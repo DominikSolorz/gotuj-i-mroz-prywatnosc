@@ -165,6 +165,22 @@ button{font:inherit;color:inherit}
 .lesson .rp{margin-left:auto;font-weight:900;color:#2e8b57}
 .expl{background:#fff0c9;border-radius:10px;padding:8px 10px;font-size:14px;text-align:left}
 .nav{display:flex;gap:8px;justify-content:center}
+@media (max-height:520px){.menuhow{display:none}#ovbox h1{font-size:22px}.stats{margin:4px 0}.bigbtn{padding:8px 20px;font-size:15px}}
+.mgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:10px 0 6px}
+.mgrid button{background:#6b4428;color:#fff;border:0;border-radius:14px;padding:8px 2px;font-size:24px;line-height:1.1;box-shadow:0 3px 0 #3d2616;cursor:pointer}
+.mgrid small{display:block;font-size:11px;font-weight:800;margin-top:2px}
+.mset{display:flex;flex-wrap:wrap;gap:6px;justify-content:center}
+.mset button{background:#e3c79a;color:var(--ink);border:0;border-radius:999px;padding:6px 12px;font-size:12px;font-weight:800;cursor:pointer}
+@media (orientation:portrait){
+  .st .nm{font-size:clamp(8px,2.3vw,12px)}
+  .st .msg{font-size:9px}
+  #app{grid-template-columns:minmax(0,1fr)}
+  #hud{flex-wrap:wrap;row-gap:3px}
+  .goal{order:20;flex:1 1 100%}
+  .chef div{display:block}
+  .chef small{display:none}
+  .st .what{display:none}
+}
 .how{display:flex;flex-wrap:wrap;align-items:stretch;justify-content:center;gap:4px;margin:10px 0}
 .how .hs{background:#fff;border:2px solid #e3c79a;border-radius:14px;padding:6px 6px 4px;width:92px;position:relative}
 .how .hs i{position:absolute;left:-6px;top:-8px;background:var(--accent);color:#fff;border-radius:50%;width:22px;height:22px;font-style:normal;font-weight:900;font-size:13px;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 0 #b04a12}
@@ -481,7 +497,7 @@ function load(){try{const d=JSON.parse(localStorage.getItem(SAVE_KEY)||"null");i
 function save(){try{localStorage.setItem(SAVE_KEY,JSON.stringify({coins:S.coins,day:S.day,best:S.best,rep:S.rep,sound:S.sound,music:S.music,hints:S.hints,up:S.up,learn:S.learn,done:S.done,quizOK:S.quizOK,quizTot:S.quizTot,easy:S.easy,tutDone:S.tutDone,maxLv:S.maxLv,stars:S.stars}));}catch(e){}}
 const unlocked=()=>RECIPES.filter(r=>r.day<=S.day);
 const usedIng=()=>{const s=new Set();unlocked().forEach(r=>r.ing.forEach(i=>s.add(i)));return s;};
-const target=()=>Math.round((45+9*S.day)*(S.easy?.75:1));
+const target=()=>Math.round((80+8*S.day)*(S.easy?.75:1));
 const maxPat=()=>Math.min(180,Math.max(70,180-S.day*2.3))*(1+.15*S.up.pat)*(S.easy?1:.8); // klient czeka do 3 minut
 const maxQ=()=>{const n=S.day<5?3:S.day<15?4:5;return S.easy?Math.min(n,4):n;};
 const rnd=a=>a[Math.floor(Math.random()*a.length)];
@@ -762,7 +778,7 @@ function tick(dt){
     S.spawn-=dt;
     if(S.spawn<=0){
       if(S.q.length<maxQ()){S.q.push(makeCust());sfx.door();dirty=true;}
-      S.spawn=(Math.max(6,16-S.day*.2)+Math.random()*4)/(1+(S.rep-3)*.08)*(S.easy?1.3:1)*(S.event&&S.event.type==="rush"?.5:1);
+      S.spawn=(Math.max(6,13-S.day*.18)+Math.random()*3)/(1+(S.rep-3)*.08)*(S.easy?1.15:1)*(S.event&&S.event.type==="rush"?.5:1);
     }
   }
   for(let i=S.q.length-1;i>=0;i--){
@@ -814,7 +830,7 @@ function reviews(){
 function endDay(){
   S.running=false;
   const tg=target(),ok=S.earned>=tg;
-  const stars=S.earned>=tg*2?3:S.earned>=tg*1.5?2:ok?1:0;
+  const stars=S.earned>=tg*1.9?3:S.earned>=tg*1.4?2:ok?1:0;
   const before=unlocked().length;
   if(S.earned>S.best)S.best=S.earned;
   S.stars[S.day]=Math.max(S.stars[S.day]||0,stars);S.lastLevel=S.day;
@@ -894,11 +910,11 @@ function showEnd(){
     <div class="stars">${"⭐".repeat(stars)}${"☆".repeat(3-stars)}</div>
     <div class="stats"><div>Zarobek<b>${S.earned} zł</b></div><div>Cel<b>${tg} zł</b></div><div>Obsłużeni<b>${S.served}</b></div><div>Stracone<b>${S.lost}</b></div><div>Ocena<b>★ ${S.rep.toFixed(1)}</b></div>${S.learn?`<div>Incydenty<b>${S.incidents}</b></div>`:""}</div>
     ${S.learn?`<p class="sub">💡 Czy wiesz, że ${rnd(TIPS)}</p>`:""}
+    <button class="bigbtn" data-act="startday">${ok?(S.day>=50&&S.stars[50]?"Zagraj jeszcze raz ▶":"Poziom "+S.day+" ▶"):"Powtórz poziom ▶"}</button>
+    <button class="bigbtn alt" data-act="map">🗺️ Mapa poziomów</button>
     ${ok&&fresh.length?`<p><b>🔓 Nowe przepisy!</b></p><div class="newr">${fresh.map(r=>`<span>${r.e} ${r.name}</span>`).join("")}</div>`:""}
     <p><b>💬 Opinie gości</b></p>${revs.map(r=>`<div class="review">„${r.t}” <small>— ${r.who} ${"⭐".repeat(r.s)}</small></div>`).join("")}
-    ${shopHTML()}
-    <button class="bigbtn" data-act="startday">${ok?(S.day>=50&&S.stars[50]?"Zagraj jeszcze raz ▶":"Poziom "+S.day+" ▶"):"Powtórz poziom ▶"}</button>
-    <button class="bigbtn alt" data-act="map">🗺️ Mapa poziomów</button>`);
+    ${shopHTML()}`);
 }
 
 /* ============ SCENA ============ */
@@ -1363,20 +1379,13 @@ function menu(){
   menuMode=true;
   const known=unlocked().length;
   overlay(`<h1>👩‍🍳 Gotuj i Mroź ❄️</h1>
-    <p class="sub">Ucz się gastronomii: gotuj, mroź, podawaj i dbaj o higienę</p>
     <div class="stats"><div>Poziom<b>${S.day}/50</b></div><div>Ocena<b>★ ${S.rep.toFixed(1)}</b></div><div>Przepisy<b>${known}/${RECIPES.length}</b></div><div>Lekcje<b>${S.done.length}/${LESSONS.length}</b></div><div>Rekord<b>${S.best} zł</b></div></div>
-    ${howStrip()}
-    <p class="sub">Przeciągaj palcem albo dotykaj. Pierwsze zamówienie poprowadzę Cię krok po kroku.</p>
     <button class="bigbtn" data-act="startday">${S.day>1?"Kontynuuj — poziom "+S.day:"Otwórz restaurację!"} ▶</button>
-    <button class="bigbtn alt" data-act="map">🗺️ Mapa poziomów (1–50)</button>
-    <button class="bigbtn alt" data-act="how">❓ Jak grać</button>
-    <button class="bigbtn alt" data-act="school">🎓 Szkoła gastronomii</button>
-    <button class="bigbtn alt" data-act="book">📖 Książka kucharska</button>
-    <button class="bigbtn alt" data-act="easy">🎚️ Poziom: ${S.easy?"ŁATWY (polecany na start)":"NORMALNY"}</button>
-    <button class="bigbtn alt" data-act="learn">🧠 Tryb nauki: ${S.learn?"TAK":"NIE"}</button>
-    <button class="bigbtn alt" data-act="hints">💡 Podpowiedzi: ${S.hints?"TAK":"NIE (tryb szefa)"}</button>`);
+    <div class="mgrid"><button data-act="map">🗺️<small>Mapa poziomów</small></button><button data-act="how">❓<small>Jak grać</small></button><button data-act="school">🎓<small>Szkoła</small></button><button data-act="book">📖<small>Przepisy</small></button></div>
+    <div class="mset"><button data-act="easy">🎚️ ${S.easy?"Łatwy":"Normalny"}</button><button data-act="learn">🧠 Nauka: ${S.learn?"tak":"nie"}</button><button data-act="hints">💡 Podpowiedzi: ${S.hints?"tak":"nie"}</button></div>
+    <p class="sub" style="margin:6px 0 0;font-size:11px">ℹ️ Mycie rąk i alergie gości włączają się na poziomie Normalny. Przeciągaj palcem albo dotykaj.</p>
+    <div class="menuhow">${howStrip()}</div>`);
 }
-
 /* ============ START ============ */
 document.addEventListener("pointerdown",e=>{
   S.idle=0;hideHandHint();
