@@ -165,6 +165,50 @@ button{font:inherit;color:inherit}
 .lesson .rp{margin-left:auto;font-weight:900;color:#2e8b57}
 .expl{background:#fff0c9;border-radius:10px;padding:8px 10px;font-size:14px;text-align:left}
 .nav{display:flex;gap:8px;justify-content:center}
+#splash{position:fixed;inset:0;z-index:100;display:flex;align-items:center;justify-content:center;overflow:hidden;color:#fff3d6;text-align:center;transition:opacity .5s}
+#splash.out{opacity:0;pointer-events:none}
+.sp-bg{position:absolute;inset:0;background:radial-gradient(circle at 50% 40%,#a8452e,#5c1f1a 60%,#2a0f0b);}
+.sp-bg::after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(0deg,rgba(255,225,190,.07) 0 2px,transparent 2px 38px)}
+.sp-in{position:relative;z-index:2;padding:16px;max-width:560px;width:100%}
+.sp-chef{font-size:clamp(70px,18vh,130px);line-height:1;animation:spb 1s infinite alternate;filter:drop-shadow(0 8px 0 rgba(0,0,0,.3))}
+@keyframes spb{to{transform:translateY(-12px) rotate(3deg)}}
+.sp-in h1{margin:4px 0 0;font:900 clamp(34px,9vh,64px)/1 Georgia,serif;text-shadow:0 5px 0 #3a120d;letter-spacing:1px}
+.sp-in h1 span{color:#ffd25e}
+.sp-in p{margin:8px 0 14px;font-weight:700;font-size:clamp(13px,3vh,18px);color:#ffe9c4}
+.sp-bar{height:14px;background:rgba(0,0,0,.4);border-radius:999px;overflow:hidden;border:2px solid #ffd25e;max-width:340px;margin:0 auto}
+.sp-bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#ffb347,#ffd25e);border-radius:999px}
+#sptxt{display:block;margin-top:8px;font-size:12px;opacity:.85;font-weight:700}
+.sp-f{position:absolute;z-index:1;font-size:clamp(28px,7vh,54px);opacity:.85;animation:spf 3s infinite alternate ease-in-out}
+.sp-f.f1{left:8%;top:18%}.sp-f.f2{right:9%;top:14%;animation-delay:.4s}.sp-f.f3{left:14%;bottom:14%;animation-delay:.8s}.sp-f.f4{right:12%;bottom:18%;animation-delay:1.2s}.sp-f.f5{left:44%;top:6%;animation-delay:.6s}.sp-f.f6{right:34%;bottom:6%;animation-delay:1s}
+@keyframes spf{to{transform:translateY(-14px) rotate(8deg)}}
+#home{position:fixed;inset:0;z-index:9;display:none;overflow:auto;-webkit-overflow-scrolling:touch}
+#home.on{display:block}
+.hm-bg{position:absolute;inset:0;background:radial-gradient(circle at 25% 35%,#a8452e,#5c1f1a 65%,#2a0f0b)}
+.hm-bg::after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(0deg,rgba(255,225,190,.07) 0 2px,transparent 2px 38px)}
+.hm-in{position:relative;z-index:2;min-height:100%;padding:max(10px,env(safe-area-inset-top)) max(14px,env(safe-area-inset-right)) max(10px,env(safe-area-inset-bottom)) max(14px,env(safe-area-inset-left));display:grid;grid-template-columns:1fr 1fr;gap:12px;align-items:center;color:#fff3d6}
+@media (orientation:portrait){.hm-in{grid-template-columns:1fr;align-content:center}}
+.hm-l{text-align:center}
+.hm-chef{font-size:clamp(70px,22vh,150px);line-height:1;animation:spb 1.2s infinite alternate;filter:drop-shadow(0 8px 0 rgba(0,0,0,.3))}
+.hm-l h1{margin:2px 0 0;font:900 clamp(30px,8vh,56px)/1.05 Georgia,serif;text-shadow:0 5px 0 #3a120d}
+.hm-l h1 span{color:#ffd25e}
+.hm-l p{margin:6px 0 8px;font-weight:700;color:#ffe9c4;font-size:clamp(12px,2.6vh,16px)}
+.hm-chips{display:flex;gap:6px;justify-content:center;flex-wrap:wrap}
+.hm-chips span{background:rgba(0,0,0,.35);border:1px solid rgba(255,210,94,.5);border-radius:999px;padding:4px 10px;font-size:12px;font-weight:800}
+.hm-r{display:flex;flex-direction:column;gap:8px;max-width:420px;width:100%;margin:0 auto}
+.hbtn{display:flex;align-items:center;gap:10px;width:100%;border:0;border-radius:16px;padding:12px 16px;font-size:clamp(15px,3.2vh,19px);font-weight:900;color:#fff;background:linear-gradient(#8a5a37,#6b4428);box-shadow:0 4px 0 #3d2616;cursor:pointer;text-align:left}
+.hbtn b{font-size:1.5em;line-height:1}
+.hbtn small{display:block;font-size:.62em;opacity:.8;font-weight:700}
+.hbtn.play{background:linear-gradient(#ff9a4a,#f0762d);box-shadow:0 5px 0 #b04a12;font-size:clamp(18px,4.2vh,24px);padding:14px 18px;justify-content:center;text-align:center}
+.hbtn:active{transform:translateY(2px);box-shadow:0 2px 0 #3d2616}
+.hrow{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.hrow .hbtn{padding:10px 10px;font-size:clamp(13px,2.8vh,16px);flex-direction:column;gap:2px;text-align:center}
+.hm-ver{position:absolute;right:12px;bottom:6px;z-index:3;font-size:10px;opacity:.6;color:#fff3d6}
+.setrow{display:flex;align-items:center;justify-content:space-between;gap:8px;text-align:left;border-bottom:1px dashed #d9c3a0;padding:7px 0;font-size:14px;font-weight:700}
+.setrow small{display:block;font-weight:600;opacity:.7;font-size:11px}
+.seg{display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end}
+.seg button{border:2px solid #e3c79a;background:#fff;border-radius:999px;padding:5px 11px;font-weight:800;font-size:12px;cursor:pointer}
+.seg button.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.diffd{background:#fff0c9;border-radius:10px;padding:6px 10px;font-size:12px;font-weight:700;margin:4px 0 8px;text-align:left}
 @media (max-height:520px){.menuhow{display:none}#ovbox h1{font-size:22px}.stats{margin:4px 0}.bigbtn{padding:8px 20px;font-size:15px}}
 .mgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:10px 0 6px}
 .mgrid button{background:#6b4428;color:#fff;border:0;border-radius:14px;padding:8px 2px;font-size:24px;line-height:1.1;box-shadow:0 3px 0 #3d2616;cursor:pointer}
@@ -245,8 +289,7 @@ body.dragging,body.dragging *{cursor:grabbing!important}
     <div class="goal"><small id="goalTxt"></small><div class="gb"><i id="goalBar"></i></div><small id="mission"></small></div>
     <button class="ibtn" data-act="help" title="Pomoc: gdzie co jest">❓</button>
     <button class="ibtn" data-act="book" title="Książka kucharska">📖</button>
-    <button class="ibtn" data-act="music" id="musBtn" title="Muzyka">🎵</button>
-    <button class="ibtn" data-act="sound" id="sndBtn" title="Dźwięki">🔊</button>
+    <button class="ibtn" data-act="pause" title="Pauza i menu">⏸</button>
   </div>
   <div id="cust"><canvas id="scene" data-act="scene"></canvas></div>
   <div id="stat"></div>
@@ -257,6 +300,12 @@ body.dragging,body.dragging *{cursor:grabbing!important}
     <div id="tray"></div>
   </div>
 </div>
+<div id="splash"><div class="sp-bg"></div>
+  <div class="sp-in"><div class="sp-chef">👩‍🍳</div><h1>Gotuj <span>i</span> Mroź</h1><p>Restauracja pełna smaków… i lodów</p>
+  <div class="sp-bar"><i id="spbar"></i></div><small id="sptxt">Ładowanie…</small></div>
+  <div class="sp-f f1">🍲</div><div class="sp-f f2">🍕</div><div class="sp-f f3">🍧</div><div class="sp-f f4">🥞</div><div class="sp-f f5">🍰</div><div class="sp-f f6">🍳</div>
+</div>
+<div id="home"><div class="hm-bg"></div><div class="hm-in"></div></div>
 <div id="toast"></div>
 <div id="coach"></div>
 <div id="evt"></div>
@@ -485,21 +534,21 @@ const TIPS=[
 let S={coins:30,day:1,best:0,rep:3,stock:{},hand:null,st:[],q:[],fx:[],pops:[],time:0,earned:0,served:0,lost:0,combo:0,
   stat:{ideal:0,good:0,late:0},spawn:0,running:false,tab:"veg",sound:true,music:true,hints:true,up:{cook:0,burn:0,pat:0,stock:0},focusC:null,bookTab:"pot",
   dirty:false,learn:true,done:[],quizOK:0,quizTot:0,incidents:0,lesson:null,quiz:null,
-  easy:true,tutDone:false,tutStep:0,tutResume:false,idle:0,maxLv:1,stars:{},lastLevel:1,dine:[],tables:[]};
+  easy:true,hard:false,diff:"easy",tutDone:false,tutStep:0,tutResume:false,idle:0,maxLv:1,stars:{},lastLevel:1,dine:[],tables:[]};
 let dirty=true,endData=null,menuMode=true;
 const upCost=u=>u.base*(S.up[u.id]+1);
-const burnAfter=()=>10+4*S.up.burn+(S.easy?6:0);
+const burnAfter=()=>10+4*S.up.burn+(S.easy?6:S.hard?-3:0);
 function load(){try{const d=JSON.parse(localStorage.getItem(SAVE_KEY)||"null");if(d){
   S.coins=d.coins??30;S.day=d.day??1;S.best=d.best??0;S.rep=d.rep??3;S.sound=d.sound!==false;S.music=d.music!==false;S.hints=d.hints!==false;
-  S.easy=d.easy!==false;S.tutDone=!!d.tutDone;S.maxLv=d.maxLv||S.day;S.stars=d.stars||{};
+  S.diff=d.diff||(d.easy===false?"normal":"easy");S.easy=S.diff==="easy";S.hard=S.diff==="hard";S.tutDone=!!d.tutDone;S.maxLv=d.maxLv||S.day;S.stars=d.stars||{};
   S.learn=d.learn!==false;S.done=Array.isArray(d.done)?d.done:[];S.quizOK=d.quizOK||0;S.quizTot=d.quizTot||0;
   if(d.up)Object.assign(S.up,d.up);}}catch(e){}}
-function save(){try{localStorage.setItem(SAVE_KEY,JSON.stringify({coins:S.coins,day:S.day,best:S.best,rep:S.rep,sound:S.sound,music:S.music,hints:S.hints,up:S.up,learn:S.learn,done:S.done,quizOK:S.quizOK,quizTot:S.quizTot,easy:S.easy,tutDone:S.tutDone,maxLv:S.maxLv,stars:S.stars}));}catch(e){}}
+function save(){try{localStorage.setItem(SAVE_KEY,JSON.stringify({coins:S.coins,day:S.day,best:S.best,rep:S.rep,sound:S.sound,music:S.music,hints:S.hints,up:S.up,learn:S.learn,done:S.done,quizOK:S.quizOK,quizTot:S.quizTot,diff:S.diff,easy:S.easy,tutDone:S.tutDone,maxLv:S.maxLv,stars:S.stars}));}catch(e){}}
 const unlocked=()=>RECIPES.filter(r=>r.day<=S.day);
 const usedIng=()=>{const s=new Set();unlocked().forEach(r=>r.ing.forEach(i=>s.add(i)));return s;};
-const target=()=>Math.round((80+8*S.day)*(S.easy?.75:1));
-const maxPat=()=>Math.min(180,Math.max(70,180-S.day*2.3))*(1+.15*S.up.pat)*(S.easy?1:.8); // klient czeka do 3 minut
-const maxQ=()=>{const n=S.day<5?3:S.day<15?4:5;return S.easy?Math.min(n,4):n;};
+const target=()=>Math.round((80+8*S.day)*(S.easy?.75:S.hard?1.25:1));
+const maxPat=()=>Math.min(180,Math.max(70,180-S.day*2.3))*(1+.15*S.up.pat)*(S.easy?1:S.hard?.65:.8); // klient czeka do 3 minut
+const maxQ=()=>{const n=S.day<5?3:S.day<15?4:5;return S.easy?Math.min(n,4):S.hard?Math.min(5,n+1):n;};
 const rnd=a=>a[Math.floor(Math.random()*a.length)];
 const titleOf=()=>TITLES[Math.min(TITLES.length-1,Math.floor((S.day-1)/5))];
 const activeStations=()=>STN.map((s,i)=>i).filter(i=>unlocked().some(r=>r.st===STN[i].type));
@@ -778,7 +827,7 @@ function tick(dt){
     S.spawn-=dt;
     if(S.spawn<=0){
       if(S.q.length<maxQ()){S.q.push(makeCust());sfx.door();dirty=true;}
-      S.spawn=(Math.max(6,13-S.day*.18)+Math.random()*3)/(1+(S.rep-3)*.08)*(S.easy?1.15:1)*(S.event&&S.event.type==="rush"?.5:1);
+      S.spawn=(Math.max(6,13-S.day*.18)+Math.random()*3)/(1+(S.rep-3)*.08)*(S.easy?1.15:S.hard?.8:1)*(S.event&&S.event.type==="rush"?.5:1);
     }
   }
   for(let i=S.q.length-1;i>=0;i--){
@@ -1212,8 +1261,7 @@ function draw(){
 /* ============ INTERFEJS ============ */
 function render(){
   dirty=false;
-  $("sndBtn").textContent=S.sound?"🔊":"🔇";
-  $("musBtn").style.opacity=S.music?1:.4;
+
   const F=focusInfo();
   const need=new Set(S.hints&&F&&!F.free?F.chips.filter(x=>!x.done).map(x=>x.id):[]);
   if(F&&F.free&&S.hints)need.add(F.o.need);
@@ -1375,16 +1423,52 @@ function showBook(){
   S._wasRunning=S.running;S.running=false;
   overlay(bookHTML());
 }
-function menu(){
-  menuMode=true;
+const diffName=()=>({easy:"Łatwy",normal:"Normalny",hard:"Trudny"})[S.diff]||"Łatwy";
+function setDiff(id){S.diff=id;S.easy=id==="easy";S.hard=id==="hard";save();}
+function updateHome(){
   const known=unlocked().length;
-  overlay(`<h1>👩‍🍳 Gotuj i Mroź ❄️</h1>
-    <div class="stats"><div>Poziom<b>${S.day}/50</b></div><div>Ocena<b>★ ${S.rep.toFixed(1)}</b></div><div>Przepisy<b>${known}/${RECIPES.length}</b></div><div>Lekcje<b>${S.done.length}/${LESSONS.length}</b></div><div>Rekord<b>${S.best} zł</b></div></div>
-    <button class="bigbtn" data-act="startday">${S.day>1?"Kontynuuj — poziom "+S.day:"Otwórz restaurację!"} ▶</button>
-    <div class="mgrid"><button data-act="map">🗺️<small>Mapa poziomów</small></button><button data-act="how">❓<small>Jak grać</small></button><button data-act="school">🎓<small>Szkoła</small></button><button data-act="book">📖<small>Przepisy</small></button></div>
-    <div class="mset"><button data-act="easy">🎚️ ${S.easy?"Łatwy":"Normalny"}</button><button data-act="learn">🧠 Nauka: ${S.learn?"tak":"nie"}</button><button data-act="hints">💡 Podpowiedzi: ${S.hints?"tak":"nie"}</button></div>
-    <p class="sub" style="margin:6px 0 0;font-size:11px">ℹ️ Mycie rąk i alergie gości włączają się na poziomie Normalny. Przeciągaj palcem albo dotykaj.</p>
-    <div class="menuhow">${howStrip()}</div>`);
+  $("home").querySelector(".hm-in").innerHTML=`<div class="hm-l"><div class="hm-chef">👩‍🍳</div><h1>Gotuj <span>i</span> Mroź</h1><p>Prowadź restaurację i ucz się gastronomii</p>
+    <div class="hm-chips"><span>⭐ ${S.rep.toFixed(1)}</span><span>🎚️ ${diffName()}</span><span>🗺️ Poziom ${S.day}/50</span><span>💰 ${S.coins} zł</span></div></div>
+    <div class="hm-r"><button class="hbtn play" data-act="startday">▶ ${S.day>1?"KONTYNUUJ · poziom "+S.day:"GRAJ"}</button>
+      <div class="hrow"><button class="hbtn" data-act="map"><b>🗺️</b>Poziomy<small>${S.maxLv} z 50</small></button><button class="hbtn" data-act="school"><b>🎓</b>Szkoła<small>${S.done.length} z ${LESSONS.length} lekcji</small></button></div>
+      <div class="hrow"><button class="hbtn" data-act="book"><b>📖</b>Przepisy<small>${known} z ${RECIPES.length}</small></button><button class="hbtn" data-act="how"><b>❓</b>Jak grać<small>krótka instrukcja</small></button></div>
+      <button class="hbtn" data-act="settings"><b>⚙️</b><span>Ustawienia<small>trudność, dźwięk, nauka</small></span></button></div>
+    <div class="hm-ver">Gotuj i Mroź · wersja 1.0</div>`;
+}
+function menu(){
+  menuMode=true;S.running=false;S.guide=null;coachClear();closeOv();
+  updateHome();$("home").classList.add("on");
+}
+function showSettings(){
+  const D={easy:"Łatwy",normal:"Normalny",hard:"Trudny"};
+  const desc={easy:"Dłuższy czas, mniej klientów, bez mycia rąk i alergii. Dla każdego.",normal:"Standardowy czas i liczba klientów, mycie rąk i alergie gości.",hard:"Krótszy czas, więcej klientów i wyższe cele. Dla ekspertów."}[S.diff];
+  const tg=(k,l,sub)=>`<div class="setrow"><span>${l}<small>${sub}</small></span><div class="seg"><button class="${S[k]?"on":""}" data-act="tgl" data-id="${k}">${S[k]?"Włączone":"Wyłączone"}</button></div></div>`;
+  overlay(`<h2>⚙️ Ustawienia</h2>
+    <div class="setrow"><span>Poziom trudności<small>Zmienisz go w każdej chwili</small></span><div class="seg">${["easy","normal","hard"].map(k=>`<button class="${S.diff===k?"on":""}" data-act="diff" data-id="${k}">${D[k]}</button>`).join("")}</div></div>
+    <div class="diffd">${desc}</div>
+    ${tg("sound","🔊 Dźwięki","kliknięcia, monety, urządzenia")}${tg("music","🎵 Muzyka","spokojna muzyka w tle")}${tg("hints","💡 Podpowiedzi","pokazuj składniki w zamówieniach")}${tg("learn","🧠 Tryb nauki","lekcje, pytanie dnia")}
+    <div class="setrow"><span>Poradnik<small>pokaż pierwszy poradnik jeszcze raz</small></span><div class="seg"><button data-act="resettut">Pokaż</button></div></div>
+    <div class="setrow"><span>Postęp w grze<small>poziom ${S.maxLv}/50 · ukończone: ${Object.keys(S.stars).length}</small></span><div class="seg"><button data-act="resetprog" style="${S._confirmReset?"background:#e5484d;color:#fff;border-color:#e5484d":""}">${S._confirmReset?"Na pewno? Kliknij jeszcze raz":"Zresetuj"}</button></div></div>
+    <button class="bigbtn" data-act="closeset">Gotowe</button>`);
+}
+function showPause(keep){
+  if(!keep)S._wasRunning=S.running;
+  S.running=false;
+  overlay(`<h2>⏸ Pauza</h2><p class="sub">Poziom ${S.day} · ${CHAPTERS[Math.min(4,Math.floor((S.day-1)/10))]}</p>
+    <button class="bigbtn" data-act="resume">▶ Wróć do gry</button>
+    <div class="mset" style="margin-top:10px"><button data-act="settings">⚙️ Ustawienia</button><button data-act="how">❓ Jak grać</button><button data-act="quit">🏠 Wyjdź do menu</button></div>`);
+}
+function splashRun(){
+  const sp=$("splash"),bar=$("spbar"),tx=$("sptxt");
+  const msgs=["Rozpalamy garnki…","Odmrażamy lody…","Nakrywamy stoliki…","Zapraszamy gości…"];
+  const t0=performance.now();let done=false,iv=null;
+  const finish=()=>{if(done)return;done=true;clearInterval(iv);sp.classList.add("out");setTimeout(()=>{sp.style.display="none";menu();},520);};
+  iv=setInterval(()=>{
+    const p=Math.min(1,(performance.now()-t0)/2600);
+    bar.style.width=(p*100)+"%";tx.textContent=p<1?msgs[Math.min(3,Math.floor(p*4))]:"Gotowe!";
+    if(p>=1){clearInterval(iv);setTimeout(finish,250);}
+  },60);
+  sp.addEventListener("pointerdown",()=>{if(performance.now()-t0>900)finish();});
 }
 /* ============ START ============ */
 document.addEventListener("pointerdown",e=>{
@@ -1398,7 +1482,17 @@ document.addEventListener("pointerdown",e=>{
   if(el.dataset.act==="showwhere"){e.preventDefault();closeOv();S.running=!!S._wasRunning;startTutorial();return;}
   if(el.dataset.act==="gnext"){e.preventDefault();if(S.guide){if(S.guide.step>=GSTEPS.length-1)guideEnd();else{S.guide.step++;dirty=true;}}return;}
   if(el.dataset.act==="gskip"){e.preventDefault();guideEnd();return;}
-  if(el.dataset.act==="easy"){e.preventDefault();S.easy=!S.easy;save();menu();return;}
+  if(el.dataset.act==="settings"){e.preventDefault();showSettings();return;}
+  if(el.dataset.act==="diff"){e.preventDefault();setDiff(el.dataset.id);showSettings();return;}
+  if(el.dataset.act==="tgl"){e.preventDefault();const k=el.dataset.id;S[k]=!S[k];save();showSettings();return;}
+  if(el.dataset.act==="resettut"){e.preventDefault();S.tutDone=false;save();say("Poradnik pokaże się na początku poziomu 1");return;}
+  if(el.dataset.act==="resetprog"){e.preventDefault();
+    if(!S._confirmReset){S._confirmReset=true;showSettings();return;}
+    S._confirmReset=false;S.day=1;S.maxLv=1;S.stars={};S.coins=30;S.rep=3;S.best=0;S.up={cook:0,burn:0,pat:0,stock:0};S.done=[];S.tutDone=false;S.quizOK=0;S.quizTot=0;save();menu();return;}
+  if(el.dataset.act==="closeset"){e.preventDefault();S._confirmReset=false;if(menuMode)menu();else showPause(true);return;}
+  if(el.dataset.act==="pause"){e.preventDefault();if(!menuMode)showPause();return;}
+  if(el.dataset.act==="resume"){e.preventDefault();closeOv();S.running=!!S._wasRunning;return;}
+  if(el.dataset.act==="quit"){e.preventDefault();menu();return;}
   e.preventDefault();
   const a=el.dataset.act;
   // przeciąganie: składnik z kafelka/karty -> urządzenie, gotowe danie z urządzenia -> klient
@@ -1416,14 +1510,14 @@ document.addEventListener("pointerdown",e=>{
     }
   }
   if(a==="scene"){if(S.running)sceneTap(e);return;}
-  if(a==="startday"){menuMode=false;endData=null;closeOv();newDay();render();beep(660,.12,"triangle");musicStart();
+  if(a==="startday"){menuMode=false;endData=null;closeOv();$("home").classList.remove("on");newDay();render();beep(660,.12,"triangle");musicStart();
     if(!S.tutDone)guideStart();return;}
   if(a==="hints"){S.hints=!S.hints;save();menu();return;}
   if(a==="learn"){S.learn=!S.learn;save();menu();return;}
   if(a==="menu"){menu();return;}
   if(a==="school"){showSchool();return;}
   if(a==="map"){showMap();return;}
-  if(a==="playlv"){S.day=Math.min(50,Math.max(1,+el.dataset.i));endData=null;menuMode=false;closeOv();newDay();render();musicStart();if(!S.tutDone)guideStart();return;}
+  if(a==="playlv"){S.day=Math.min(50,Math.max(1,+el.dataset.i));endData=null;menuMode=false;closeOv();$("home").classList.remove("on");newDay();render();musicStart();if(!S.tutDone)guideStart();return;}
   if(a==="lesson"){S.lesson={id:el.dataset.id,step:0,score:0,pick:null};lessonView();return;}
   if(a==="lprev"){S.lesson.step=Math.max(0,S.lesson.step-1);lessonView();return;}
   if(a==="lnext"){const st=S.lesson,L=LESSONS.find(x=>x.id===st.id);
@@ -1711,7 +1805,7 @@ function loop(now){
 }
 load();S.st=STN.map(s=>freshStation(s.type));
 usedIng().forEach(i=>{S.stock[i]=3;});
-render();resize();menu();requestAnimationFrame(loop);
+render();resize();splashRun();requestAnimationFrame(loop);
 </script>
 </body>
 </html>

@@ -19,6 +19,17 @@ Shot "demo.html" "school" 960 540 2 "$o\telefon\5-szkola-gastronomii.png"
 Shot "demo.html" "map"    960 540 2 "$o\telefon\6-mapa-poziomow.png"
 Shot "demo.html" "quiz"   960 540 2 "$o\telefon\7-pytanie-dnia.png"
 Shot "demo.html" "end"    960 540 2 "$o\telefon\8-opinie-gosci.png"
+# interfejs (do planszy układu)
+New-Item -ItemType Directory -Force "$r\store\ui" | Out-Null
+$u="$r\store\ui"
+Shot "demo.html" "splash"   960 540 2 "$u\1-ladowanie.png"
+Shot "demo.html" "menu"     960 540 2 "$u\2-ekran-glowny.png"
+Shot "demo.html" "play1"    960 540 2 "$u\3-gra.png"
+Shot "demo.html" "pause"    960 540 2 "$u\4-pauza.png"
+Shot "demo.html" "settings" 960 540 2 "$u\5-ustawienia.png"
+Shot "demo.html" "map"      960 540 2 "$u\6-mapa-poziomow.png"
+Shot "demo.html" "how"      960 540 2 "$u\7-jak-grac.png"
+Shot "demo.html" "end"      960 540 2 "$u\8-koniec-poziomu.png"
 # tablet 7" 1920x1200
 Shot "demo.html" "play1"  1280 800 1.5 "$o\tablet-7\1-kolejka-i-przepis.png"
 Shot "demo.html" "play4"  1280 800 1.5 "$o\tablet-7\2-alergia-i-higiena.png"

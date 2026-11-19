@@ -2,10 +2,13 @@
 (function(){
   let s=20260;Math.random=()=>{s|=0;s=s+0x6D2B79F5|0;let t=Math.imul(s^s>>>15,1|s);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};
   const sc=(location.hash||"#play1").slice(1);
-  S.sound=false;S.music=false;S.easy=false;S.tutDone=true;
+  S.sound=false;S.music=false;S.easy=false;S.hard=false;S.diff="normal";S.tutDone=true;
+  setTimeout(()=>document.querySelectorAll(".fly,.coinfx,.cf").forEach(n=>n.remove()),3800);window.__clean=1;
+  window.__realMenu=menu;menu=function(){};  // ekran ładowania nie może zmienić widoku w trakcie zrzutu
+  const hideHome=()=>document.getElementById("home").classList.remove("on");
   const sIdx=type=>STN.findIndex(x=>x.type===type);
   function setup(day,n){
-    S.day=day;S.rep=4.3;S.coins=148;S.best=212;closeOv();menuMode=false;newDay();
+    S.day=day;S.rep=4.3;S.coins=148;S.best=212;closeOv();menuMode=false;hideHome();newDay();
     for(let i=0;i<1200&&(S.q.length<n||S.q.some(c=>c.walk));i++){S.spawn=S.q.length<n?0:99;tick(.1);}
     S.time=58;S.earned=96;S.spawn=9999;
   }
@@ -26,7 +29,7 @@
     const nx=r.ing[2];S.stock[nx]=3;act({act:"ing",id:nx});S.tab=ING[nx].c;
     S.focusC=F.c;dirty=true;
     finish();
-    if(sc==="menu"){S.day=5;menu();}
+    if(sc==="menu"){S.day=5;window.__realMenu();}
     if(sc==="book"){S.bookTab="pan";S.running=false;showBook();}
     if(sc==="end"){S.running=true;S.earned=224;S.served=14;S.lost=1;S.incidents=0;S.stat={ideal:6,good:6,late:2};S.time=0;S.q=[];endDay();showEnd();}
   }
@@ -38,6 +41,10 @@
     const m=document.querySelector(".st.micro");
     if(m){m.classList.add("drop");const b=m.getBoundingClientRect();const g=ghostShow("🧈");g.style.left=(b.left+b.width*.5)+"px";g.style.top=(b.top+b.height*.2)+"px";}
   }
+  if(sc==="splash"){setTimeout(()=>{const sp=document.getElementById("splash");sp.style.display="flex";sp.classList.remove("out");document.getElementById("spbar").style.width="64%";document.getElementById("sptxt").textContent="Nakrywamy stoliki…";document.getElementById("home").classList.remove("on");},3750);}
+  if(sc==="settings"){setup(5,3);S.running=false;menuMode=true;window.__realMenu();showSettings();}
+  if(sc==="pause"){setup(5,4);menuMode=false;finish();showPause();}
+  if(sc==="how"){setup(5,3);S.running=false;menuMode=true;window.__realMenu();showHow();}
   if(sc==="map"){setup(5,3);S.maxLv=14;S.stars={1:3,2:3,3:2,4:3,5:2,6:1,7:3,8:2,9:2,10:3,11:1,12:2,13:3};S.day=14;finish();showMap();}
   if(sc==="play4"){
     setup(6,4);
