@@ -52,7 +52,7 @@ button{font:inherit;color:inherit}
 .st.target{outline:4px solid var(--gold);outline-offset:-1px;animation:glow2 .9s infinite alternate}
 @keyframes pulse{to{transform:scale(1.03)}}
 @keyframes glow2{to{outline-color:rgba(255,210,94,.35)}}
-.st .nm{font-weight:900;font-size:clamp(9px,1.9vh,14px);padding:0 14px;line-height:1.1;text-align:center}
+.st .nm{font-weight:900;font-size:clamp(8px,1.55vh,13px);padding:0 15px;line-height:1.1;text-align:center;white-space:nowrap}
 .st .big{line-height:1;width:100%;display:flex;justify-content:center;align-items:center}
 .st .big svg{width:100%;height:clamp(34px,10.5vh,66px)}
 .bigE{font-size:clamp(28px,8vh,48px)}
@@ -1021,7 +1021,7 @@ function person(c,alpha,dy){
   g.restore();
 }
 function bubble(c){
-  const n=c.orders.length,bw=Math.min(SW*.94,U*(n===2?6.4:4.6)),bh=U*3.2;
+  const n=c.orders.length,bw=Math.min(SW*.94,U*(n===2?6.4:4.6)),bh=U*3.75;
   const bx=Math.max(2,Math.min(W-bw-2,c.x-bw/2)),by=CT-U*3.3-U*.95-U*.5-bh;
   const di=c.orders.findIndex(o=>!o.got);
   const match=S.hand&&S.hand.t==="dish"&&c.orders.some(o=>!o.got&&orderMatches(o,S.hand.dish));
