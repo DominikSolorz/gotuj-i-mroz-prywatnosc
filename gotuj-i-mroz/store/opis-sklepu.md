@@ -4,7 +4,7 @@
 Gotuj i Mroź
 
 ## Krótki opis (max 80 znaków)
-Prowadź restaurację: gotuj, mroź i obsługuj klientów w kolejce!
+Ucz się gastronomii: gotuj, mroź, podawaj i dbaj o higienę!
 
 ## Pełny opis (max 4000 znaków)
 Wciel się w szefową kuchni i poprowadź własną restaurację!
@@ -15,6 +15,12 @@ GOTUJ I MROŹ
 • Garnek, patelnia, piekarnik i zamrażarka – cztery urządzenia do obsługi jednocześnie.
 • Warzywa, owoce, mięso, nabiał i produkty spiżarni – 46 składników.
 • 65 prawdziwych przepisów: żurek, bigos, pierogi, schabowy, pizza, lasagne, szarlotka, lody, sorbety i wiele więcej.
+
+
+SZKOŁA GASTRONOMII
+• 8 lekcji z quizami: higiena i HACCP, temperatury i mrożenie, techniki gotowania, przechowywanie i FIFO, alergeny, obsługa gościa, bezpieczeństwo pracy, kuchnia bez marnowania żywności.
+• Pytanie dnia po każdej zmianie i Certyfikat Mistrza Gastronomii.
+• Naucz się zasad pracy w prawdziwej kuchni: myj ręce po surowym mięsie, uważaj na alergeny gości, obsługuj według kolejki.
 
 WŁASNE DANIA
 Nie znasz przepisu? Wrzuć dowolne 2–4 składniki do urządzenia i stwórz własne danie. Możliwych kombinacji jest prawie milion!
