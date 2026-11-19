@@ -538,12 +538,14 @@ let S={coins:30,day:1,best:0,rep:3,stock:{},hand:null,st:[],q:[],fx:[],pops:[],t
 let dirty=true,endData=null,menuMode=true;
 const upCost=u=>u.base*(S.up[u.id]+1);
 const burnAfter=()=>10+4*S.up.burn+(S.easy?6:S.hard?-3:0);
-function load(){try{const d=JSON.parse(localStorage.getItem(SAVE_KEY)||"null");if(d){
-  S.coins=d.coins??30;S.day=d.day??1;S.best=d.best??0;S.rep=d.rep??3;S.sound=d.sound!==false;S.music=d.music!==false;S.hints=d.hints!==false;
-  S.diff=d.diff||(d.easy===false?"normal":"easy");S.easy=S.diff==="easy";S.hard=S.diff==="hard";S.tutDone=!!d.tutDone;S.maxLv=d.maxLv||S.day;S.stars=d.stars||{};
+const validLevel=n=>Number.isInteger(n)&&n>=1&&n<=50;
+const levelOr=(n,fallback)=>validLevel(n)?n:fallback;
+function load(){try{const d=JSON.parse(localStorage.getItem(SAVE_KEY)||"null");if(d&&typeof d==="object"&&!Array.isArray(d)){
+  S.coins=Number.isFinite(d.coins)?Math.max(0,d.coins):30;S.day=levelOr(d.day,1);S.best=Number.isFinite(d.best)?Math.max(0,d.best):0;S.rep=Number.isFinite(d.rep)?Math.max(0,Math.min(5,d.rep)):3;S.sound=d.sound!==false;S.music=d.music!==false;S.hints=d.hints!==false;
+  S.diff=d.diff||(d.easy===false?"normal":"easy");S.easy=S.diff==="easy";S.hard=S.diff==="hard";S.tutDone=!!d.tutDone;S.maxLv=Math.max(S.day,levelOr(d.maxLv,S.day));S.stars={};if(d.stars&&typeof d.stars==="object"&&!Array.isArray(d.stars))for(const [k,v] of Object.entries(d.stars)){if(validLevel(Number(k))&&Number.isInteger(v)&&v>=1&&v<=3)S.stars[k]=v;}S.day=S.maxLv;
   S.learn=d.learn!==false;S.done=Array.isArray(d.done)?d.done:[];S.quizOK=d.quizOK||0;S.quizTot=d.quizTot||0;
-  if(d.up)Object.assign(S.up,d.up);}}catch(e){}}
-function save(){try{localStorage.setItem(SAVE_KEY,JSON.stringify({coins:S.coins,day:S.day,best:S.best,rep:S.rep,sound:S.sound,music:S.music,hints:S.hints,up:S.up,learn:S.learn,done:S.done,quizOK:S.quizOK,quizTot:S.quizTot,diff:S.diff,easy:S.easy,tutDone:S.tutDone,maxLv:S.maxLv,stars:S.stars}));}catch(e){}}
+  if(d.up&&typeof d.up==="object")for(const k of Object.keys(S.up)){if(Number.isInteger(d.up[k])&&d.up[k]>=0&&d.up[k]<=3)S.up[k]=d.up[k];}}}catch(e){}}
+function save(){try{if(!validLevel(S.day))S.day=levelOr(S.maxLv,1);S.maxLv=Math.max(S.day,levelOr(S.maxLv,S.day));localStorage.setItem(SAVE_KEY,JSON.stringify({coins:S.coins,day:S.day,best:S.best,rep:S.rep,sound:S.sound,music:S.music,hints:S.hints,up:S.up,learn:S.learn,done:S.done,quizOK:S.quizOK,quizTot:S.quizTot,diff:S.diff,easy:S.easy,tutDone:S.tutDone,maxLv:S.maxLv,stars:S.stars}));}catch(e){}}
 const unlocked=()=>RECIPES.filter(r=>r.day<=S.day);
 const usedIng=()=>{const s=new Set();unlocked().forEach(r=>r.ing.forEach(i=>s.add(i)));return s;};
 const target=()=>Math.round((80+8*S.day)*(S.easy?.75:S.hard?1.25:1));
@@ -883,8 +885,9 @@ function endDay(){
   const before=unlocked().length;
   if(S.earned>S.best)S.best=S.earned;
   S.stars[S.day]=Math.max(S.stars[S.day]||0,stars);S.lastLevel=S.day;
-  if(ok&&S.day<50)S.day++;
-  S.maxLv=Math.max(S.maxLv,S.day);
+  const nextLevel=ok?Math.min(50,S.day+1):S.day;
+  S.maxLv=Math.max(S.maxLv,nextLevel);
+  S.day=ok?S.maxLv:S.day;
   const fresh=ok?RECIPES.filter(r=>r.day===S.day):[];
   save();
   endData={ok,stars,tg,fresh,revs:reviews()};
@@ -1514,10 +1517,10 @@ document.addEventListener("pointerdown",e=>{
     if(!S.tutDone)guideStart();return;}
   if(a==="hints"){S.hints=!S.hints;save();menu();return;}
   if(a==="learn"){S.learn=!S.learn;save();menu();return;}
-  if(a==="menu"){menu();return;}
+  if(a==="menu"){S.day=S.maxLv;save();menu();return;}
   if(a==="school"){showSchool();return;}
   if(a==="map"){showMap();return;}
-  if(a==="playlv"){S.day=Math.min(50,Math.max(1,+el.dataset.i));endData=null;menuMode=false;closeOv();$("home").classList.remove("on");newDay();render();musicStart();if(!S.tutDone)guideStart();return;}
+  if(a==="playlv"){const level=Number(el.dataset.i);if(!validLevel(level)||level>S.maxLv)return;S.day=level;endData=null;menuMode=false;closeOv();$("home").classList.remove("on");newDay();render();musicStart();if(!S.tutDone)guideStart();return;}
   if(a==="lesson"){S.lesson={id:el.dataset.id,step:0,score:0,pick:null};lessonView();return;}
   if(a==="lprev"){S.lesson.step=Math.max(0,S.lesson.step-1);lessonView();return;}
   if(a==="lnext"){const st=S.lesson,L=LESSONS.find(x=>x.id===st.id);
