@@ -11,21 +11,23 @@ function Shot($file, $hash, $w, $h2, $scale, $out) {
 $o = "$r\store\play"
 New-Item -ItemType Directory -Force "$o\telefon", "$o\tablet-7", "$o\tablet-10" | Out-Null
 # telefon 1920x1080
-Shot "demo.html" "menu"  960 540 2 "$o\telefon\1-menu.png"
-Shot "demo.html" "play1" 960 540 2 "$o\telefon\2-kolejka-i-przepis.png"
-Shot "demo.html" "play2" 960 540 2 "$o\telefon\3-idealne-danie.png"
-Shot "demo.html" "play3" 960 540 2 "$o\telefon\4-danie-szefa.png"
-Shot "demo.html" "end"   960 540 2 "$o\telefon\5-opinie-gosci.png"
-Shot "demo.html" "book"  960 540 2 "$o\telefon\6-ksiazka-kucharska.png"
+Shot "demo.html" "menu"   960 540 2 "$o\telefon\1-menu.png"
+Shot "demo.html" "drag"   960 540 2 "$o\telefon\2-chwyc-i-wrzuc.png"
+Shot "demo.html" "play2"  960 540 2 "$o\telefon\3-idealne-danie.png"
+Shot "demo.html" "play4"  960 540 2 "$o\telefon\4-alergia-i-higiena.png"
+Shot "demo.html" "school" 960 540 2 "$o\telefon\5-szkola-gastronomii.png"
+Shot "demo.html" "lesson" 960 540 2 "$o\telefon\6-lekcja.png"
+Shot "demo.html" "quiz"   960 540 2 "$o\telefon\7-pytanie-dnia.png"
+Shot "demo.html" "end"    960 540 2 "$o\telefon\8-opinie-gosci.png"
 # tablet 7" 1920x1200
-Shot "demo.html" "play1" 1280 800 1.5 "$o\tablet-7\1-kolejka-i-przepis.png"
-Shot "demo.html" "play2" 1280 800 1.5 "$o\tablet-7\2-idealne-danie.png"
-Shot "demo.html" "end"   1280 800 1.5 "$o\tablet-7\3-opinie-gosci.png"
+Shot "demo.html" "play1"  1280 800 1.5 "$o\tablet-7\1-kolejka-i-przepis.png"
+Shot "demo.html" "play4"  1280 800 1.5 "$o\tablet-7\2-alergia-i-higiena.png"
+Shot "demo.html" "school" 1280 800 1.5 "$o\tablet-7\3-szkola-gastronomii.png"
 # tablet 10" 2560x1600
-Shot "demo.html" "play1" 1280 800 2 "$o\tablet-10\1-kolejka-i-przepis.png"
-Shot "demo.html" "play3" 1280 800 2 "$o\tablet-10\2-danie-szefa.png"
-Shot "demo.html" "menu"  1280 800 2 "$o\tablet-10\3-menu.png"
-Shot "demo.html" "book"  1280 800 2 "$o\tablet-10\4-ksiazka-kucharska.png"
+Shot "demo.html" "play1"  1280 800 2 "$o\tablet-10\1-kolejka-i-przepis.png"
+Shot "demo.html" "play4"  1280 800 2 "$o\tablet-10\2-alergia-i-higiena.png"
+Shot "demo.html" "school" 1280 800 2 "$o\tablet-10\3-szkola-gastronomii.png"
+Shot "demo.html" "quiz"   1280 800 2 "$o\tablet-10\4-pytanie-dnia.png"
 # grafika funkcji 1024x500
 Shot "feature.html" "x" 1024 500 1 "$o\grafika-funkcji-1024x500.png"
 Copy-Item "$r\store\icon-512.png" "$o\ikona-512.png" -Force

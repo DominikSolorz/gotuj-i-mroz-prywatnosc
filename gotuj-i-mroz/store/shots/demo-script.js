@@ -27,7 +27,28 @@
     finish();
     if(sc==="menu"){S.day=5;menu();}
     if(sc==="book"){S.bookTab="pan";S.running=false;showBook();}
-    if(sc==="end"){S.running=true;S.earned=224;S.served=14;S.lost=1;S.stat={ideal:6,good:6,late:2};S.time=0;S.q=[];endDay();}
+    if(sc==="end"){S.running=true;S.earned=224;S.served=14;S.lost=1;S.incidents=0;S.stat={ideal:6,good:6,late:2};S.time=0;S.q=[];endDay();showEnd();}
+  }
+  if(sc==="drag"){
+    setup(5,5);
+    const F=focusInfo();put(F.stIdx,F.r.ing.slice(0,1));
+    S.stock.maslo=3;act({act:"ing",id:"maslo"});S.hand=null;S.stock.maslo=3;
+    S.tab="dairy";dirty=true;finish();
+    const m=document.querySelector(".st.micro");
+    if(m){m.classList.add("drop");const b=m.getBoundingClientRect();const g=ghostShow("🧈");g.style.left=(b.left+b.width*.5)+"px";g.style.top=(b.top+b.height*.2)+"px";}
+  }
+  if(sc==="play4"){
+    setup(6,4);
+    const c=S.q[1];c.allergy="mleko";c.orders=[{k:"free",need:"kurczak",avoid:"mleko",got:false}];
+    S.focusC=c;S.stock.kurczak=3;
+    act({act:"ing",id:"kurczak"});act({act:"station",i:sIdx("pan")});
+    S.tab="veg";dirty=true;finish();
+  }
+  if(sc==="school"||sc==="lesson"||sc==="quiz"){
+    setup(5,3);S.done=["higiena","techniki"];finish();
+    if(sc==="school"){showSchool();}
+    if(sc==="lesson"){menuMode=true;S.lesson={id:"temperatury",step:1,score:0,pick:null};lessonView();}
+    if(sc==="quiz"){menuMode=false;S.quiz={q:QBANK.find(x=>x.q.indexOf("głęboko mrożoną")>=0),done:true,pick:0};renderQuiz();}
   }
   if(sc==="play2"){
     setup(8,4);

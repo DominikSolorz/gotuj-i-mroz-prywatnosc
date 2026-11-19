@@ -12,9 +12,10 @@ Wciel się w szefową kuchni i poprowadź własną restaurację!
 Klienci wchodzą drzwiami, ustawiają się w kolejce przy ladzie i czekają na swoje zamówienie. Zdążysz na czas? Zapłacą i zostawią napiwek. Spóźnisz się? Wyjdą głodni i bez płacenia.
 
 GOTUJ I MROŹ
-• Garnek, patelnia, piekarnik i zamrażarka – cztery urządzenia do obsługi jednocześnie.
+• Garnek, patelnia, piekarnik, mikrofalówka i zamrażarka – pięć urządzeń do obsługi jednocześnie.
+• Chwyć składnik palcem i wrzuć go do urządzenia, a gotowe danie przeciągnij do klienta. Możesz też po prostu dotykać.
 • Warzywa, owoce, mięso, nabiał i produkty spiżarni – 46 składników.
-• 65 prawdziwych przepisów: żurek, bigos, pierogi, schabowy, pizza, lasagne, szarlotka, lody, sorbety i wiele więcej.
+• 72 prawdziwe przepisy: żurek, bigos, pierogi, schabowy, pizza, lasagne, szarlotka, lody, sorbety i wiele więcej.
 
 
 SZKOŁA GASTRONOMII

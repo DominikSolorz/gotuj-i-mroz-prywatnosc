@@ -52,13 +52,13 @@ button{font:inherit;color:inherit}
 .st.target{outline:4px solid var(--gold);outline-offset:-1px;animation:glow2 .9s infinite alternate}
 @keyframes pulse{to{transform:scale(1.03)}}
 @keyframes glow2{to{outline-color:rgba(255,210,94,.35)}}
-.st .nm{font-weight:900;font-size:clamp(10px,2vh,14px)}
+.st .nm{font-weight:900;font-size:clamp(9px,1.9vh,14px);padding:0 14px;line-height:1.1;text-align:center}
 .st .big{font-size:clamp(24px,7vh,46px);line-height:1}
 .st.cooking .big{animation:wob .5s infinite alternate}
 @keyframes wob{from{transform:rotate(-6deg)}to{transform:rotate(6deg)}}
 .st .slots{display:flex;gap:1px;min-height:20px;font-size:clamp(14px,3.2vh,22px);justify-content:center;flex-wrap:wrap;line-height:1.1}
 .st .msg{font-size:clamp(9px,1.7vh,12px);font-weight:700;text-align:center;line-height:1.1}
-.st .clr{position:absolute;top:2px;right:2px;border:0;background:rgba(0,0,0,.15);border-radius:50%;width:24px;height:24px;font-size:11px;cursor:pointer}
+.st .clr{position:absolute;top:2px;right:2px;border:0;background:rgba(0,0,0,.15);border-radius:50%;width:20px;height:20px;font-size:10px;cursor:pointer;line-height:1;padding:0}
 .st .go{background:var(--accent);color:#fff;border:0;border-radius:8px;font-weight:900;font-size:12px;padding:4px 8px;box-shadow:0 2px 0 #b04a12;cursor:pointer}
 .bar{height:7px;width:100%;background:rgba(0,0,0,.18);border-radius:5px;overflow:hidden}
 .bar i{display:block;height:100%;width:0}
@@ -146,6 +146,11 @@ button{font:inherit;color:inherit}
 .lesson .rp{margin-left:auto;font-weight:900;color:#2e8b57}
 .expl{background:#fff0c9;border-radius:10px;padding:8px 10px;font-size:14px;text-align:left}
 .nav{display:flex;gap:8px;justify-content:center}
+.st.micro{background:linear-gradient(#e8ecf3,#b3bccd);border-color:#6f7f9c}
+.st.drop{transform:scale(1.05);box-shadow:0 0 0 5px var(--gold),0 0 18px rgba(255,210,94,.9)}
+#ghost{position:fixed;left:0;top:0;pointer-events:none;font-size:46px;line-height:1;transform:translate(-50%,-70%) rotate(-8deg);z-index:30;display:none;filter:drop-shadow(0 8px 6px rgba(0,0,0,.45))}
+body.dragging,body.dragging *{cursor:grabbing!important}
+.tile,.chip{cursor:grab}
 </style>
 </head>
 <body>
@@ -198,6 +203,7 @@ const STN=[
   {type:"pot",name:"Garnek",e:"🍲",cls:"",noun:"Potrawka",ce:"🥘"},
   {type:"pan",name:"Patelnia",e:"🍳",cls:"",noun:"Z patelni",ce:"🍳"},
   {type:"oven",name:"Piekarnik",e:"♨️",cls:"oven",noun:"Zapiekanka",ce:"🥧"},
+  {type:"micro",name:"Mikrofalówka",e:"⚡",cls:"micro",noun:"Z mikrofalówki",ce:"🥣"},
   {type:"frz",name:"Zamrażarka",e:"❄️",cls:"frz",noun:"Deser",ce:"🍨"}
 ];
 const RECIPES=[ // id, nazwa, emoji, urządzenie, składniki, czas, cena, dzień odblokowania
@@ -250,6 +256,13 @@ const RECIPES=[ // id, nazwa, emoji, urządzenie, składniki, czas, cena, dzień
  ["pizzahaw","Pizza hawajska","🍍","oven","maka ser ananas",6,20,9],
  ["brownie","Brownie","🍫","oven","czekolada jajko orzechy maka",6,20,10],
  ["schabpiecz","Schab pieczony","🍖","oven","schab jablko cebula",7,24,10],
+ ["kakao","Gorące kakao","☕","micro","mleko czekolada",3,9,2],
+ ["ziemmaslo","Ziemniaki z masłem","🥔","micro","ziemniak ziemniak maslo",4,10,3],
+ ["jajkokubek","Omlet w kubku","🍳","micro","jajko jajko ser",3,11,3],
+ ["ryzmleko","Ryż na mleku","🍚","micro","ryz mleko miod",4,12,4],
+ ["brokpara","Brokuły na parze","🥦","micro","brokul maslo cytryna",4,13,5],
+ ["jablkomiod","Jabłko z miodem","🍎","micro","jablko miod orzechy",3,12,6],
+ ["ciastokubek","Ciasto w kubku","🧁","micro","maka jajko czekolada maslo",4,15,7],
  ["sorbett","Sorbet truskawkowy","🍧","frz","truskawka truskawka cytryna",5,14,1],
  ["lodybanan","Lody bananowe","🍦","frz","banan banan mleko",5,14,2],
  ["koktajl","Koktajl mrożony","🥤","frz","jagoda banan jablko",5,17,3],
@@ -289,6 +302,7 @@ const AL={ // alergeny gości
 };
 const dishHas=(g,ing)=>ing.some(i=>AL[g].ing.includes(i));
 const isRaw=id=>ING[id].c==="meat"||id==="jajko";
+const hyg=()=>S.learn&&S.day>=2; // zasady higieny od dnia 2
 const LESSONS=[
  {id:"higiena",icon:"🧼",title:"Higiena i HACCP",cards:[
   "Myj ręce przed pracą, po dotknięciu surowego mięsa, ryb i jajek oraz po wyjściu do toalety. Używaj mydła i myj co najmniej 20–30 sekund.",
@@ -312,8 +326,10 @@ const LESSONS=[
   "Gotowanie w garnku, czyli w wodzie lub bulionie, jest łagodne. To najlepszy sposób na zupy, makarony i ziemniaki.",
   "Smażenie na patelni to wysoka temperatura. Powstaje rumiana skórka (reakcja Maillarda). Nie przepełniaj patelni, bo jedzenie zacznie się dusić zamiast rumienić.",
   "Pieczenie w piekarniku to suche, gorące powietrze. Dobre do ciast, pizzy, zapiekanek i pieczeni.",
-  "Gotowanie na parze i duszenie zachowują więcej smaku i witamin. Do deserów lodowych służy zamrażarka, a składniki łączymy zanim zamarzną."],
+  "Gotowanie na parze i duszenie zachowują więcej smaku i witamin. Do deserów lodowych służy zamrażarka, a składniki łączymy zanim zamarzną.",
+  "Mikrofalówka podgrzewa żywność szybko, ale nierówno. Mieszaj potrawę, odczekaj chwilę i sprawdź temperaturę. Nie wkładaj metalowych naczyń, folii aluminiowej ani jajek w skorupce."],
   q:[
+  {q:"Czego NIE wolno wkładać do mikrofalówki?",a:["Szklanego kubka","Metalowych naczyń i folii aluminiowej","Ceramicznego talerza"],c:1,w:"Metal odbija mikrofale i powoduje iskrzenie, co grozi pożarem. Jajka w skorupce mogą wybuchnąć."},
   {q:"Które urządzenie najlepiej nadaje się do zup?",a:["Garnek","Zamrażarka","Patelnia"],c:0,w:"Zupy gotujemy w garnku, w wodzie lub bulionie."},
   {q:"Dlaczego nie przepełniamy patelni?",a:["Bo jedzenie dusi się zamiast się rumienić","Bo zużywamy za dużo gazu","Bo wyjdzie zbyt słodkie"],c:0,w:"Za dużo jedzenia obniża temperaturę i wydziela parę, więc nie powstaje skórka."},
   {q:"Co robi piekarnik?",a:["Piecze suchym, gorącym powietrzem","Mrozi","Gotuje w wodzie"],c:0,w:"Piekarnik jest do pieczenia i zapiekania."}]},
@@ -538,7 +554,7 @@ function act(d){
     case "ing": {
       const id=d.id;
       if(S.hand&&S.hand.t==="dish"){say("Ręce zajęte potrawą! Podaj ją klientowi 🍽️");sfx.bad();break;}
-      if(S.learn&&S.dirty&&!isRaw(id)){say("🧼 Najpierw umyj ręce po surowym mięsie, rybach lub jajkach! (higiena, HACCP)");sfx.bad();break;}
+      if(hyg()&&S.dirty&&!isRaw(id)){say("🧼 Najpierw umyj ręce po surowym mięsie, rybach lub jajkach! (higiena, HACCP)");sfx.bad();break;}
       if(S.hand&&S.hand.t==="ing"){
         S.stock[S.hand.id]++;
         if(S.hand.id===id){S.hand=null;sfx.put();dirty=true;break;}
@@ -549,7 +565,7 @@ function act(d){
         S.coins-=ING[id].p;sfx.buy();
       }else S.stock[id]--;
       S.hand={t:"ing",id};sfx.take();dirty=true;
-      if(isRaw(id)&&S.learn&&!S.dirty){S.dirty=true;say("⚠️ Surowy produkt! Po jego użyciu umyj ręce 🧼");}
+      if(isRaw(id)&&hyg()&&!S.dirty){S.dirty=true;say("⚠️ Surowy produkt! Po jego użyciu umyj ręce 🧼");}
       break;
     }
     case "wash": {
@@ -583,7 +599,7 @@ function stationTap(i){
   const st=S.st[i],def=STN[i];
   if(!S.hand){
     if(st.state==="done"){
-      if(S.learn&&S.dirty){say("🧼 Umyj ręce, zanim weźmiesz gotowe danie! (zanieczyszczenie krzyżowe)");sfx.bad();return;}
+      if(hyg()&&S.dirty){say("🧼 Umyj ręce, zanim weźmiesz gotowe danie! (zanieczyszczenie krzyżowe)");sfx.bad();return;}
       const q=quality(st);S.hand={t:"dish",dish:st.dish,q};resetSt(st);sfx.take();dirty=true;haptic(15);
       say(S.hand.dish.e+" "+S.hand.dish.name+" — "+q.l+"! Podaj klientowi przy ladzie");
     }
@@ -716,7 +732,7 @@ function showSchool(){
   menuMode=true;S.running=false;
   const all=S.done.length===LESSONS.length;
   overlay(`<h2>🎓 Szkoła gastronomii</h2><p class="sub">Ukończone lekcje: ${S.done.length}/${LESSONS.length}${all?" · 🏅 Certyfikat Mistrza Gastronomii!":""}</p>`+
-    LESSONS.map(l=>`<button class="lesson" data-act="lesson" data-id="${l.id}"><span class="re">${l.icon}</span><span><b>${l.title}</b><small>${l.cards.length} kart + quiz (3 pytania)</small></span><span class="rp">${S.done.includes(l.id)?"✅":"▶"}</span></button>`).join("")+
+    LESSONS.map(l=>`<button class="lesson" data-act="lesson" data-id="${l.id}"><span class="re">${l.icon}</span><span><b>${l.title}</b><small>${l.cards.length} kart + quiz (${l.q.length} pyt.)</small></span><span class="rp">${S.done.includes(l.id)?"✅":"▶"}</span></button>`).join("")+
     `<p class="sub" style="margin-top:6px">Za ukończenie lekcji (min. 2 z 3 poprawnych) dostajesz 25 zł. Dzięki lekcjom lepiej wiesz, co robić w grze.</p>
      <button class="bigbtn alt" data-act="menu">Wróć do menu</button>`);
 }
@@ -736,7 +752,7 @@ function lessonView(){
       (pick!==null?`<p class="expl">${pick===q.c?"✅ Dobrze!":"❌ Nie tym razem."} ${q.w}</p><button class="bigbtn" data-act="lnext">${qi===L.q.length-1?"Wynik ▶":"Dalej ▶"}</button>`:""));
     return;
   }
-  const pass=st.score>=2,first=pass&&!S.done.includes(L.id);
+  const pass=st.score>=Math.ceil(L.q.length*2/3),first=pass&&!S.done.includes(L.id);
   if(first){S.done.push(L.id);S.coins+=25;save();sfx.tada();}
   const all=S.done.length===LESSONS.length;
   overlay(`<h2>${pass?"Lekcja zaliczona! 🎉":"Spróbuj jeszcze raz 💪"}</h2><div class="stars">${pass?"⭐":"☆"}</div>
@@ -955,7 +971,7 @@ function render(){
     else if(F.st.state==="burnt")hint="🔥 Przypalone! Dotknij: "+sn.name+", żeby wyrzucić";
     else if(F.st.state!=="idle")hint="⏳ "+sn.name+" jest zajęta — poczekaj albo ✖";
     else if(S.hand&&S.hand.t==="ing")hint=need.has(S.hand.id)?"👉 Wrzuć do: "+sn.e+" "+sn.name:(S.hints?"❌ Tego składnika nie potrzeba — odłóż 🗑️":"👉 Wrzuć do: "+sn.e+" "+sn.name);
-    else if(S.hints){const nx=F.chips.find(x=>!x.done);if(nx){const cat=CATS.find(c=>c[0]===ING[nx.id].c);hint="👆 Weź: "+ING[nx.id].e+" "+ING[nx.id].n+" (zakładka "+cat[1]+" "+cat[2]+")";}
+    else if(S.hints){const nx=F.chips.find(x=>!x.done);if(nx){const cat=CATS.find(c=>c[0]===ING[nx.id].c);hint="👆 Chwyć "+ING[nx.id].e+" "+ING[nx.id].n+" (zakładka "+cat[1]+" "+cat[2]+") i wrzuć do: "+sn.e+" "+sn.name;}
       else if(F.st.state==="idle")hint="▶ Dotknij „Gotuj” w urządzeniu";}
     else hint="📖 Sprawdź przepis w książce kucharskiej";
     rc=`<div class="rc-head"><span class="rc-e">${r.e}</span><div><b>${r.name}</b><small>${r.price} zł · ${r.ing.length} składniki</small></div><span class="rc-st">${sn.e} ${sn.name}</span></div>`+
@@ -989,7 +1005,7 @@ function render(){
     else h=`✋ <span class="he">${S.hand.dish.e}</span> ${S.hand.dish.name} · ${S.hand.q.l}`;
   }
   $("hand").innerHTML=h;
-  $("wash").classList.toggle("dirty",!!(S.learn&&S.dirty));$("wash").style.display=S.learn?"":"none";
+  $("wash").classList.toggle("dirty",!!(hyg()&&S.dirty));$("wash").style.display=hyg()?"":"none";
   // spiżarnia
   const used=usedIng();
   const cats=CATS.filter(c=>[...used].some(i=>ING[i].c===c[0]));
@@ -1052,6 +1068,7 @@ function menu(){
     <p class="sub">Ucz się gastronomii: gotuj, mroź, podawaj i dbaj o higienę</p>
     <div class="stats"><div>Dzień<b>${S.day}</b></div><div>Ocena<b>★ ${S.rep.toFixed(1)}</b></div><div>Przepisy<b>${known}/${RECIPES.length}</b></div><div>Lekcje<b>${S.done.length}/${LESSONS.length}</b></div><div>Rekord<b>${S.best} zł</b></div></div>
     <p style="text-align:left;font-size:13px">
+    🖐️ <b>Chwyć</b> składnik (przytrzymaj i przeciągnij) i <b>wrzuć</b> do garnka, patelni, piekarnika, mikrofalówki lub zamrażarki. Gotowe danie przeciągnij do klienta. Możesz też po prostu dotykać.<br>
     🚪 Klienci wchodzą i stoją w kolejce — <b>nie zdążysz, nie zapłacą</b>.<br>
     📋 Karta przepisu prowadzi Cię krok po kroku.<br>
     ⭐ Wyjmij danie szybko = <b>idealne</b> (więcej pieniędzy i seria 🔥). Za późno = przypalone.<br>
@@ -1071,6 +1088,20 @@ document.addEventListener("pointerdown",e=>{
   const el=e.target.closest("[data-act]");if(!el)return;
   e.preventDefault();
   const a=el.dataset.act;
+  // przeciąganie: składnik z kafelka/karty -> urządzenie, gotowe danie z urządzenia -> klient
+  if(S.running&&a==="ing"){
+    DR={kind:"ing",id:el.dataset.id,x0:e.clientX,y0:e.clientY,pid:e.pointerId,touch:e.pointerType==="touch",started:false,armed:e.pointerType!=="touch"};
+    if(DR.touch)DR.timer=setTimeout(()=>{if(DR){DR.armed=true;haptic(12);}},160);
+    return;
+  }
+  if(S.running&&a==="station"){
+    const sti=S.st[+el.dataset.i];
+    if(sti&&sti.state==="done"&&!S.hand){
+      DR={kind:"dish",i:+el.dataset.i,x0:e.clientX,y0:e.clientY,pid:e.pointerId,touch:e.pointerType==="touch",started:false,armed:e.pointerType!=="touch"};
+      if(DR.touch)DR.timer=setTimeout(()=>{if(DR){DR.armed=true;haptic(12);}},160);
+      return;
+    }
+  }
   if(a==="scene"){if(S.running)sceneTap(e);return;}
   if(a==="startday"){menuMode=false;endData=null;closeOv();newDay();render();beep(660,.12,"triangle");musicStart();return;}
   if(a==="hints"){S.hints=!S.hints;save();menu();return;}
@@ -1103,6 +1134,59 @@ document.addEventListener("pointerdown",e=>{
   if(a==="book"&&menuMode){S.running=false;overlay(bookHTML());return;}
   act(el.dataset);
 });
+/* ---------- przeciąganie ---------- */
+let DR=null;
+function ghostShow(txt){let g=document.getElementById("ghost");if(!g){g=document.createElement("div");g.id="ghost";document.body.appendChild(g);}g.textContent=txt;g.style.display="block";document.body.classList.add("dragging");return g;}
+function ghostHide(){const g=document.getElementById("ghost");if(g)g.style.display="none";document.body.classList.remove("dragging");document.querySelectorAll(".st.drop").forEach(n=>n.classList.remove("drop"));}
+function dragCancel(){if(DR&&DR.timer)clearTimeout(DR.timer);DR=null;ghostHide();}
+document.addEventListener("pointermove",e=>{
+  if(!DR||e.pointerId!==DR.pid)return;
+  const dx=e.clientX-DR.x0,dy=e.clientY-DR.y0,dist=Math.hypot(dx,dy);
+  if(!DR.started){
+    if(!DR.armed){if(dist>10){clearTimeout(DR.timer);DR=null;}return;}
+    if(dist<8)return;
+    DR.started=true;
+    let em="❓";
+    if(DR.kind==="ing")em=ING[DR.id].e;
+    else{const st=S.st[DR.i];em=st&&st.dish?st.dish.e:"🍽️";}
+    ghostShow(em);sfx.take();
+    if(DR.kind==="ing"&&!S.dragTip){S.dragTip=true;}
+  }
+  const g=document.getElementById("ghost");g.style.left=e.clientX+"px";g.style.top=e.clientY+"px";
+  document.querySelectorAll(".st.drop").forEach(n=>n.classList.remove("drop"));
+  const t=document.elementFromPoint(e.clientX,e.clientY),stEl=t&&t.closest&&t.closest("[data-act=station]");
+  if(stEl&&DR.kind==="ing")stEl.classList.add("drop");
+},{passive:true});
+document.addEventListener("pointerup",e=>{
+  if(!DR||e.pointerId!==DR.pid)return;
+  const d=DR;clearTimeout(d.timer);DR=null;
+  if(!d.started){ // zwykłe dotknięcie
+    if(d.kind==="ing")act({act:"ing",id:d.id});else act({act:"station",i:d.i});
+    return;
+  }
+  ghostHide();
+  const t=document.elementFromPoint(e.clientX,e.clientY);
+  if(d.kind==="ing"){
+    const stEl=t&&t.closest("[data-act=station]"),bin=t&&t.closest("#bin");
+    if(stEl){
+      const i=+stEl.dataset.i;
+      if(!(S.hand&&S.hand.t==="ing"&&S.hand.id===d.id))act({act:"ing",id:d.id});
+      if(S.hand&&S.hand.t==="ing"&&S.hand.id===d.id){
+        stationTap(i);
+        if(S.hand&&S.hand.t==="ing"){act({act:"bin"});} // urządzenie nie przyjęło – odłóż
+      }
+    }else if(bin&&S.hand&&S.hand.t==="ing")act({act:"bin"});
+  }else{
+    if(t&&t.id==="scene"){
+      const r=cv.getBoundingClientRect(),x=e.clientX-r.left;
+      let best=-1,bd=1e9;S.q.forEach((c,k)=>{const dd=Math.abs(c.x-x);if(dd<SW*.6&&dd<bd){bd=dd;best=k;}});
+      act({act:"station",i:d.i});
+      if(S.hand&&S.hand.t==="dish"){if(best>=0)custTap(best);else say("Upuść danie na kliencie przy ladzie");}
+    }
+  }
+});
+document.addEventListener("pointercancel",e=>{if(DR&&e.pointerId===DR.pid)dragCancel();});
+document.addEventListener("touchmove",e=>{if(DR&&DR.started)e.preventDefault();},{passive:false});
 document.addEventListener("contextmenu",e=>e.preventDefault());
 window.addEventListener("resize",resize);
 if(window.ResizeObserver)new ResizeObserver(resize).observe($("cust"));
