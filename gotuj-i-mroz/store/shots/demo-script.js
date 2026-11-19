@@ -12,9 +12,10 @@
   function put(idx,ings){ings.forEach(i=>{S.stock[i]=3;act({act:"ing",id:i});act({act:"station",i:idx});});}
   function cook(rid,frac){const r=R(rid),i=sIdx(r.st);put(i,r.ing);S.st[i].t=S.st[i].time*frac;return i;}
   function recOrders(){return S.q.map(c=>c.orders.find(o=>o.k==="rec")).filter(Boolean);}
+  function seat(n){for(let k=0;k<n;k++){const c=makeCust();c.p=c.max;const tb=TBL[k];S.tables[k]=true;S.dine.push({c,table:k,cx:tb.x,cy:tb.y+U*1.25,tx:tb.x,ty:tb.y+U*1.25,state:"eat",t:k*2,alpha:1,dish:["🍲","🍕","🍧"][k%3]});}}
   function finish(){
     S.q.forEach((c,i)=>{c.p=c.max*[.92,.75,.55,.85,.4][i%5];c.walk=false;});
-    S.running=false;dirty=true;render();draw();
+    seat(3);S.running=false;dirty=true;render();draw();
   }
   if(sc==="play1"||sc==="menu"||sc==="book"||sc==="end"){
     setup(sc==="play1"?5:6,5);
@@ -37,6 +38,7 @@
     const m=document.querySelector(".st.micro");
     if(m){m.classList.add("drop");const b=m.getBoundingClientRect();const g=ghostShow("🧈");g.style.left=(b.left+b.width*.5)+"px";g.style.top=(b.top+b.height*.2)+"px";}
   }
+  if(sc==="map"){setup(5,3);S.maxLv=14;S.stars={1:3,2:3,3:2,4:3,5:2,6:1,7:3,8:2,9:2,10:3,11:1,12:2,13:3};S.day=14;finish();showMap();}
   if(sc==="play4"){
     setup(6,4);
     const c=S.q[1];c.allergy="mleko";c.orders=[{k:"free",need:"kurczak",avoid:"mleko",got:false}];

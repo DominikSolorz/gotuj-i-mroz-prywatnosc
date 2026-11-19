@@ -16,7 +16,7 @@ Shot "demo.html" "drag"   960 540 2 "$o\telefon\2-chwyc-i-wrzuc.png"
 Shot "demo.html" "play2"  960 540 2 "$o\telefon\3-idealne-danie.png"
 Shot "demo.html" "play4"  960 540 2 "$o\telefon\4-alergia-i-higiena.png"
 Shot "demo.html" "school" 960 540 2 "$o\telefon\5-szkola-gastronomii.png"
-Shot "demo.html" "lesson" 960 540 2 "$o\telefon\6-lekcja.png"
+Shot "demo.html" "map"    960 540 2 "$o\telefon\6-mapa-poziomow.png"
 Shot "demo.html" "quiz"   960 540 2 "$o\telefon\7-pytanie-dnia.png"
 Shot "demo.html" "end"    960 540 2 "$o\telefon\8-opinie-gosci.png"
 # tablet 7" 1920x1200

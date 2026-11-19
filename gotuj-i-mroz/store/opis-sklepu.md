@@ -18,6 +18,12 @@ GOTUJ I MROŹ
 • 72 prawdziwe przepisy: żurek, bigos, pierogi, schabowy, pizza, lasagne, szarlotka, lody, sorbety i wiele więcej.
 
 
+50 POZIOMÓW W 5 ROZDZIAŁACH
+• Od baru mlecznego po mistrzostwa kuchni. Mapa poziomów z gwiazdkami, a nowe przepisy i wyzwania odblokowują się stopniowo.
+• Klienci cierpliwie czekają do 3 minut, a licznik czasu nad każdym pokazuje, ile im zostało.
+• Zadowoleni goście zasiadają do stołów w jadalni i jedzą zamówienie.
+• Urządzenia są narysowane: garnek gotuje, patelnia smaży, piekarnik piecze, mikrofalówka grzeje, a zamrażarka mrozi.
+
 ŁATWY START
 • Poradnik krok po kroku pokazuje, gdzie co jest: klienci, karta przepisu, spiżarnia i kuchnia.
 • Poziom łatwy (domyślny) daje więcej czasu i mniej klientów. Gdy nic nie robisz, animowana ręka pokazuje, co dokąd przeciągnąć.
