@@ -165,6 +165,16 @@ button{font:inherit;color:inherit}
 .lesson .rp{margin-left:auto;font-weight:900;color:#2e8b57}
 .expl{background:#fff0c9;border-radius:10px;padding:8px 10px;font-size:14px;text-align:left}
 .nav{display:flex;gap:8px;justify-content:center}
+.how{display:flex;flex-wrap:wrap;align-items:stretch;justify-content:center;gap:4px;margin:10px 0}
+.how .hs{background:#fff;border:2px solid #e3c79a;border-radius:14px;padding:6px 6px 4px;width:92px;position:relative}
+.how .hs i{position:absolute;left:-6px;top:-8px;background:var(--accent);color:#fff;border-radius:50%;width:22px;height:22px;font-style:normal;font-weight:900;font-size:13px;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 0 #b04a12}
+.how .hs b{display:block;font-size:30px;line-height:1.1}
+.how .hs small{display:block;font-size:11px;font-weight:700;line-height:1.15;margin-top:2px}
+.how .ar{align-self:center;font-weight:900;font-size:18px;opacity:.5}
+.howtips{text-align:left;font-size:13px;font-weight:700;margin:6px 0}
+.howtips div{background:#fff0c9;border-radius:10px;padding:5px 9px;margin:4px 0}
+.gbtn{background:var(--accent);color:#fff;border:0;border-radius:12px;padding:8px 16px;font-weight:900;font-size:15px;box-shadow:0 3px 0 #b04a12;cursor:pointer;align-self:flex-start}
+.gskip{background:transparent;border:0;color:#8a6a55;font-size:11px;text-decoration:underline;cursor:pointer;align-self:flex-end;padding:0}
 .chap{margin:10px 0 4px;text-align:left;font-size:13px}
 .lvgrid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
 .lv{background:#fff;border:2px solid #e3c79a;border-radius:10px;padding:6px 2px;cursor:pointer;font-size:15px;line-height:1.1}
@@ -537,7 +547,7 @@ function makeCust(){
   const type=roll<Math.max(.04,.08+(S.rep-3)*.03)?"vip":(S.day>=12&&roll>.93?"critic":"normal");
   const m=Math.min(240,maxPat()*(n===2?1.6:1)*(type==="vip"?.8:1));
   return {x:-60,orders,type,allergy,p:m,max:m,walk:true,phase:Math.random()*6,
-    skin:rnd(SKINS),hair:rnd(HAIRS),hs:Math.floor(Math.random()*6),style:Math.floor(Math.random()*4),shirt:rnd(SHIRTS),
+    skin:rnd(SKINS),hair:rnd(HAIRS),eye:rnd(["#3b2a1a","#2f6a4f","#2f5d9a","#6a4a2a","#5a3a7a"]),lash:Math.random()<.35,hs:Math.floor(Math.random()*6),style:Math.floor(Math.random()*4),shirt:rnd(SHIRTS),
     must:Math.random()<.25,glasses:Math.random()<.25,hat:rnd(SHIRTS)};
 }
 function leave(i,happy){
@@ -746,7 +756,7 @@ function sceneTap(e){
 const slotX=k=>QW-SW*.62-k*SW;
 function tick(dt){
   if(!S.running)return;
-  if(S.time>0)S.time-=dt;
+  if(S.time>0&&!S.guide)S.time-=dt;
   eventTick(dt);
   if(S.time>0){
     S.spawn-=dt;
@@ -786,6 +796,7 @@ function tick(dt){
       if(st.type!=="frz"&&st.age>=burnAfter()){st.state="burnt";dirty=true;sfx.burn();say("Przypaliło się! 🔥");}
     }
   });
+  if(S.guide)guideTick();
   if(S.time<=0&&S.q.length===0)endDay();
 }
 function reviews(){
@@ -1051,66 +1062,84 @@ function paintFG(b){
   b.font=`${U*1.5}px ${EF}`;b.textAlign="center";b.textBaseline="alphabetic";
   b.fillText("🛎️",QW*.06,CT+th*.85);b.fillText("🫙",QW*.52,CT+th*.85);b.fillText("🧾",QW*.3,CT+th*.85);
 }
+function shade(hex,p){ // rozjaśnij (p>0) lub przyciemnij (p<0)
+  const n=parseInt(hex.slice(1),16),r0=n>>16,g0=(n>>8)&255,b0=n&255;
+  const m=p<0?0:255,k=Math.abs(p),mix=v=>Math.round(v+(m-v)*k);
+  return `rgb(${mix(r0)},${mix(g0)},${mix(b0)})`;
+}
 function person(c,alpha,dy){
-  const tt=performance.now()/1000,ph=c.phase||0;
-  const r=U*.95,walk=c.walk;
-  const bob=walk?-Math.abs(Math.sin(ph))*U*.28:Math.sin(tt*1.7+ph)*U*.05;
-  const sway=walk?Math.sin(ph)*U*.1:Math.sin(tt*1.1+ph)*U*.06;
-  const x=c.x+sway,y=CT-U*3.3+bob+(dy||0);
-  const f=c.p/c.max,blink=((tt+ph*3)%4.3)<.12;
-  g.save();g.globalAlpha=alpha;
-  // tył włosów (długie / kok)
-  g.fillStyle=c.hair;
-  if(c.hs===1){rr(g,x-r*1.12,y-r*1.0,r*2.24,r*2.9,r*.9);g.fill();}
-  if(c.hs===4){g.beginPath();g.arc(x,y-r*1.25,r*.5,0,7);g.fill();}
-  // tułów
-  const tw=U*3.1,tx=x-tw/2,ty=y+r*.9,th=CT-ty+U*1.4;
-  g.fillStyle=c.shirt;rr(g,tx,ty,tw,th,U*.9);g.fill();
-  // wzór koszulki
-  g.save();rr(g,tx,ty,tw,th,U*.9);g.clip();
-  if(c.style===1){g.fillStyle="rgba(255,255,255,.22)";for(let k=0;k<5;k++)g.fillRect(tx,ty+U*(.6+k*.75),tw,U*.28);}
-  else if(c.style===2){g.fillStyle="rgba(0,0,0,.18)";g.fillRect(x-U*.1,ty,U*.2,th);g.fillStyle="rgba(255,255,255,.35)";for(let k=0;k<3;k++){g.beginPath();g.arc(x,ty+U*(1+k*.8),U*.12,0,7);g.fill();}}
-  else if(c.style===3){g.fillStyle="rgba(0,0,0,.16)";rr(g,x-U*.9,ty+U*.1,U*1.8,U*.9,U*.4);g.fill();}
+  const tt=performance.now()/1000,ph=c.phase||0,walk=c.walk;
+  const R=U*1.2,OL="#3b2218",lw=Math.max(1.2,U*.1);
+  const bob=walk?-Math.abs(Math.sin(ph))*U*.3:Math.sin(tt*1.7+ph)*U*.05;
+  const sway=walk?Math.sin(ph)*U*.12:Math.sin(tt*1.1+ph)*U*.07;
+  const x=c.x+sway,hy=CT-U*3.55+bob+(dy||0);
+  const f=c.p/c.max,blink=((tt+ph*3)%4.3)<.12,angry=f<.25,happy=f>.55;
+  g.save();g.globalAlpha=alpha;g.lineJoin="round";g.lineCap="round";g.lineWidth=lw;g.strokeStyle=OL;
+  // tył włosów
+  if(c.hs===1){g.fillStyle=c.hair;rr(g,x-R*1.18,hy-R*1.05,R*2.36,R*3.0,R*.9);g.fill();g.stroke();}
+  // tułów (cieniowany)
+  const tw=U*3.3,tx=x-tw/2,ty=hy+R*.78,th=CT-ty+U*1.7;
+  let gr=g.createLinearGradient(tx,0,tx+tw,0);gr.addColorStop(0,shade(c.shirt,.22));gr.addColorStop(.55,c.shirt);gr.addColorStop(1,shade(c.shirt,-.25));
+  g.fillStyle=gr;rr(g,tx,ty,tw,th,U*1.0);g.fill();g.stroke();
+  g.save();rr(g,tx,ty,tw,th,U*1.0);g.clip();
+  if(c.style===1){g.fillStyle="rgba(255,255,255,.25)";for(let k=0;k<5;k++)g.fillRect(tx,ty+U*(.8+k*.8),tw,U*.3);}
+  else if(c.style===2){g.fillStyle="rgba(0,0,0,.2)";g.fillRect(x-U*.08,ty,U*.16,th);g.fillStyle="rgba(255,255,255,.55)";for(let k=0;k<3;k++){g.beginPath();g.arc(x,ty+U*(1.1+k*.8),U*.13,0,7);g.fill();}}
+  else if(c.style===3){g.fillStyle="rgba(0,0,0,.18)";rr(g,x-U*1.0,ty+U*.2,U*2.0,U*1.0,U*.45);g.fill();}
   g.restore();
   // kołnierzyk
-  g.fillStyle="rgba(255,255,255,.3)";g.beginPath();g.moveTo(x-U*.55,ty);g.lineTo(x,ty+U*.7);g.lineTo(x+U*.55,ty);g.closePath();g.fill();
-  if(c.type==="vip"){g.fillStyle="#ffd25e";g.fillRect(x-U*.12,ty+U*.2,U*.24,U*1.5);}
-  // ręce oparte o ladę
-  g.fillStyle=c.shirt;rr(g,tx-U*.35,ty+U*.2,U*.7,U*1.9,U*.35);g.fill();rr(g,tx+tw-U*.35,ty+U*.2,U*.7,U*1.9,U*.35);g.fill();
-  g.fillStyle=c.skin;g.beginPath();g.ellipse(tx,ty+U*2.2,U*.36,U*.3,0,0,7);g.ellipse(tx+tw,ty+U*2.2,U*.36,U*.3,0,0,7);g.fill();
-  // szyja i głowa
-  g.fillStyle=c.skin;g.fillRect(x-r*.28,y+r*.7,r*.56,r*.5);
-  g.beginPath();g.arc(x,y,r,0,7);g.fill();
-  g.beginPath();g.arc(x-r,y+r*.1,r*.2,0,7);g.arc(x+r,y+r*.1,r*.2,0,7);g.fill();
-  // policzki
-  if(f>.5){g.fillStyle="rgba(255,120,120,.28)";g.beginPath();g.arc(x-r*.55,y+r*.38,r*.2,0,7);g.arc(x+r*.55,y+r*.38,r*.2,0,7);g.fill();}
-  // włosy (góra)
+  g.fillStyle="#fff";g.beginPath();g.moveTo(x-U*.7,ty-U*.02);g.lineTo(x,ty+U*.85);g.lineTo(x+U*.7,ty-U*.02);g.closePath();g.fill();g.stroke();
+  if(c.type==="vip"){g.fillStyle="#ffd25e";g.beginPath();g.moveTo(x-U*.15,ty+U*.7);g.lineTo(x+U*.15,ty+U*.7);g.lineTo(x+U*.25,ty+U*2);g.lineTo(x-U*.25,ty+U*2);g.closePath();g.fill();g.stroke();}
+  // ręce: lewa opiera się o ladę, prawa macha, gdy klient jest zniecierpliwiony
+  const sh=ty+U*.5;
+  g.strokeStyle=OL;g.fillStyle=c.shirt;
+  const arm=(sx,sy,ex,ey)=>{g.lineWidth=U*.95+lw*2;g.strokeStyle=OL;g.beginPath();g.moveTo(sx,sy);g.lineTo(ex,ey);g.stroke();g.lineWidth=U*.95;g.strokeStyle=c.shirt;g.beginPath();g.moveTo(sx,sy);g.lineTo(ex,ey);g.stroke();
+    g.lineWidth=lw;g.strokeStyle=OL;g.fillStyle=c.skin;g.beginPath();g.arc(ex,ey,U*.46,0,7);g.fill();g.stroke();};
+  arm(tx+U*.2,sh,tx-U*.2,ty+U*2.9);
+  if(angry)arm(tx+tw-U*.2,sh,tx+tw+U*.5,ty-U*.2+Math.sin(tt*9)*U*.35);
+  else arm(tx+tw-U*.2,sh,tx+tw+U*.2,ty+U*2.9);
+  g.lineWidth=lw;g.strokeStyle=OL;
+  // szyja
+  g.fillStyle=shade(c.skin,-.12);g.fillRect(x-R*.3,hy+R*.6,R*.6,R*.4);
+  // uszy
+  g.fillStyle=c.skin;g.beginPath();g.arc(x-R*.98,hy+R*.1,R*.2,0,7);g.arc(x+R*.98,hy+R*.1,R*.2,0,7);g.fill();g.stroke();
+  // głowa (gradient)
+  gr=g.createRadialGradient(x-R*.3,hy-R*.35,R*.1,x,hy,R*1.1);gr.addColorStop(0,shade(c.skin,.28));gr.addColorStop(1,c.skin);
+  g.fillStyle=gr;g.beginPath();g.arc(x,hy,R,0,7);g.fill();g.stroke();
+  // włosy / czapka
   g.fillStyle=c.hair;
-  if(c.hs===0||c.hs===1||c.hs===4){g.beginPath();g.arc(x,y-r*.3,r*1.06,Math.PI,Math.PI*2);g.closePath();g.fill();}
-  else if(c.hs===2){g.fillStyle=c.hat;g.beginPath();g.arc(x,y-r*.3,r*1.08,Math.PI,Math.PI*2);g.closePath();g.fill();rr(g,x-r*.1,y-r*.5,r*1.5,r*.24,r*.1);g.fill();}
-  else if(c.hs===5){for(let k=0;k<6;k++){g.beginPath();g.arc(x-r*.9+k*r*.36,y-r*(.5+(k%2)*.2),r*.34,0,7);g.fill();}}
-  else{g.fillRect(x-r*1.0,y-r*.2,r*.22,r*.55);g.fillRect(x+r*.78,y-r*.2,r*.22,r*.55);}
+  const cap=()=>{g.beginPath();g.arc(x,hy-R*.12,R*1.06,Math.PI*1.02,Math.PI*1.98);g.quadraticCurveTo(x+R*.35,hy-R*.62,x-R*.15,hy-R*.5);g.quadraticCurveTo(x-R*.7,hy-R*.45,x-R*1.04,hy-R*.2);g.closePath();g.fill();g.stroke();
+    g.strokeStyle="rgba(255,255,255,.35)";g.lineWidth=lw*.8;g.beginPath();g.arc(x,hy-R*.12,R*.8,Math.PI*1.15,Math.PI*1.45);g.stroke();g.strokeStyle=OL;g.lineWidth=lw;};
+  if(c.hs===0||c.hs===1||c.hs===4)cap();
+  if(c.hs===4){g.fillStyle=c.hair;g.beginPath();g.arc(x,hy-R*1.28,R*.46,0,7);g.fill();g.stroke();}
+  else if(c.hs===2){g.fillStyle=c.hat;g.beginPath();g.arc(x,hy-R*.12,R*1.1,Math.PI,Math.PI*2);g.closePath();g.fill();g.stroke();rr(g,x-R*.1,hy-R*.5,R*1.6,R*.26,R*.1);g.fill();g.stroke();}
+  else if(c.hs===5){for(let k=0;k<7;k++){g.fillStyle=c.hair;g.beginPath();g.arc(x-R*1.0+k*R*.33,hy-R*(.55+(k%2)*.22),R*.36,0,7);g.fill();g.stroke();}}
+  else if(c.hs===3){g.fillStyle=c.hair;g.fillRect(x-R*1.06,hy-R*.25,R*.2,R*.6);g.fillRect(x+R*.86,hy-R*.25,R*.2,R*.6);}
   // brwi
-  g.strokeStyle=c.hair;g.lineWidth=Math.max(1,U*.12);g.lineCap="round";g.beginPath();
-  const bl=f<.25?-1:0;
-  g.moveTo(x-r*.62,y-r*.28+bl*r*.1);g.lineTo(x-r*.16,y-r*.28-bl*r*.14);g.moveTo(x+r*.62,y-r*.28+bl*r*.1);g.lineTo(x+r*.16,y-r*.28-bl*r*.14);g.stroke();
-  // oczy
-  g.fillStyle="#2b1a12";
-  if(blink){g.strokeStyle="#2b1a12";g.lineWidth=Math.max(1,U*.12);g.beginPath();g.moveTo(x-r*.5,y+r*.04);g.lineTo(x-r*.26,y+r*.04);g.moveTo(x+r*.26,y+r*.04);g.lineTo(x+r*.5,y+r*.04);g.stroke();}
-  else{g.beginPath();g.arc(x-r*.38,y+r*.02,r*.13,0,7);g.arc(x+r*.38,y+r*.02,r*.13,0,7);g.fill();
-    g.fillStyle="#fff";g.beginPath();g.arc(x-r*.34,y-r*.02,r*.04,0,7);g.arc(x+r*.42,y-r*.02,r*.04,0,7);g.fill();}
-  if(c.glasses||c.type==="critic"){g.strokeStyle="#2b1a12";g.lineWidth=1.2;g.beginPath();g.arc(x-r*.38,y+r*.02,r*.28,0,7);g.moveTo(x+r*.66,y+r*.02);g.arc(x+r*.38,y+r*.02,r*.28,0,7);g.moveTo(x-r*.1,y+r*.02);g.lineTo(x+r*.1,y+r*.02);g.stroke();}
-  // nos
-  g.strokeStyle="rgba(0,0,0,.25)";g.lineWidth=1;g.beginPath();g.moveTo(x,y+r*.12);g.lineTo(x-r*.07,y+r*.34);g.lineTo(x+r*.08,y+r*.34);g.stroke();
-  if(c.must){g.fillStyle=c.hair;rr(g,x-r*.42,y+r*.4,r*.84,r*.15,r*.08);g.fill();}
+  g.strokeStyle=(c.hs===3?"#5a3420":c.hair);g.lineWidth=Math.max(1.4,U*.16);g.beginPath();
+  if(angry){g.moveTo(x-R*.66,hy-R*.36);g.lineTo(x-R*.14,hy-R*.18);g.moveTo(x+R*.66,hy-R*.36);g.lineTo(x+R*.14,hy-R*.18);}
+  else{g.moveTo(x-R*.66,hy-R*.3);g.quadraticCurveTo(x-R*.4,hy-R*.42,x-R*.14,hy-R*.3);g.moveTo(x+R*.66,hy-R*.3);g.quadraticCurveTo(x+R*.4,hy-R*.42,x+R*.14,hy-R*.3);}
+  g.stroke();g.lineWidth=lw;g.strokeStyle=OL;
+  // oczy: duże, błyszczące
+  const ex=R*.38,ey=hy+R*.02;
+  if(blink){g.lineWidth=Math.max(1.4,U*.13);g.beginPath();g.moveTo(x-ex-R*.18,ey);g.lineTo(x-ex+R*.18,ey);g.moveTo(x+ex-R*.18,ey);g.lineTo(x+ex+R*.18,ey);g.stroke();g.lineWidth=lw;}
+  else{
+    g.fillStyle="#fff";g.beginPath();g.ellipse(x-ex,ey,R*.21,R*.27,0,0,7);g.ellipse(x+ex,ey,R*.21,R*.27,0,0,7);g.fill();g.lineWidth=lw*.6;g.stroke();g.lineWidth=lw;
+    g.fillStyle=c.eye||"#3b2a1a";g.beginPath();g.arc(x-ex,ey+R*.03,R*.14,0,7);g.arc(x+ex,ey+R*.03,R*.14,0,7);g.fill();
+    g.fillStyle="#1a1008";g.beginPath();g.arc(x-ex,ey+R*.03,R*.07,0,7);g.arc(x+ex,ey+R*.03,R*.07,0,7);g.fill();
+    g.fillStyle="#fff";g.beginPath();g.arc(x-ex-R*.05,ey-R*.04,R*.05,0,7);g.arc(x+ex-R*.05,ey-R*.04,R*.05,0,7);g.fill();
+    if(c.lash){g.lineWidth=Math.max(1.2,U*.1);g.beginPath();g.moveTo(x-ex-R*.2,ey-R*.18);g.lineTo(x-ex-R*.32,ey-R*.28);g.moveTo(x+ex+R*.2,ey-R*.18);g.lineTo(x+ex+R*.32,ey-R*.28);g.stroke();g.lineWidth=lw;}
+  }
+  if(c.glasses||c.type==="critic"){g.strokeStyle="#2b1a12";g.lineWidth=Math.max(1.3,U*.12);g.beginPath();g.arc(x-ex,ey,R*.3,0,7);g.moveTo(x+ex+R*.3,ey);g.arc(x+ex,ey,R*.3,0,7);g.moveTo(x-ex+R*.3,ey);g.lineTo(x+ex-R*.3,ey);g.stroke();g.lineWidth=lw;g.strokeStyle=OL;}
+  // nos i rumieńce
+  g.strokeStyle="rgba(120,60,30,.55)";g.lineWidth=Math.max(1,U*.09);g.beginPath();g.moveTo(x,hy+R*.12);g.quadraticCurveTo(x-R*.1,hy+R*.36,x+R*.06,hy+R*.36);g.stroke();g.strokeStyle=OL;g.lineWidth=lw;
+  if(f>.4){g.fillStyle="rgba(255,110,110,.32)";g.beginPath();g.ellipse(x-R*.62,hy+R*.45,R*.2,R*.13,0,0,7);g.ellipse(x+R*.62,hy+R*.45,R*.2,R*.13,0,0,7);g.fill();}
+  if(c.must){g.fillStyle=c.hair;g.beginPath();g.ellipse(x-R*.22,hy+R*.5,R*.24,R*.09,.25,0,7);g.ellipse(x+R*.22,hy+R*.5,R*.24,R*.09,-.25,0,7);g.fill();}
   // usta
-  g.strokeStyle="#2b1a12";g.lineWidth=Math.max(1.2,U*.14);g.lineCap="round";g.beginPath();
-  if(f>.55)g.arc(x,y+r*.25,r*.42,.15*Math.PI,.85*Math.PI);
-  else if(f>.25){g.moveTo(x-r*.28,y+r*.62);g.lineTo(x+r*.28,y+r*.62);}
-  else{g.arc(x,y+r*.98,r*.4,1.15*Math.PI,1.85*Math.PI);}
-  g.stroke();
-  // kropla potu przy niecierpliwości
-  if(f<.25){g.fillStyle="#8fd3ff";g.beginPath();g.ellipse(x+r*1.05,y-r*.5,r*.14,r*.22,0,0,7);g.fill();}
+  if(happy){g.fillStyle="#8a2f2f";g.beginPath();g.moveTo(x-R*.38,hy+R*.56);g.quadraticCurveTo(x,hy+R*1.02,x+R*.38,hy+R*.56);g.quadraticCurveTo(x,hy+R*.64,x-R*.38,hy+R*.56);g.fill();g.stroke();
+    g.fillStyle="#fff";g.beginPath();g.moveTo(x-R*.28,hy+R*.6);g.quadraticCurveTo(x,hy+R*.7,x+R*.28,hy+R*.6);g.quadraticCurveTo(x,hy+R*.66,x-R*.28,hy+R*.6);g.fill();}
+  else if(!angry){g.beginPath();g.moveTo(x-R*.3,hy+R*.66);g.lineTo(x+R*.3,hy+R*.66);g.stroke();}
+  else{g.beginPath();g.arc(x,hy+R*1.05,R*.36,1.18*Math.PI,1.82*Math.PI);g.stroke();
+    g.fillStyle="#8fd3ff";g.beginPath();g.ellipse(x+R*1.08,hy-R*.5,R*.13,R*.2,0,0,7);g.fill();}
   g.restore();
 }function bubble(c){
   const n=c.orders.length,bw=Math.min(SW*.94,U*(n===2?6.4:4.6)),bh=U*3.75;
@@ -1211,6 +1240,7 @@ function render(){
         <span class="rc-arrow">➜</span><span class="rc-dish">${r.e}</span></div>`:"")+
       `<div class="rc-hint">${hint}</div>`;
   }
+  if(S.guide)rc=guideHTML();
   $("recipe").innerHTML=rc;
   // urządzenia
   $("stat").innerHTML=activeStations().map(i=>{
@@ -1335,17 +1365,11 @@ function menu(){
   overlay(`<h1>👩‍🍳 Gotuj i Mroź ❄️</h1>
     <p class="sub">Ucz się gastronomii: gotuj, mroź, podawaj i dbaj o higienę</p>
     <div class="stats"><div>Poziom<b>${S.day}/50</b></div><div>Ocena<b>★ ${S.rep.toFixed(1)}</b></div><div>Przepisy<b>${known}/${RECIPES.length}</b></div><div>Lekcje<b>${S.done.length}/${LESSONS.length}</b></div><div>Rekord<b>${S.best} zł</b></div></div>
-    <p style="text-align:left;font-size:13px">
-    🖐️ <b>Chwyć</b> składnik (przytrzymaj i przeciągnij) i <b>wrzuć</b> do garnka, patelni, piekarnika, mikrofalówki lub zamrażarki. Gotowe danie przeciągnij do klienta. Możesz też po prostu dotykać.<br>
-    🚪 Klienci wchodzą i stoją w kolejce — <b>nie zdążysz, nie zapłacą</b>.<br>
-    📋 Karta przepisu prowadzi Cię krok po kroku.<br>
-    ⭐ Wyjmij danie szybko = <b>idealne</b> (więcej pieniędzy i seria 🔥). Za późno = przypalone.<br>
-    👑 VIP płacą podwójnie, 🧐 krytyk lubi tylko idealne.<br>
-    🍽️ Od dnia 4 goście proszą o „coś z…” — wymyśl własne danie!<br>
-    🧼 Po surowym mięsie, rybach i jajkach umyj ręce. 🚫 Uważaj na alergeny gości.<br>
-    🎓 W Szkole gastronomii poznasz higienę, temperatury, mrożenie i obsługę.</p>
+    ${howStrip()}
+    <p class="sub">Przeciągaj palcem albo dotykaj. Pierwsze zamówienie poprowadzę Cię krok po kroku.</p>
     <button class="bigbtn" data-act="startday">${S.day>1?"Kontynuuj — poziom "+S.day:"Otwórz restaurację!"} ▶</button>
     <button class="bigbtn alt" data-act="map">🗺️ Mapa poziomów (1–50)</button>
+    <button class="bigbtn alt" data-act="how">❓ Jak grać</button>
     <button class="bigbtn alt" data-act="school">🎓 Szkoła gastronomii</button>
     <button class="bigbtn alt" data-act="book">📖 Książka kucharska</button>
     <button class="bigbtn alt" data-act="easy">🎚️ Poziom: ${S.easy?"ŁATWY (polecany na start)":"NORMALNY"}</button>
@@ -1359,7 +1383,12 @@ document.addEventListener("pointerdown",e=>{
   const el=e.target.closest("[data-act]");if(!el)return;
   if(el.dataset.act==="tnext"){e.preventDefault();if(S.tutStep>=TUT.length-1)endTutorial();else{S.tutStep++;showCoach();}return;}
   if(el.dataset.act==="tskip"){e.preventDefault();endTutorial();return;}
-  if(el.dataset.act==="help"){e.preventDefault();if(!menuMode)startTutorial();else say("Pomoc pokaże się w grze (przycisk ❓)");return;}
+  if(el.dataset.act==="help"){e.preventDefault();showHow();return;}
+  if(el.dataset.act==="how"){e.preventDefault();showHow();return;}
+  if(el.dataset.act==="closehow"){e.preventDefault();if(menuMode){menu();}else{closeOv();S.running=!!S._wasRunning;}return;}
+  if(el.dataset.act==="showwhere"){e.preventDefault();closeOv();S.running=!!S._wasRunning;startTutorial();return;}
+  if(el.dataset.act==="gnext"){e.preventDefault();if(S.guide){if(S.guide.step>=GSTEPS.length-1)guideEnd();else{S.guide.step++;dirty=true;}}return;}
+  if(el.dataset.act==="gskip"){e.preventDefault();guideEnd();return;}
   if(el.dataset.act==="easy"){e.preventDefault();S.easy=!S.easy;save();menu();return;}
   e.preventDefault();
   const a=el.dataset.act;
@@ -1379,13 +1408,13 @@ document.addEventListener("pointerdown",e=>{
   }
   if(a==="scene"){if(S.running)sceneTap(e);return;}
   if(a==="startday"){menuMode=false;endData=null;closeOv();newDay();render();beep(660,.12,"triangle");musicStart();
-    if(!S.tutDone)startTutorial();return;}
+    if(!S.tutDone)guideStart();return;}
   if(a==="hints"){S.hints=!S.hints;save();menu();return;}
   if(a==="learn"){S.learn=!S.learn;save();menu();return;}
   if(a==="menu"){menu();return;}
   if(a==="school"){showSchool();return;}
   if(a==="map"){showMap();return;}
-  if(a==="playlv"){S.day=Math.min(50,Math.max(1,+el.dataset.i));endData=null;menuMode=false;closeOv();newDay();render();musicStart();if(!S.tutDone)startTutorial();return;}
+  if(a==="playlv"){S.day=Math.min(50,Math.max(1,+el.dataset.i));endData=null;menuMode=false;closeOv();newDay();render();musicStart();if(!S.tutDone)guideStart();return;}
   if(a==="lesson"){S.lesson={id:el.dataset.id,step:0,score:0,pick:null};lessonView();return;}
   if(a==="lprev"){S.lesson.step=Math.max(0,S.lesson.step-1);lessonView();return;}
   if(a==="lnext"){const st=S.lesson,L=LESSONS.find(x=>x.id===st.id);
@@ -1491,6 +1520,61 @@ function pickMission(){
   if(S.day>=5)opts.push({k:"vip",need:1,text:"Obsłuż klienta VIP 👑"});
   const m=rnd(opts);return Object.assign({have:0,done:false,reward:25+S.day*2},m);
 }
+/* ---------- poradnik: pierwsze zamówienie krok po kroku ---------- */
+const panIdx=()=>STN.findIndex(s=>s.type==="pan");
+const GSTEPS=[
+ {e:"👀",t:"Klient chce OMLET 🍳. Zamówienie jest nad jego głową.",btn:"Dalej ▶"},
+ {e:"🥚",t:"Chwyć JAJKO i przeciągnij na PATELNIĘ",wait:()=>S.st[panIdx()].items.length>=1},
+ {e:"🥚",t:"Jeszcze jedno JAJKO!",wait:()=>S.st[panIdx()].items.length>=2},
+ {e:"🧀",t:"Teraz SER!",wait:()=>S.st[panIdx()].items.length>=3},
+ {e:"🍳",t:"Smaży się… poczekaj kilka sekund",wait:()=>S.st[panIdx()].state==="done"},
+ {e:"✋",t:"Gotowe! Przeciągnij omlet do klienta",wait:()=>S.served>=1},
+ {e:"🎉",t:"Brawo! Pierwsza zapłata! Teraz grasz sama.",btn:"Zaczynamy ▶"}
+];
+function howStrip(){
+  const s=[["👀","Zobacz zamówienie"],["🥚","Chwyć składnik"],["🍳","Wrzuć do urządzenia"],["🍽️","Podaj klientowi"],["💰","Zapłata!"]];
+  return `<div class="how">`+s.map((x,i)=>(i?`<span class="ar">➜</span>`:"")+`<div class="hs"><i>${i+1}</i><b>${x[0]}</b><small>${x[1]}</small></div>`).join("")+`</div>`;
+}
+function showHow(){
+  S._wasRunning=S.running;S.running=false;
+  overlay(`<h2>❓ Jak grać?</h2>${howStrip()}
+    <div class="howtips"><div>⏱ Klient czeka do 3 minut. Patrz na licznik nad jego głową.</div><div>⭐ Wyjmij danie szybko = idealne i więcej pieniędzy.</div><div>🎯 Zrób zadanie dnia, a dostaniesz premię.</div></div>
+    <button class="bigbtn" data-act="closehow">${menuMode?"Wróć do menu":"Wróć do gry ▶"}</button>
+    ${menuMode?"":`<button class="bigbtn alt" data-act="showwhere">📍 Pokaż, gdzie co jest</button>`}`);
+}
+function guideStart(){
+  if(S.day!==1){S.tutDone=true;save();return;}
+  S.guide={step:0};
+  S.q=[];S.dine=[];S.tables=[];
+  const c=makeCust();c.orders=[{k:"rec",rid:"omlet",got:false}];c.allergy=null;c.type="normal";c.p=c.max=300;c.x=slotX(0);c.walk=false;
+  S.q.push(c);S.focusC=c;S.spawn=99999;S.tab="dairy";S.mission=null;
+  S.stock.jajko=Math.max(S.stock.jajko||0,3);S.stock.ser=Math.max(S.stock.ser||0,3);
+  S.running=true;dirty=true;
+}
+function guideHTML(){
+  const st=GSTEPS[S.guide.step];
+  return `<div class="rc-head"><span class="rc-e" style="font-size:34px">${st.e}</span><div><b style="font-size:15px">${st.t}</b><small>Poradnik · krok ${S.guide.step+1} z ${GSTEPS.length}</small></div></div>`+
+    (st.btn?`<button class="gbtn" data-act="gnext">${st.btn}</button>`:`<div class="rc-hint">👆 Zrób to, a pójdziemy dalej</div>`)+
+    `<button class="gskip" data-act="gskip">Pomiń poradnik</button>`;
+}
+function guideEnd(){
+  if(!S.guide)return;
+  S.guide=null;S.tutDone=true;save();S.spawn=2;
+  const c=S.q[0];if(c){c.p=c.max=maxPat();}
+  S.mission=pickMission();dirty=true;sfx.tada();
+}
+function guideTick(){
+  const G=S.guide;if(!G)return;
+  const st=GSTEPS[G.step];if(!st.wait)return;
+  const pan=S.st[panIdx()];
+  if(G.step>=1&&G.step<=3){ // zły składnik? cofnij
+    const n=k=>pan.items.filter(x=>x===k).length;
+    if(pan.items.some(x=>x!=="jajko"&&x!=="ser")||n("jajko")>2||n("ser")>1){
+      pan.items.forEach(i=>S.stock[i]=(S.stock[i]||0)+1);resetSt(pan);G.step=1;dirty=true;say("Ups, to nie to! Zaczynamy od jajka 🥚");sfx.bad();return;
+    }
+  }
+  if(st.wait()){G.step++;dirty=true;sfx.put();}
+}
 /* ---------- poradnik: gdzie co jest ---------- */
 const TUT=[
  {t:"Witaj, szefowo kuchni! 👩‍🍳 To jest RESTAURACJA. Klienci przychodzą do lady i czekają. Nad głową każdego widzisz, czego chce (obrazek dania i składniki).",el:"#cust"},
@@ -1535,7 +1619,7 @@ function handHintTarget(){
   return {sig:"ing"+nx.id+F.stIdx+(S.hand?"h":""),a:center(from),b:center(to)};
 }
 function updateHandHint(){
-  if(!S.running||S.idle<6||dirtyNow()){hideHandHint();return;}
+  if(!S.running||S.idle<(S.guide?.3:6)||dirtyNow()){hideHandHint();return;}
   const t=handHintTarget();
   if(!t){hideHandHint();return;}
   if(HH.sig===t.sig&&HH.anim)return;

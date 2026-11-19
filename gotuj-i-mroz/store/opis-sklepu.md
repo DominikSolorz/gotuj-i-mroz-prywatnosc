@@ -29,7 +29,7 @@ WIĘCEJ FRAJDY
 • Latające monety, konfetti, dźwięki smażenia i ruchome postacie klientów.
 
 ŁATWY START
-• Poradnik krok po kroku pokazuje, gdzie co jest: klienci, karta przepisu, spiżarnia i kuchnia.
+• Pierwsze zamówienie (omlet) poprowadzi Cię krok po kroku: uczysz się, wykonując je. Przycisk ❓ pokazuje obrazkową instrukcję i gdzie co jest.
 • Poziom łatwy (domyślny) daje więcej czasu i mniej klientów. Gdy nic nie robisz, animowana ręka pokazuje, co dokąd przeciągnąć.
 
 SZKOŁA GASTRONOMII
