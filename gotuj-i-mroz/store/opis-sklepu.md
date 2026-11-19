@@ -68,5 +68,5 @@ E-mail: goldservicepoland@gmail.com (sprawdź, czy chcesz go podać publicznie)
 
 ## Deklaracja bezpieczeństwa danych (Data safety)
 - Aplikacja nie zbiera ani nie udostępnia żadnych danych użytkownika.
-- Postęp gry zapisuje się tylko lokalnie na urządzeniu.
+- Postęp gry jest zapisywany lokalnie. Android może objąć go systemową kopią zapasową w usługach Google lub przenieść na inne urządzenie, zgodnie z ustawieniami użytkownika. Twórca gry nie otrzymuje tych danych.
 - Brak reklam i brak zakupów w aplikacji.
