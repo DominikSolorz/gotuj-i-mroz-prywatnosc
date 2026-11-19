@@ -28,7 +28,7 @@ function extract(name){
 function harness(saved){
   const storage={value:saved===undefined?null:JSON.stringify(saved),setItem(k,v){assert.equal(k,'gotuj_i_mroz_v2');this.value=v;},getItem(){return this.value;}};
   const S={coins:30,day:1,best:0,rep:3,sound:true,music:true,hints:true,diff:'easy',easy:true,hard:false,tutDone:false,maxLv:1,stars:{},learn:true,done:[],quizOK:0,quizTot:0,up:{cook:0,burn:0,pat:0,stock:0},earned:0,running:true,st:[],q:[]};
-  const ctx={S,localStorage:storage,RECIPES:[],reviews:()=>[],sfx:{tada(){}},startQuiz(){},showEnd(){},target:()=>100,unlocked:()=>[],Math,JSON,Object,Number};
+  const ctx={S,SAVE_KEY:'gotuj_i_mroz_v2',localStorage:storage,RECIPES:[],reviews:()=>[],sfx:{tada(){}},startQuiz(){},showEnd(){},target:()=>100,unlocked:()=>[],Math,JSON,Object,Number};
   vm.createContext(ctx);
   vm.runInContext("const validLevel=n=>Number.isInteger(n)&&n>=1&&n<=50;const levelOr=(n,fallback)=>validLevel(n)?n:fallback;"+extract('load')+';'+extract('save')+';'+extract('endDay'),ctx);
   return {ctx,S,storage,load:()=>vm.runInContext('load()',ctx),save:()=>vm.runInContext('save()',ctx),endDay:()=>vm.runInContext('endDay()',ctx)};
@@ -66,7 +66,7 @@ test('invalid save values are rejected without crashing',()=>{
   assert.equal(h.S.coins,0);assert.equal(h.S.rep,5);
 });
 test('map contains five chapters of ten levels',()=>{
-  assert.match(html,/for\\(let c=0;c<5;c\\+\\+\\)/);
-  assert.match(html,/for\\(let i=1;i<=10;i\\+\\+\\)/);
-  assert.match(html,/level>S\\.maxLv/);
+  assert.ok(html.includes('for(let c=0;c<5;c++)'));
+  assert.ok(html.includes('for(let i=1;i<=10;i++)'));
+  assert.ok(html.includes('level>S.maxLv'));
 });
