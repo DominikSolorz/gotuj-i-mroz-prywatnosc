@@ -1,0 +1,17 @@
+name: Test gry
+on:
+  push:
+    paths:
+      - 'gotuj-i-mroz/**'
+      - '.github/workflows/test-game.yml'
+  workflow_dispatch:
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm test
+        working-directory: gotuj-i-mroz
