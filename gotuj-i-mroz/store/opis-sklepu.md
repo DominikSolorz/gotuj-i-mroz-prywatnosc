@@ -18,6 +18,10 @@ GOTUJ I MROŹ
 • 72 prawdziwe przepisy: żurek, bigos, pierogi, schabowy, pizza, lasagne, szarlotka, lody, sorbety i wiele więcej.
 
 
+ŁATWY START
+• Poradnik krok po kroku pokazuje, gdzie co jest: klienci, karta przepisu, spiżarnia i kuchnia.
+• Poziom łatwy (domyślny) daje więcej czasu i mniej klientów. Gdy nic nie robisz, animowana ręka pokazuje, co dokąd przeciągnąć.
+
 SZKOŁA GASTRONOMII
 • 8 lekcji z quizami: higiena i HACCP, temperatury i mrożenie, techniki gotowania, przechowywanie i FIFO, alergeny, obsługa gościa, bezpieczeństwo pracy, kuchnia bez marnowania żywności.
 • Pytanie dnia po każdej zmianie i Certyfikat Mistrza Gastronomii.

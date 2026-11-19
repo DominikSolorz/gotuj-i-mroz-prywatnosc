@@ -146,6 +146,21 @@ button{font:inherit;color:inherit}
 .lesson .rp{margin-left:auto;font-weight:900;color:#2e8b57}
 .expl{background:#fff0c9;border-radius:10px;padding:8px 10px;font-size:14px;text-align:left}
 .nav{display:flex;gap:8px;justify-content:center}
+#stat,#tray,#recipe,#cust{position:relative}
+#cust::before,#stat::before{position:absolute;z-index:4;left:10px;background:rgba(40,20,10,.9);color:#ffe9c4;font-size:10px;font-weight:800;letter-spacing:.4px;padding:2px 8px;pointer-events:none;white-space:nowrap}
+#cust::before{content:"🚪 RESTAURACJA · klienci przy ladzie";bottom:0;border-radius:8px 8px 0 0}
+#stat::before{content:"🔥 KUCHNIA · urządzenia";top:-13px;border-radius:8px 8px 0 0}
+@media (max-width:640px){#cust::before,#stat::before{font-size:9px}}
+.coach{position:relative;z-index:50;box-shadow:0 0 0 100vmax rgba(15,8,4,.7),0 0 0 4px var(--gold)!important;border-radius:12px;animation:coachp 1s infinite alternate}
+@keyframes coachp{to{box-shadow:0 0 0 100vmax rgba(15,8,4,.7),0 0 0 8px rgba(255,210,94,.5)!important}}
+#coach{position:fixed;left:50%;transform:translateX(-50%);z-index:60;max-width:min(560px,94vw);width:94%;background:var(--cream);border:3px solid var(--gold);border-radius:16px;padding:10px 14px;box-shadow:0 8px 30px rgba(0,0,0,.55);display:none;color:var(--ink)}
+#coach.on{display:block}
+#coach p{margin:0 0 8px;font-size:15px;font-weight:700;line-height:1.35}
+#coach .cb{display:flex;gap:8px;justify-content:space-between;align-items:center}
+#coach .cs{font-size:12px;opacity:.7}
+#coach button{background:var(--accent);color:#fff;border:0;border-radius:12px;padding:8px 16px;font-weight:900;font-size:15px;cursor:pointer;box-shadow:0 3px 0 #b04a12}
+#coach button.skip{background:#8a6a55;box-shadow:0 3px 0 #5a4030;font-size:12px;padding:6px 10px}
+#hhand{position:fixed;left:0;top:0;font-size:38px;line-height:1;pointer-events:none;z-index:40;display:none;filter:drop-shadow(0 4px 4px rgba(0,0,0,.5))}
 .st.micro{background:linear-gradient(#e8ecf3,#b3bccd);border-color:#6f7f9c}
 .st.drop{transform:scale(1.05);box-shadow:0 0 0 5px var(--gold),0 0 18px rgba(255,210,94,.9)}
 #ghost{position:fixed;left:0;top:0;pointer-events:none;font-size:46px;line-height:1;transform:translate(-50%,-70%) rotate(-8deg);z-index:30;display:none;filter:drop-shadow(0 8px 6px rgba(0,0,0,.45))}
@@ -162,6 +177,7 @@ body.dragging,body.dragging *{cursor:grabbing!important}
     <span class="pill" id="combo">🔥</span>
     <span class="pill" id="time">⏱ 90s</span>
     <div class="goal"><small id="goalTxt"></small><div class="gb"><i id="goalBar"></i></div></div>
+    <button class="ibtn" data-act="help" title="Pomoc: gdzie co jest">❓</button>
     <button class="ibtn" data-act="book" title="Książka kucharska">📖</button>
     <button class="ibtn" data-act="music" id="musBtn" title="Muzyka">🎵</button>
     <button class="ibtn" data-act="sound" id="sndBtn" title="Dźwięki">🔊</button>
@@ -176,6 +192,7 @@ body.dragging,body.dragging *{cursor:grabbing!important}
   </div>
 </div>
 <div id="toast"></div>
+<div id="coach"></div>
 <div id="ov"><div id="ovbox"></div></div>
 
 <script>
@@ -302,7 +319,7 @@ const AL={ // alergeny gości
 };
 const dishHas=(g,ing)=>ing.some(i=>AL[g].ing.includes(i));
 const isRaw=id=>ING[id].c==="meat"||id==="jajko";
-const hyg=()=>S.learn&&S.day>=2; // zasady higieny od dnia 2
+const hyg=()=>S.learn&&S.day>=2&&!S.easy; // zasady higieny od dnia 2 (poziom normalny)
 const LESSONS=[
  {id:"higiena",icon:"🧼",title:"Higiena i HACCP",cards:[
   "Myj ręce przed pracą, po dotknięciu surowego mięsa, ryb i jajek oraz po wyjściu do toalety. Używaj mydła i myj co najmniej 20–30 sekund.",
@@ -398,20 +415,22 @@ const TIPS=[
 /* ============ STAN ============ */
 let S={coins:30,day:1,best:0,rep:3,stock:{},hand:null,st:[],q:[],fx:[],pops:[],time:0,earned:0,served:0,lost:0,combo:0,
   stat:{ideal:0,good:0,late:0},spawn:0,running:false,tab:"veg",sound:true,music:true,hints:true,up:{cook:0,burn:0,pat:0,stock:0},focusC:null,bookTab:"pot",
-  dirty:false,learn:true,done:[],quizOK:0,quizTot:0,incidents:0,lesson:null,quiz:null};
+  dirty:false,learn:true,done:[],quizOK:0,quizTot:0,incidents:0,lesson:null,quiz:null,
+  easy:true,tutDone:false,tutStep:0,tutResume:false,idle:0};
 let dirty=true,endData=null,menuMode=true;
 const upCost=u=>u.base*(S.up[u.id]+1);
-const burnAfter=()=>10+4*S.up.burn;
+const burnAfter=()=>10+4*S.up.burn+(S.easy?6:0);
 function load(){try{const d=JSON.parse(localStorage.getItem(SAVE_KEY)||"null");if(d){
   S.coins=d.coins??30;S.day=d.day??1;S.best=d.best??0;S.rep=d.rep??3;S.sound=d.sound!==false;S.music=d.music!==false;S.hints=d.hints!==false;
+  S.easy=d.easy!==false;S.tutDone=!!d.tutDone;
   S.learn=d.learn!==false;S.done=Array.isArray(d.done)?d.done:[];S.quizOK=d.quizOK||0;S.quizTot=d.quizTot||0;
   if(d.up)Object.assign(S.up,d.up);}}catch(e){}}
-function save(){try{localStorage.setItem(SAVE_KEY,JSON.stringify({coins:S.coins,day:S.day,best:S.best,rep:S.rep,sound:S.sound,music:S.music,hints:S.hints,up:S.up,learn:S.learn,done:S.done,quizOK:S.quizOK,quizTot:S.quizTot}));}catch(e){}}
+function save(){try{localStorage.setItem(SAVE_KEY,JSON.stringify({coins:S.coins,day:S.day,best:S.best,rep:S.rep,sound:S.sound,music:S.music,hints:S.hints,up:S.up,learn:S.learn,done:S.done,quizOK:S.quizOK,quizTot:S.quizTot,easy:S.easy,tutDone:S.tutDone}));}catch(e){}}
 const unlocked=()=>RECIPES.filter(r=>r.day<=S.day);
 const usedIng=()=>{const s=new Set();unlocked().forEach(r=>r.ing.forEach(i=>s.add(i)));return s;};
-const target=()=>60+14*S.day;
-const maxPat=()=>Math.max(45,60-S.day)*(1+.15*S.up.pat); // klient czeka ok. minuty
-const maxQ=()=>S.day<2?3:S.day<4?4:5;
+const target=()=>Math.round((60+14*S.day)*(S.easy?.7:1));
+const maxPat=()=>Math.max(45,60-S.day)*(1+.15*S.up.pat)*(S.easy?1.4:1); // klient czeka ok. minuty (łatwy: dłużej)
+const maxQ=()=>{const n=S.day<2?3:S.day<4?4:5;return S.easy?Math.min(n,3):n;};
 const rnd=a=>a[Math.floor(Math.random()*a.length)];
 const titleOf=()=>TITLES[Math.min(S.day-1,TITLES.length-1)];
 const activeStations=()=>STN.map((s,i)=>i).filter(i=>unlocked().some(r=>r.st===STN[i].type));
@@ -464,7 +483,7 @@ function makeOrder(){
 function makeCust(){
   const n=Math.random()<Math.min(.5,Math.max(0,(S.day-2)*.15))?2:1;
   const orders=[];let allergy=null;
-  if(S.learn&&S.day>=4&&Math.random()<.15){
+  if(S.learn&&!S.easy&&S.day>=4&&Math.random()<.15){
     allergy=rnd(Object.keys(AL));
     const safe=[...usedIng()].filter(i=>!AL[allergy].ing.includes(i));
     orders.push({k:"free",need:rnd(safe),avoid:allergy,got:false});
@@ -667,7 +686,7 @@ function tick(dt){
     S.spawn-=dt;
     if(S.spawn<=0){
       if(S.q.length<maxQ()){S.q.push(makeCust());sfx.door();dirty=true;}
-      S.spawn=(Math.max(3,8-S.day*.45)+Math.random()*3)/(1+(S.rep-3)*.08);
+      S.spawn=(Math.max(3,8-S.day*.45)+Math.random()*3)/(1+(S.rep-3)*.08)*(S.easy?1.5:1);
     }
   }
   for(let i=S.q.length-1;i>=0;i--){
@@ -949,6 +968,10 @@ function render(){
   const F=focusInfo();
   const need=new Set(S.hints&&F&&!F.free?F.chips.filter(x=>!x.done).map(x=>x.id):[]);
   if(F&&F.free&&S.hints)need.add(F.o.need);
+  // automatycznie otwórz zakładkę spiżarni z następnym potrzebnym składnikiem
+  const nxt=F&&!F.free?F.chips.find(x=>!x.done):null;
+  const nsig=nxt?F.r.id+"|"+nxt.id+"|"+F.st.items.length:"";
+  if(nsig!==S.needSig){S.needSig=nsig;if(nxt&&S.hints)S.tab=ING[nxt.id].c;}
   // karta przepisu
   let rc="";
   if(!F){
@@ -1079,13 +1102,19 @@ function menu(){
     <button class="bigbtn" data-act="startday">${S.day>1?"Kontynuuj — dzień "+S.day:"Otwórz restaurację!"} ▶</button>
     <button class="bigbtn alt" data-act="school">🎓 Szkoła gastronomii</button>
     <button class="bigbtn alt" data-act="book">📖 Książka kucharska</button>
+    <button class="bigbtn alt" data-act="easy">🎚️ Poziom: ${S.easy?"ŁATWY (polecany na start)":"NORMALNY"}</button>
     <button class="bigbtn alt" data-act="learn">🧠 Tryb nauki: ${S.learn?"TAK":"NIE"}</button>
     <button class="bigbtn alt" data-act="hints">💡 Podpowiedzi: ${S.hints?"TAK":"NIE (tryb szefa)"}</button>`);
 }
 
 /* ============ START ============ */
 document.addEventListener("pointerdown",e=>{
+  S.idle=0;hideHandHint();
   const el=e.target.closest("[data-act]");if(!el)return;
+  if(el.dataset.act==="tnext"){e.preventDefault();if(S.tutStep>=TUT.length-1)endTutorial();else{S.tutStep++;showCoach();}return;}
+  if(el.dataset.act==="tskip"){e.preventDefault();endTutorial();return;}
+  if(el.dataset.act==="help"){e.preventDefault();if(!menuMode)startTutorial();else say("Pomoc pokaże się w grze (przycisk ❓)");return;}
+  if(el.dataset.act==="easy"){e.preventDefault();S.easy=!S.easy;save();menu();return;}
   e.preventDefault();
   const a=el.dataset.act;
   // przeciąganie: składnik z kafelka/karty -> urządzenie, gotowe danie z urządzenia -> klient
@@ -1103,7 +1132,8 @@ document.addEventListener("pointerdown",e=>{
     }
   }
   if(a==="scene"){if(S.running)sceneTap(e);return;}
-  if(a==="startday"){menuMode=false;endData=null;closeOv();newDay();render();beep(660,.12,"triangle");musicStart();return;}
+  if(a==="startday"){menuMode=false;endData=null;closeOv();newDay();render();beep(660,.12,"triangle");musicStart();
+    if(!S.tutDone)startTutorial();return;}
   if(a==="hints"){S.hints=!S.hints;save();menu();return;}
   if(a==="learn"){S.learn=!S.learn;save();menu();return;}
   if(a==="menu"){menu();return;}
@@ -1134,6 +1164,65 @@ document.addEventListener("pointerdown",e=>{
   if(a==="book"&&menuMode){S.running=false;overlay(bookHTML());return;}
   act(el.dataset);
 });
+/* ---------- poradnik: gdzie co jest ---------- */
+const TUT=[
+ {t:"Witaj, szefowo kuchni! 👩‍🍳 To jest RESTAURACJA. Klienci przychodzą do lady i czekają. Nad głową każdego widzisz, czego chce (obrazek dania i składniki).",el:"#cust"},
+ {t:"To jest KARTA PRZEPISU. Mówi, co ugotować, z czego i w jakim urządzeniu. Podpowiedź pod spodem prowadzi Cię krok po kroku.",el:"#recipe"},
+ {t:"To jest SPIŻARNIA. Złap składnik i PRZECIĄGNIJ go do urządzenia (albo tylko go dotknij). Złote ramki pokazują, co jest potrzebne.",el:"#tray"},
+ {t:"To jest KUCHNIA: garnek, patelnia, piekarnik, mikrofalówka i zamrażarka. Wrzuć tu składniki. Podświetlone urządzenie jest właściwe.",el:"#stat"},
+ {t:"Gdy danie jest gotowe, PRZECIĄGNIJ je do klienta przy ladzie (albo dotknij danie, a potem klienta). Zdążysz na czas, to zapłacą! Powodzenia! 🍀",el:"#cust"}
+];
+function coachClear(){document.querySelectorAll(".coach").forEach(n=>n.classList.remove("coach"));$("coach").classList.remove("on");}
+function showCoach(){
+  coachClear();
+  const st=TUT[S.tutStep],el=document.querySelector(st.el);
+  if(el)el.classList.add("coach");
+  const c=$("coach"),r=el?el.getBoundingClientRect():{top:0,height:0};
+  const mid=r.top+r.height/2,low=mid>innerHeight*.5;
+  c.style.top=low?"58px":"auto";c.style.bottom=low?"auto":"12px";
+  const last=S.tutStep===TUT.length-1;
+  c.innerHTML=`<p>${st.t}</p><div class="cb"><span class="cs">Krok ${S.tutStep+1} z ${TUT.length}</span><span>${last?"":`<button class="skip" data-act="tskip">Pomiń</button> `}<button data-act="tnext">${last?"Zaczynamy! ▶":"Dalej ▶"}</button></span></div>`;
+  c.classList.add("on");
+}
+function startTutorial(){S.tutResume=S.running;S.running=false;S.tutStep=0;closeOv();showCoach();}
+function endTutorial(){coachClear();S.tutDone=true;save();S.running=S.tutResume;S.tutResume=false;dirty=true;beep(660,.12,"triangle");}
+/* animowana ręka: pokazuje, co dokąd przeciągnąć, gdy gracz długo nic nie robi */
+let HH={anim:null,sig:""};
+function hideHandHint(){const h=$("hhand");if(h)h.style.display="none";if(HH.anim){HH.anim.cancel();HH.anim=null;}HH.sig="";}
+function center(el){const r=el.getBoundingClientRect();return [r.left+r.width/2,r.top+r.height/2];}
+function handHintTarget(){
+  const F=focusInfo();if(!F||F.free||S.hand&&S.hand.t==="dish")return null;
+  if(F.st.state==="done"&&F.st.dish&&F.st.dish.rid===F.r.id&&!S.hand){
+    const from=document.querySelector(`[data-act=station][data-i="${F.stIdx}"]`);
+    const r=cv.getBoundingClientRect();
+    if(!from)return null;
+    return {sig:"dish"+F.stIdx,a:center(from),b:[r.left+F.c.x,r.top+CT-U*2]};
+  }
+  if(F.st.state!=="idle")return null;
+  const nx=F.chips.find(x=>!x.done);if(!nx)return null;
+  const to=document.querySelector(`[data-act=station][data-i="${F.stIdx}"]`);if(!to)return null;
+  let from=null;
+  if(S.hand&&S.hand.t==="ing"){if(S.hand.id!==nx.id)return null;from=$("hand");}
+  else from=document.querySelector(`#tray [data-act=ing][data-id="${nx.id}"]`)||document.querySelector(`#recipe [data-act=ing][data-id="${nx.id}"]`);
+  if(!from)return null;
+  return {sig:"ing"+nx.id+F.stIdx+(S.hand?"h":""),a:center(from),b:center(to)};
+}
+function updateHandHint(){
+  if(!S.running||S.idle<6||dirtyNow()){hideHandHint();return;}
+  const t=handHintTarget();
+  if(!t){hideHandHint();return;}
+  if(HH.sig===t.sig&&HH.anim)return;
+  hideHandHint();
+  let h=$("hhand");if(!h){h=document.createElement("div");h.id="hhand";h.textContent="👆";document.body.appendChild(h);}
+  h.style.display="block";HH.sig=t.sig;
+  HH.anim=h.animate([
+    {transform:`translate(${t.a[0]-12}px,${t.a[1]-8}px) scale(1)`,opacity:0},
+    {transform:`translate(${t.a[0]-12}px,${t.a[1]-8}px) scale(1.15)`,opacity:1,offset:.15},
+    {transform:`translate(${t.b[0]-12}px,${t.b[1]-8}px) scale(1.15)`,opacity:1,offset:.8},
+    {transform:`translate(${t.b[0]-12}px,${t.b[1]-8}px) scale(1)`,opacity:0}
+  ],{duration:1900,iterations:Infinity,easing:"ease-in-out"});
+}
+const dirtyNow=()=>!!DR;
 /* ---------- przeciąganie ---------- */
 let DR=null;
 function ghostShow(txt){let g=document.getElementById("ghost");if(!g){g=document.createElement("div");g.id="ghost";document.body.appendChild(g);}g.textContent=txt;g.style.display="block";document.body.classList.add("dragging");return g;}
@@ -1194,7 +1283,9 @@ let last=performance.now();
 function loop(now){
   const dt=Math.min(.1,(now-last)/1000);last=now;
   tick(dt);
+  if(S.running)S.idle+=dt;
   if(dirty)render();else updateBars();
+  updateHandHint();
   draw();
   requestAnimationFrame(loop);
 }

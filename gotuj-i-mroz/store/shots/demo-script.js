@@ -2,7 +2,7 @@
 (function(){
   let s=20260;Math.random=()=>{s|=0;s=s+0x6D2B79F5|0;let t=Math.imul(s^s>>>15,1|s);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};
   const sc=(location.hash||"#play1").slice(1);
-  S.sound=false;S.music=false;
+  S.sound=false;S.music=false;S.easy=false;S.tutDone=true;
   const sIdx=type=>STN.findIndex(x=>x.type===type);
   function setup(day,n){
     S.day=day;S.rep=4.3;S.coins=148;S.best=212;closeOv();menuMode=false;newDay();
