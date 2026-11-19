@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<data-extraction-rules>
+    <!-- WebView profile includes the game's localStorage. -->
+    <cloud-backup>
+        <include domain="root" path="app_webview/" />
+    </cloud-backup>
+    <device-transfer>
+        <include domain="root" path="app_webview/" />
+    </device-transfer>
+</data-extraction-rules>
