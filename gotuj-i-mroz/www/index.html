@@ -410,7 +410,7 @@ function save(){try{localStorage.setItem(SAVE_KEY,JSON.stringify({coins:S.coins,
 const unlocked=()=>RECIPES.filter(r=>r.day<=S.day);
 const usedIng=()=>{const s=new Set();unlocked().forEach(r=>r.ing.forEach(i=>s.add(i)));return s;};
 const target=()=>60+14*S.day;
-const maxPat=()=>Math.max(24,44-S.day*1.8)*(1+.15*S.up.pat);
+const maxPat=()=>Math.max(45,60-S.day)*(1+.15*S.up.pat); // klient czeka ok. minuty
 const maxQ=()=>S.day<2?3:S.day<4?4:5;
 const rnd=a=>a[Math.floor(Math.random()*a.length)];
 const titleOf=()=>TITLES[Math.min(S.day-1,TITLES.length-1)];
