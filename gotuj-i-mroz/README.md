@@ -4,8 +4,7 @@
 1. Zainstaluj Node.js LTS (nodejs.org) i Android Studio (developer.android.com/studio).
 2. W tym folderze:
 ```
-npm install
-npx cap add android
+npm ci
 npx cap sync android
 npx cap open android
 ```
@@ -23,4 +22,4 @@ npx cap open android
 5. Wypełnij ankietę treści (gra bez reklam, bez zbierania danych) i klasyfikację wiekową.
 
 ## Zmiany w grze
-Edytuj www/index.html, potem `npx cap sync android` i zbuduj ponownie.
+Edytuj www/index.html, potem `npx cap sync android` i zbuduj ponownie. Nie uruchamiaj `npx cap add android`, ponieważ projekt Android już znajduje się w repozytorium.\n\n## Kontrola przed wydaniem\nUruchom `npm test`, następnie `npx cap sync android` i `cd android && ./gradlew assembleDebug`. Sprawdź działanie na urządzeniu oraz przywracanie postępu.\n\nWydanie do Google Play wymaga podpisanego AAB i zachowania oryginalnego klucza upload. Pliki kluczy i hasła przechowuj poza repozytorium. `versionCode` zwiększaj przy każdym kolejnym wydaniu. Nie publikuj starego pliku `store/gotuj-i-mroz-v1.aab`, ponieważ nie zawiera aktualnych zmian.
