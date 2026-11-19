@@ -22,7 +22,8 @@ jobs:
         with:
           distribution: temurin
           java-version: '21'
-      - uses: android-actions/setup-android@v3
+      # GitHub Ubuntu runners already provide Android SDK; the setup action
+      # currently fails while requesting the removed legacy SDK 'tools' package.
       - name: Install dependencies
         run: npm ci
       - name: Test game
