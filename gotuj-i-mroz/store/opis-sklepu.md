@@ -24,6 +24,10 @@ GOTUJ I MROŹ
 • Zadowoleni goście zasiadają do stołów w jadalni i jedzą zamówienie.
 • Urządzenia są narysowane: garnek gotuje, patelnia smaży, piekarnik piecze, mikrofalówka grzeje, a zamrażarka mrozi.
 
+WIĘCEJ FRAJDY
+• Zadanie dnia z nagrodą, godzina szczytu i happy hour w trakcie poziomu.
+• Latające monety, konfetti, dźwięki smażenia i ruchome postacie klientów.
+
 ŁATWY START
 • Poradnik krok po kroku pokazuje, gdzie co jest: klienci, karta przepisu, spiżarnia i kuchnia.
 • Poziom łatwy (domyślny) daje więcej czasu i mniej klientów. Gdy nic nie robisz, animowana ręka pokazuje, co dokąd przeciągnąć.
