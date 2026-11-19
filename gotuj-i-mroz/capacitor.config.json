@@ -1,0 +1,6 @@
+﻿{
+  "appId": "pl.gotujimroz.app",
+  "appName": "Gotuj i Mroź",
+  "webDir": "www",
+  "android": { "backgroundColor": "#fff1dc" }
+}

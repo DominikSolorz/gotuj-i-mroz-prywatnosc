@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Gotuj i Mroź</string>
+    <string name="title_activity_main">Gotuj i Mroź</string>
+    <string name="package_name">pl.gotujimroz.app</string>
+    <string name="custom_url_scheme">pl.gotujimroz.app</string>
+</resources>
