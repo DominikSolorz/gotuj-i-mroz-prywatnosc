@@ -188,6 +188,9 @@ button{font:inherit;color:inherit}
 #coach button.skip{background:#8a6a55;box-shadow:0 3px 0 #5a4030;font-size:12px;padding:6px 10px}
 #hhand{position:fixed;left:0;top:0;font-size:38px;line-height:1;pointer-events:none;z-index:40;display:none;filter:drop-shadow(0 4px 4px rgba(0,0,0,.5))}
 .st.micro{background:linear-gradient(#e8ecf3,#b3bccd);border-color:#6f7f9c}
+.st.dim{opacity:.5;filter:saturate(.5)}
+.tile.dimmed{opacity:.55}
+.rc-hint b{color:#b04a12}
 .st.drop{transform:scale(1.05);box-shadow:0 0 0 5px var(--gold),0 0 18px rgba(255,210,94,.9)}
 #ghost{position:fixed;left:0;top:0;pointer-events:none;font-size:46px;line-height:1;transform:translate(-50%,-70%) rotate(-8deg);z-index:30;display:none;filter:drop-shadow(0 8px 6px rgba(0,0,0,.45))}
 body.dragging,body.dragging *{cursor:grabbing!important}
@@ -1030,7 +1033,8 @@ function bubble(c){
   g.shadowColor="rgba(0,0,0,.35)";g.shadowBlur=6;
   g.fillStyle=c.type==="vip"?"#fff3cf":"#fffaf0";rr(g,bx,by,bw,bh,U*.7);g.fill();
   g.shadowBlur=0;
-  g.lineWidth=match?3:foc?2.5:2;g.strokeStyle=match?"#2fbf71":foc?"#f0762d":c.type==="vip"?"#e0a100":"#e8b86a";rr(g,bx,by,bw,bh,U*.7);g.stroke();
+  const urg=c.p/c.max<.2;
+  g.lineWidth=match?3:urg?3:foc?2.5:2;g.strokeStyle=match?"#2fbf71":urg?(Math.floor(performance.now()/300)%2?"#e5484d":"#ffb4a8"):foc?"#f0762d":c.type==="vip"?"#e0a100":"#e8b86a";rr(g,bx,by,bw,bh,U*.7);g.stroke();
   g.fillStyle=c.type==="vip"?"#fff3cf":"#fffaf0";g.beginPath();g.moveTo(c.x-U*.5,by+bh-1);g.lineTo(c.x,by+bh+U*.5);g.lineTo(c.x+U*.5,by+bh-1);g.fill();
   g.textAlign="center";g.textBaseline="middle";
   g.font=`${U*1.45}px ${EF}`;
@@ -1039,7 +1043,7 @@ function bubble(c){
     g.globalAlpha=o.got?.35:1;g.fillText(oEmoji(o),cx,by+U*1.25);
     g.globalAlpha=1;if(o.got)g.fillText("✅",cx,by+U*1.25);
   });
-  if(di>=0&&S.hints){
+  if(di>=0&&S.hints&&(c===S.focusC||S.q.length<=1)){
     const o=c.orders[di];g.font=`${U*.78}px ${EF}`;
     g.fillText(o.k==="rec"?R(o.rid).ing.map(i=>ING[i].e).join(""):"z "+ING[o.need].e+" ?"+(o.avoid?" 🚫"+AL[o.avoid].e:""),bx+bw/2,by+U*2.45);
   }
@@ -1108,6 +1112,10 @@ function render(){
     else if(S.hints){const nx=F.chips.find(x=>!x.done);if(nx){const cat=CATS.find(c=>c[0]===ING[nx.id].c);hint="👆 Chwyć "+ING[nx.id].e+" "+ING[nx.id].n+" (zakładka "+cat[1]+" "+cat[2]+") i wrzuć do: "+sn.e+" "+sn.name;}
       else if(F.st.state==="idle")hint="▶ Dotknij „"+STN[F.stIdx].btn.slice(2)+"” w urządzeniu";}
     else hint="📖 Sprawdź przepis w książce kucharskiej";
+    {const nD=F.chips.filter(x=>x.done).length,tot=F.chips.length+2;let cur=nD;
+      if(F.st.state==="cooking"||F.st.state==="done")cur=F.chips.length;
+      if(S.hand&&S.hand.t==="dish")cur=F.chips.length+1;
+      hint="KROK "+(cur+1)+" z "+tot+" · "+hint;}
     rc=`<div class="rc-head"><span class="rc-e">${r.e}</span><div><b>${r.name}</b><small>${r.price} zł · ⏱ ${r.time} s</small></div><span class="rc-st">${sn.e} ${sn.name}</span></div>`+
       (S.hints?`<div class="rc-row">${F.chips.map((x,i)=>{const stk=S.stock[x.id]||0,held=S.hand&&S.hand.t==="ing"&&S.hand.id===x.id&&!x.done;
         return (i?`<span class="rc-plus">+</span>`:"")+`<div class="chip ${x.done?"done":""} ${held?"held":""}" ${x.done?"":`data-act="ing" data-id="${x.id}"`}>${ING[x.id].e}<i>${x.done?"✓":stk}</i></div>`;}).join("")}
@@ -1125,7 +1133,8 @@ function render(){
     const slots=st.items.map(x=>ING[x].e).join("")||"·";
     const m=st.state==="idle"&&st.items.length>=2;
     const tgt=F&&!F.free&&F.stIdx===i&&st.state!=="cooking"?"target":"";
-    return `<div class="st ${def.cls} ${st.state} ${tgt}" data-act="station" data-i="${i}">
+    const dim=F&&!F.free&&F.stIdx!==i&&st.state==="idle"&&!st.items.length?"dim":"";
+    return `<div class="st ${def.cls} ${st.state} ${tgt} ${dim}" data-act="station" data-i="${i}">
       <button class="clr" data-act="clear" data-i="${i}">✖</button>
       <div class="nm">${def.name}</div><div class="big">${(st.state==="done"||st.state==="burnt")?`<span class="bigE">${big}</span>`:appSVG(def.type,st.state==="cooking")}</div><div class="what">${def.what}</div>
       <div class="slots">${slots}</div>
@@ -1139,15 +1148,15 @@ function render(){
     else h=`✋ <span class="he">${S.hand.dish.e}</span> ${S.hand.dish.name} · ${S.hand.q.l}`;
   }
   $("hand").innerHTML=h;
-  $("wash").classList.toggle("dirty",!!(hyg()&&S.dirty));$("wash").style.display=hyg()?"":"none";
+  $("wash").classList.toggle("dirty",!!(hyg()&&S.dirty));$("wash").style.display=(hyg()&&S.dirty)?"":"none";
   // spiżarnia
   const used=usedIng();
   const cats=CATS.filter(c=>[...used].some(i=>ING[i].c===c[0]));
   if(!cats.some(c=>c[0]===S.tab))S.tab=cats[0][0];
   $("tabs").innerHTML=cats.map(([k,ic,n])=>`<button class="tab ${S.tab===k?"on":""}" data-act="tab" data-id="${k}"><span class="ti">${ic}</span><span class="tl"> ${n}</span>${[...need].some(id=>ING[id].c===k)?`<span class="dot"></span>`:""}</button>`).join("");
-  $("tray").innerHTML=Object.keys(ING).filter(id=>ING[id].c===S.tab&&used.has(id)).map(id=>{
+  $("tray").innerHTML=Object.keys(ING).filter(id=>ING[id].c===S.tab&&used.has(id)).sort((a,b)=>(need.has(b)?1:0)-(need.has(a)?1:0)).map(id=>{
     const x=ING[id],n=S.stock[id]||0,held=S.hand&&S.hand.t==="ing"&&S.hand.id===id;
-    return `<div class="tile ${held?"held":""} ${n?"":"out"} ${need.has(id)&&!held?"need":""}" data-act="ing" data-id="${id}">
+    return `<div class="tile ${held?"held":""} ${n?"":"out"} ${need.has(id)&&!held?"need":""} ${need.size&&!need.has(id)&&!held?"dimmed":""}" data-act="ing" data-id="${id}">
       <span class="badge">${n}</span><button class="plus" data-act="buy" data-id="${id}">+${x.p}zł</button>
       <div class="te">${x.e}</div><div class="tn">${n?x.n:"Kup "+x.p+" zł"}</div></div>`;
   }).join("");
