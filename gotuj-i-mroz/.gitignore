@@ -6,3 +6,7 @@ local.properties
 *.keystore
 keystore.properties
 release-keys/
+
+# pliki instalacyjne nie powinny trafiac do repozytorium
+*.aab
+*.apk
