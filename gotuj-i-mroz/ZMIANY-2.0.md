@@ -45,3 +45,20 @@ Bez zmian: offline, bez reklam, zakupów, analityki i nowych uprawnień; dane ty
 
 ## Wersja 2.4 (versionCode 6)
 - Układ pionowy na bardzo małych ekranach (np. 320×568): spiżarnia nie wystaje już poza ekran (audyt na 320×568, 360×600, 360×640, 375×667).
+
+## Wersja 2.5 (versionCode 7) – Pokój szefa
+- **Pokój szefa** (menu główne): 19 osiągnięć (+25 zł każde, złote powiadomienie w grze), 5 wnętrz restauracji do kupienia za monety (Cegła, Miętowy bar, Cukiernia, Granatowe bistro, Złota gwiazdka – zmieniają wygląd całej sceny), 12 wyglądów szefa kuchni (widoczny w menu i nagłówku gry), statystyki gracza.
+- **Efekty**: iskry przy idealnym daniu; muzyka zmienia tonację wraz z rozdziałem.
+- **Ustawienia**: przełączniki wibracji i efektów ekranu (wstrząsy, konfetti, iskry); „Jak grać” pod okrągłym przyciskiem ❓ w menu.
+- Wszystko zapisuje się lokalnie i wchodzi do kopii zapasowej (GM2). Testy: 31.
+- Naprawiono w trakcie prac błąd kolizji nazwy `S.fx` (ustawienie efektów vs tablica efektów klientów), wychwycony testem; dodano test regresji.
+
+## Wersja 3.0 (versionCode 8) – Kuchnia szefa
+- **Nowy tryb „Kuchnia szefa”** (przycisk w menu): prawdziwa restauracja z salą, stolikami, kasjerką, kelnerem, wydawką i kuchnią. Goście wchodzą, zamawiają u kasjerki i siadają, szef gotuje, kelner niesie danie do stolika, gość je i płaci. Obsługa kasy (wydawanie reszty) jest opcjonalna i daje napiwek.
+- **Szef chodzi po kuchni** i staje przy zlewie (mycie rąk z wodą i bąbelkami), desce, kuchence (patelnia, garnek) i piekarniku; składniki wylatują z jego ręki; do podania zakłada rękawiczki.
+- **Kampania: 72 plansze, 72 przepisy** w 8 światach o różnym wyglądzie: bar, pizzeria, zupy, obiady i Śląsk, kuchnia azjatycka, wypieki, wegetariańska, kuchnia od zera. Każda plansza ma 3–5 różnych dań w menu; plansza trwa ok. 10–15 minut.
+- **Nauka i rosnąca trudność (6 poziomów):** na początku widzisz przepis i zielone pola; wyżej ukryta lista składników, kolejność i zielone pole przy smażeniu, więcej podobnych składników do wyboru, węższe okna czasowe. Ograniczona liczba podpowiedzi (podświetlają i tłumaczą dlaczego) oraz 24 pytania szefa o bezpieczne gotowanie (75°C dla drobiu, higiena, ryż, olej, alergeny).
+- **Grafika:** własne rysunki wszystkich 72 dań zamiast emotikon, postacie z twarzami i fryzurami, osiem motywów restauracji.
+- **Telefon i tablet:** kamera przybliża kuchnię na małych ekranach, kafelki oczekujących gości na scenie, większe przyciski i osobne układy.
+- Zapis w localStorage (klucz gotuj_i_mroz_k3), bez internetu, bez reklam i bez zbierania danych: deklaracje Google Play bez zmian.
+- Testy: 44 (silnik gotowania, wszystkie przepisy, trudność, podpowiedzi, pytania, rysunki dań).

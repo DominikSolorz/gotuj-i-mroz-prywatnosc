@@ -32,6 +32,12 @@ WIĘCEJ FRAJDY
 • Pierwsze zamówienie (omlet) poprowadzi Cię krok po kroku: uczysz się, wykonując je. Przycisk ❓ pokazuje obrazkową instrukcję i gdzie co jest.
 • Poziom łatwy (domyślny) daje więcej czasu i mniej klientów. Gdy nic nie robisz, animowana ręka pokazuje, co dokąd przeciągnąć.
 
+KUCHNIA SZEFA (NOWOŚĆ)
+• Prawdziwa restauracja: kasjerka, kelner, stoliki, wydawka i kuchnia. Gotujesz krok po kroku: myjesz ręce, kroisz, mieszasz, smażysz i pieczesz.
+• 72 plansze i 72 przepisy: bar, pizzeria, zupy, Śląsk, kuchnia azjatycka, wypieki i dania wegetariańskie.
+• Każda plansza jest trudniejsza: musisz sam wybierać składniki i wyczuć moment, a podpowiedzi uczą, dlaczego tak.
+• Pytania szefa o bezpieczne gotowanie. Wszystko offline.
+
 KREATOR DAŃ
 • Wymyśl własny przepis: wybierz urządzenie, 2–4 składniki, nazwę i ikonę, na przykład hot-doga z serem. Gra liczy cenę, kalorie i alergeny.
 • Goście zamawiają Twoje dania, a przepisami możesz wymienić się ze znajomymi za pomocą kodu. Działa bez internetu.

@@ -1,0 +1,168 @@
+/* Gotuj i Mroź 3.0 – interfejs Kuchni szefa */
+#k{position:fixed;inset:0;z-index:12;display:none;background:#1d0f0b;color:#2b1a12;font-family:system-ui,"Segoe UI",Roboto,sans-serif;user-select:none;-webkit-user-select:none;touch-action:manipulation}
+#k.on{display:flex;flex-direction:column}
+#k *{box-sizing:border-box}
+.k-top{display:flex;align-items:center;gap:8px;padding:max(6px,env(safe-area-inset-top)) max(8px,env(safe-area-inset-right)) 4px max(8px,env(safe-area-inset-left));color:#fff3dc}
+.k-top .kt{flex:1;min-width:0;font-weight:900;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.k-top .kt small{display:block;font-size:11px;font-weight:700;opacity:.75}
+.k-pill{background:rgba(255,255,255,.12);border-radius:999px;padding:4px 10px;font-weight:800;font-size:13px;white-space:nowrap}
+.k-btn{border:0;border-radius:12px;background:rgba(255,255,255,.14);color:#fff;font-size:18px;min-width:40px;height:38px;cursor:pointer;font-weight:900}
+.k-main{flex:1;min-height:0;display:grid;gap:8px;padding:0 max(8px,env(safe-area-inset-right)) max(8px,env(safe-area-inset-bottom)) max(8px,env(safe-area-inset-left));grid-template-columns:1fr;grid-template-rows:minmax(130px,.9fr) minmax(0,1.1fr)}
+@media (orientation:landscape){.k-main{grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);grid-template-rows:minmax(0,1fr)}}
+.k-scene{position:relative;border-radius:16px;overflow:hidden;border:3px solid #4a2d1e;background:#6a281f;min-height:0}
+.k-scene svg{position:absolute;inset:0;width:100%;height:100%;display:block}
+.k-panel{background:#fff3dc;border-radius:16px;border:3px solid #ffd25e;padding:10px 12px;overflow:auto;display:flex;flex-direction:column;gap:8px;min-height:0;-webkit-overflow-scrolling:touch}
+.kp-h{display:flex;align-items:center;gap:8px}
+.kp-h .n{background:#f0762d;color:#fff;border-radius:999px;font-weight:900;font-size:12px;padding:3px 10px;white-space:nowrap}
+.kp-h b{font-size:15px}
+.kp-t{font-size:15px;font-weight:700;line-height:1.35}
+.kp-why{background:#e4f6e9;border-left:4px solid #3cb371;border-radius:8px;padding:6px 10px;font-size:13px;line-height:1.35}
+.kp-bar{height:12px;border-radius:8px;background:#e6d3b3;overflow:hidden;position:relative}
+.kp-bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#ffb347,#f0762d);border-radius:8px}
+.kp-chips{display:flex;flex-wrap:wrap;gap:6px}
+.kp-chip{display:flex;align-items:center;gap:6px;border:2px solid #e3c79a;background:#fff;border-radius:12px;padding:6px 10px;font-weight:800;font-size:14px;cursor:pointer;min-height:44px;line-height:1.1;text-align:left}
+.kp-chip small{display:block;font-size:11px;opacity:.65;font-weight:700}
+.kp-chip .e{font-size:24px}
+.kp-chip.ok{background:#d8f3e2;border-color:#3cb371}
+.kp-chip.bad{animation:kshake .35s;background:#ffd9d9;border-color:#e5484d}
+@keyframes kshake{25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+.kp-big{border:0;border-radius:16px;padding:14px 18px;font-size:18px;font-weight:900;color:#fff;background:linear-gradient(#ff9a4a,#f0762d);box-shadow:0 4px 0 #b04a12;cursor:pointer;min-height:56px;touch-action:none}
+.kp-big:active,.kp-big.hold{transform:translateY(2px);box-shadow:0 2px 0 #b04a12}
+.kp-big.alt{background:linear-gradient(#8a5a37,#6b4428);box-shadow:0 4px 0 #3d2616}
+.kp-big.go{background:linear-gradient(#4cc27f,#2e8b57);box-shadow:0 4px 0 #1d6a40}
+.kp-big[disabled]{opacity:.45}
+.kp-row{display:flex;gap:8px;flex-wrap:wrap}
+.kp-row>*{flex:1}
+.kp-gauge{position:relative;height:30px;border-radius:10px;background:#e6d3b3;overflow:hidden;border:2px solid #cdb48c}
+.kp-gauge .z{position:absolute;top:0;bottom:0;background:rgba(60,179,113,.55)}
+.kp-gauge .b{position:absolute;top:0;bottom:0;width:4px;background:#e5484d}
+.kp-gauge .m{position:absolute;top:2px;bottom:2px;width:12px;margin-left:-6px;border-radius:6px;background:#2b1a12;box-shadow:0 0 0 2px #fff}
+.kp-temps{display:flex;gap:6px}
+.kp-temps button{flex:1;border:2px solid #e3c79a;background:#fff;border-radius:12px;padding:8px 4px;font-weight:800;font-size:13px;cursor:pointer;min-height:44px}
+.kp-temps button.on{background:#f0762d;border-color:#f0762d;color:#fff}
+.kp-sub{font-size:12px;opacity:.75}
+.k-modal{position:absolute;inset:0;background:rgba(20,10,5,.78);display:none;align-items:center;justify-content:center;padding:12px;z-index:5}
+.k-modal.on{display:flex}
+.k-box{background:#fff3dc;border:3px solid #ffd25e;border-radius:18px;padding:14px 16px;max-width:620px;width:100%;max-height:94%;overflow:auto;text-align:center}
+.k-box h2{margin:0 0 6px;font-size:21px}
+.k-box p{margin:6px 0;font-size:14px;line-height:1.4}
+.k-stars{font-size:38px;letter-spacing:4px;margin:2px 0}
+.k-card{display:flex;align-items:center;gap:10px;text-align:left;background:#fff;border:2px solid #e3c79a;border-radius:14px;padding:8px 10px;margin:6px 0;width:100%;cursor:pointer;font:inherit;color:inherit}
+.k-card .e{font-size:30px}
+.k-card b{display:block;font-size:15px}
+.k-card small{display:block;opacity:.72;font-size:12px}
+.k-card .r{margin-left:auto;font-weight:900;text-align:right;white-space:nowrap}
+.k-card.lock{opacity:.5;cursor:default}
+.k-book{font-weight:900;font-size:13px;margin:10px 0 2px;text-align:left;opacity:.8}
+.k-note{background:#fff0c9;border-radius:10px;padding:6px 10px;margin:5px 0;text-align:left;font-size:13px}
+.k-note b{display:block}
+/* animacje szefa */
+.chef .arm{transform-box:fill-box;transform-origin:50% 0}
+.chef .bob{animation:kbob 2.4s ease-in-out infinite}
+@keyframes kbob{50%{transform:translateY(-3px)}}
+.chef[data-a=chop] .armR{animation:kchop .28s ease-in-out infinite}
+.chef[data-a=chop] .armL{transform:rotate(18deg)}
+@keyframes kchop{0%,100%{transform:rotate(-8deg)}50%{transform:rotate(38deg)}}
+.chef[data-a=mix] .armR{animation:kmix .6s linear infinite}
+@keyframes kmix{0%{transform:rotate(-12deg)}25%{transform:rotate(14deg)}50%{transform:rotate(-4deg)}75%{transform:rotate(16deg)}100%{transform:rotate(-12deg)}}
+.chef[data-a=fry] .armR{animation:kfry .5s ease-in-out infinite}
+@keyframes kfry{0%,100%{transform:rotate(-6deg)}50%{transform:rotate(10deg)}}
+.chef[data-a=wash] .armL{animation:kwashL .32s ease-in-out infinite alternate}
+.chef[data-a=wash] .armR{animation:kwashR .32s ease-in-out infinite alternate-reverse}
+@keyframes kwashL{from{transform:rotate(-24deg)}to{transform:rotate(-40deg)}}
+@keyframes kwashR{from{transform:rotate(24deg)}to{transform:rotate(40deg)}}
+.chef[data-a=cheer] .armL,.chef[data-a=cheer] .armR{animation:kcheer .45s ease-in-out infinite alternate}
+@keyframes kcheer{from{transform:rotate(160deg)}to{transform:rotate(130deg)}}
+.chef[data-a=serve] .armR{transform:rotate(60deg)}
+.chef[data-a=sad] .armL,.chef[data-a=sad] .armR{transform:rotate(8deg)}
+.chef .tool{display:none}
+.chef[data-a=chop] .t-knife,.chef[data-a=mix] .t-spoon,.chef[data-a=fry] .t-spoon{display:inline}
+.steam{animation:ksteam 2s ease-in infinite;opacity:0}
+.steam.on{opacity:.8}
+@keyframes ksteam{0%{transform:translateY(8px);opacity:0}30%{opacity:.8}100%{transform:translateY(-22px);opacity:0}}
+.bub{animation:kbub 1.1s ease-in infinite}
+@keyframes kbub{0%{transform:translateY(0);opacity:.9}100%{transform:translateY(-14px);opacity:0}}
+.cust{transition:transform 1.3s cubic-bezier(.3,.8,.3,1),opacity .6s}
+.cust .walk{animation:kwalk .5s ease-in-out infinite alternate}
+.cust.still .walk{animation:none}
+@keyframes kwalk{from{transform:translateY(0)}to{transform:translateY(-3px)}}
+.k-home-logo{display:block;margin:0 auto;width:min(86%,420px)}
+@media (prefers-reduced-motion:reduce){.chef .bob,.steam,.bub,.cust .walk{animation:none}}
+.kp-ing{margin-top:auto;background:#fff;border:2px dashed #e3c79a;border-radius:10px;padding:6px 10px;font-size:12.5px;line-height:1.5}
+.kp-ing i{font-style:normal;opacity:.7}
+
+.chef.gl .hand{fill:#4fa3e0}
+.paragon{background:#fff;border:2px dashed #b8b0a0;font-family:ui-monospace,Consolas,monospace;padding:10px 12px;text-align:left;margin:8px auto;max-width:330px;font-size:13px;line-height:1.6;transform-origin:top;animation:kpar .6s ease-out}
+@keyframes kpar{from{transform:scaleY(.1);opacity:.2}to{transform:scaleY(1);opacity:1}}
+.kasa-coins{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:6px}
+.k-book small{font-weight:600;opacity:.7}
+
+.cash .bob{animation:kbob 2.8s ease-in-out infinite}
+.cash .arm{transform-box:fill-box;transform-origin:50% 0}
+.cash[data-a=ring] .armR{animation:kring .3s ease-in-out 3}
+@keyframes kring{0%,100%{transform:rotate(0)}50%{transform:rotate(-40deg)}}
+@media (prefers-reduced-motion:reduce){.cash .bob,.cash[data-a=ring] .armR{animation:none}}
+
+.waiter{transition:transform 1.5s linear}
+
+.chef{transition:transform .7s ease}
+.stream{animation:kstream .22s linear infinite}
+@keyframes kstream{from{transform:scaleX(1)}to{transform:scaleX(.6)}}
+.stream{transform-box:fill-box;transform-origin:center}
+
+.chef.moving .bob{animation:kwbob .28s ease-in-out infinite}
+@keyframes kwbob{50%{transform:translateY(-5px) rotate(1.5deg)}}
+.chef[data-a=mix] .armR{animation:kmix2 .55s ease-in-out infinite alternate}
+@keyframes kmix2{from{transform:rotate(-52deg)}to{transform:rotate(-34deg)}}
+.chef[data-a=fry] .armR{animation:kfry2 .45s ease-in-out infinite alternate}
+@keyframes kfry2{from{transform:rotate(-50deg)}to{transform:rotate(-38deg)}}
+.chef[data-a=flip] .armR{animation:none;transform:rotate(-85deg)}
+.chef[data-a=mix] .t-spoon,.chef[data-a=fry] .t-spoon{display:inline}
+
+/* ---- czytelność na telefonie i tablecie ---- */
+.k-guests{position:absolute;left:6px;top:6px;display:flex;gap:5px;z-index:3;pointer-events:none;flex-wrap:wrap;max-width:94%}
+.kg{position:relative;background:rgba(255,255,255,.94);border-radius:12px;padding:3px 8px 8px;min-width:46px;text-align:center;box-shadow:0 2px 6px rgba(0,0,0,.35);overflow:hidden}
+.kg b{font-size:clamp(18px,3.4vw,26px);line-height:1.1;display:block}
+.kg i{position:absolute;left:0;bottom:0;height:5px}
+.kg.on{outline:3px solid #ffd25e}
+.kp-ing{margin-top:auto;font-size:13px}
+.kp-ing summary{font-weight:900;cursor:pointer;min-height:28px}
+.kp-ing:not([open]){padding:2px 10px}
+.kp-big,.kp-chip,.kp-temps button{min-height:52px}
+@media (max-width:640px) and (orientation:portrait){
+  .k-main{grid-template-rows:minmax(0,46%) minmax(0,54%);gap:6px}
+  .k-top .kt small{display:none}.k-pill{font-size:12px;padding:3px 8px}
+  .kp-t{font-size:16px}.kp-big{min-height:62px;font-size:19px}.k-panel{padding:8px 10px;gap:6px}
+  .kp-why{font-size:13px}.kp-chip{padding:6px 8px;font-size:15px}
+  .k-box{padding:12px;max-height:96%}.k-card{padding:8px}
+}
+@media (orientation:landscape) and (max-height:520px){
+  .k-main{grid-template-columns:minmax(0,1.45fr) minmax(0,1fr);gap:6px}
+  .k-top{padding-top:max(3px,env(safe-area-inset-top));padding-bottom:2px}
+  .k-top .kt{font-size:14px}.k-top .kt small{display:none}.k-btn{height:34px}
+  .k-panel{padding:7px 9px;gap:5px}.kp-t{font-size:14px;line-height:1.3}.kp-why{font-size:12px;padding:4px 8px}
+  .kp-big{min-height:50px;padding:8px 12px;font-size:16px}.kp-chip{min-height:46px;padding:4px 8px}
+  .kp-h b{font-size:14px}.k-card{padding:6px 8px;margin:4px 0}.k-card b{font-size:14px}
+  .k-box h2{font-size:18px}.k-box p{font-size:13px;margin:4px 0}.k-stars{font-size:30px}.k-box{padding:10px 12px;max-height:98%}
+}
+@media (min-width:900px) and (min-height:640px){
+  .k-main{gap:12px;padding-bottom:max(12px,env(safe-area-inset-bottom))}
+  .kp-t{font-size:18px}.kp-big{font-size:21px;min-height:64px}.kp-chip{font-size:16px}.k-panel{padding:14px 16px;gap:10px}
+  .k-box{max-width:760px}
+}
+@media (min-width:700px) and (max-width:1100px) and (orientation:portrait){
+  .k-main{grid-template-rows:minmax(0,50%) minmax(0,50%)}.kp-t{font-size:18px}.kp-big{font-size:21px;min-height:66px}
+}
+
+.k-card .e{display:flex;align-items:center;justify-content:center;width:46px;height:46px;flex:none}
+svg.dish{display:block}
+.kg b{display:flex;justify-content:center}
+
+.kp-gauge .z.hid{display:none}.kp-gauge .z.rev{display:block;outline:3px solid #ffd25e}
+.kp-hint{border:2px dashed #e0b25a;background:#fff8e0;border-radius:12px;padding:8px 12px;font-weight:800;font-size:14px;min-height:46px;cursor:pointer;color:#6a4a10}
+.kp-hint[disabled]{opacity:.45}
+.kp-chip.hint,.kp-temps button.hint{animation:khint .5s ease-in-out infinite alternate;box-shadow:0 0 0 4px #ffd25e;border-color:#f0762d}
+@keyframes khint{to{transform:scale(1.05)}}
+.kp-quiz{display:flex;flex-direction:column;gap:8px}.kp-quiz p{margin:0;font-size:16px;font-weight:800}.kq{justify-content:flex-start;text-align:left;font-size:15px}
+
+.k-card small svg.dish{display:inline-block;vertical-align:middle;margin-right:3px}

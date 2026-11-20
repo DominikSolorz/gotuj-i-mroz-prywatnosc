@@ -168,3 +168,32 @@ test('kopia zapasowa: zapis i odczyt postępu oraz przepisów, odporność na z�
     assert.ok(run(`decodeBackup(${JSON.stringify(bad)})`).err,bad);
   assert.ok(run('decodeBackup("A".repeat(70000))').err);
 });
+test('Pokój szefa: wygląd szefa, wnętrza i osiągnięcia mają poprawne dane',()=>{
+  const th=JSON.parse(run('JSON.stringify(THEMES)'));
+  assert.equal(th[0].cost,0);assert.equal(th[0].id,'cegla');
+  assert.equal(new Set(th.map(t=>t.id)).size,th.length);
+  for(const t of th){assert.match(t.id,/^[a-z]{3,12}$/);assert.equal(t.wall.length,2);assert.equal(t.floor.length,2);assert.ok(t.brick&&t.cost>=0&&t.n&&t.e);for(const c of [...t.wall,...t.floor])assert.match(c,/^#[0-9a-f]{6}$/i);}
+  assert.equal(run('CHEFS.length'),12);assert.equal(run('new Set(CHEFS).size'),12);
+  const ach=JSON.parse(run('JSON.stringify(ACH)'));
+  assert.ok(ach.length>=15);assert.equal(new Set(ach.map(a=>a.id)).size,ach.length);
+  for(const a of ach){assert.match(a.id,/^[a-z0-9]{2,6}$/);assert.ok(a.n&&a.d&&a.e&&a.v>0);assert.ok(['served','ideal','earned','combo','vip','levels','stars3','recipes','lessons','quiz'].includes(a.k),a.id);}
+});
+test('osiągnięcia: wartości postępu i nowo zdobyte',()=>{
+  run('MY=[]');
+  const s={tot:{served:30,ideal:12,earned:1200,combo:5,vip:0},stars:{1:3,2:3,3:1,4:0},done:['a','b','c'],quizOK:4,ach:['s1']};
+  assert.equal(run(`achValue('levels',${JSON.stringify(s)})`),3);
+  assert.equal(run(`achValue('stars3',${JSON.stringify(s)})`),2);
+  const ids=[...run(`achNew(${JSON.stringify(s)}).map(a=>a.id)`)];
+  assert.ok(ids.includes('s25')&&ids.includes('i10')&&ids.includes('e1k')&&ids.includes('c5')&&ids.includes('n3'));
+  assert.ok(!ids.includes('s1'),'już zdobyte nie wraca');assert.ok(!ids.includes('s100')&&!ids.includes('l5'));
+  assert.equal(run(`achValue('nieznane',${JSON.stringify(s)})`),0);
+});
+test('zapis i odczyt zawiera nowe pola z walidacją',()=>{
+  assert.ok(html.includes('S.theme=typeof d.theme==="string"'));
+  assert.ok(html.includes('theme:S.theme,own:S.own,chef:S.chef'));
+});
+test('ustawienie efektów nie nadpisuje tablicy S.fx (efekty odchodzących klientów)',()=>{
+  assert.ok(!/S\.fx=d\./.test(html));assert.ok(!/\bfx:S\.fx\b/.test(html));
+  assert.ok(!html.includes('S.fx===false')&&!html.includes('S.fx!==false'));
+  assert.ok(html.includes('S.vfx=d.vfx!==false'));
+});

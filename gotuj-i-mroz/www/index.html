@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <meta name="theme-color" content="#2a1712">
 <title>Gotuj i Mroź</title>
+<link rel="stylesheet" href="css/k.css">
 <style>
 :root{--bg:#2a1712;--panel:#3a2219;--cream:#fbf0dc;--accent:#f0762d;--gold:#ffd25e;--ink:#2b1a12;--ok:#3cb371;--bad:#e5484d;--shadow:0 2px 0 rgba(0,0,0,.35)}
 *{box-sizing:border-box}
@@ -168,6 +169,15 @@ input,textarea{-webkit-user-select:text;user-select:text}
 .crbar{position:sticky;bottom:-14px;background:var(--cream);padding:4px 0 2px;margin-top:6px;border-top:2px solid #e3c79a}
 .crbar .crprev{margin:4px 0}
 .crbar .bigbtn{margin-top:2px}
+#ach{position:fixed;left:50%;top:10px;transform:translate(-50%,-160%);z-index:130;background:linear-gradient(#ffd25e,#f0a030);color:#3a2000;border-radius:14px;padding:8px 18px;font-weight:900;font-size:15px;line-height:1.25;text-align:center;box-shadow:0 6px 22px rgba(0,0,0,.5);border:2px solid #fff3b0;transition:transform .4s cubic-bezier(.2,1.3,.4,1);max-width:92vw;pointer-events:none}
+#ach small{font-size:11px;font-weight:700;opacity:.85}
+#ach.on{transform:translate(-50%,0)}
+.hrow3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.hrow3 .hbtn{padding:8px 4px;font-size:clamp(11px,2.5vh,14px);flex-direction:column;gap:1px;text-align:center;justify-content:center}
+.hbtn.quick{padding:8px 14px;font-size:clamp(12px,2.8vh,15px);background:linear-gradient(#6b7f8f,#4d6070);box-shadow:0 4px 0 #2e3d4a}
+.hbtn.play small{display:block;font-size:.5em;font-weight:700;opacity:.92;margin-top:2px}
+.hm-l .k-home-logo{margin-bottom:4px}
+.hq{position:absolute;right:max(12px,env(safe-area-inset-right));top:max(10px,env(safe-area-inset-top));z-index:5;width:42px;height:42px;border-radius:50%;border:0;background:rgba(0,0,0,.35);color:#fff;font-size:20px;cursor:pointer}
 .crprev.ok{background:#d8f3e2}
 .crprev.no{background:#ffe3d6}
 .review{background:#fff;border-radius:10px;padding:6px 10px;margin:5px 0;text-align:left;font-size:13px;font-style:italic;border-left:4px solid var(--gold)}
@@ -648,12 +658,42 @@ const SAY={
  late:["Trochę przypieczone…","Mogło być lepiej.","Hmm, za długo na ogniu."],
  leave:["Czekałem za długo!","Nie mam już czasu…","Idę gdzie indziej!"]
 };
+/* wygląd szefa, wnętrza restauracji i osiągnięcia (Pokój szefa) */
+const CHEFS=["👩‍🍳","👨‍🍳","🧑‍🍳","👩🏻‍🍳","👨🏻‍🍳","🧑🏻‍🍳","👩🏽‍🍳","👨🏽‍🍳","🧑🏽‍🍳","👩🏿‍🍳","👨🏿‍🍳","🧑🏿‍🍳"];
+const THEMES=[
+ {id:"cegla",n:"Cegła klasyczna",e:"🧱",cost:0,wall:["#8f3d2d","#6a281f"],brick:"rgba(255,225,190,.13)",floor:["#a4723f","#6a4425"]},
+ {id:"mieta",n:"Miętowy bar",e:"🍃",cost:120,wall:["#4f9a86","#2f6f5f"],brick:"rgba(255,255,255,.16)",floor:["#d9c9a3","#b09c6c"]},
+ {id:"cukier",n:"Cukiernia",e:"🍰",cost:200,wall:["#d98aa6","#b0607e"],brick:"rgba(255,255,255,.2)",floor:["#f3dcc4","#d2b08e"]},
+ {id:"granat",n:"Granatowe bistro",e:"🌙",cost:260,wall:["#35588f","#1d3158"],brick:"rgba(190,215,255,.14)",floor:["#8a7a62","#5a4c3a"]},
+ {id:"zloto",n:"Złota gwiazdka",e:"⭐",cost:420,wall:["#5b3a1c","#2f1c0d"],brick:"rgba(255,210,94,.22)",floor:["#2a2a33","#101015"]}
+];
+const ACH=[
+ {id:"s1",e:"🍽️",n:"Pierwsze danie",d:"Podaj pierwsze danie",k:"served",v:1},
+ {id:"s25",e:"🥘",n:"Rozkręcona kuchnia",d:"Obsłuż 25 dań",k:"served",v:25},
+ {id:"s100",e:"🍲",n:"Setka na talerzu",d:"Obsłuż 100 dań",k:"served",v:100},
+ {id:"s500",e:"👑",n:"Mistrz stołówki",d:"Obsłuż 500 dań",k:"served",v:500},
+ {id:"i10",e:"⭐",n:"Idealne dziesięć",d:"Wydaj 10 idealnych dań",k:"ideal",v:10},
+ {id:"i50",e:"🌟",n:"Perfekcjonistka",d:"Wydaj 50 idealnych dań",k:"ideal",v:50},
+ {id:"l5",e:"🗺️",n:"Pierwsze kroki",d:"Ukończ 5 poziomów",k:"levels",v:5},
+ {id:"l20",e:"🧭",n:"Doświadczony kucharz",d:"Ukończ 20 poziomów",k:"levels",v:20},
+ {id:"l50",e:"🏆",n:"Legenda kuchni",d:"Ukończ wszystkie 50 poziomów",k:"levels",v:50},
+ {id:"t10",e:"✨",n:"Trzy gwiazdki",d:"Zdobądź 3 gwiazdki na 10 poziomach",k:"stars3",v:10},
+ {id:"e1k",e:"💰",n:"Pierwszy tysiąc",d:"Zarób łącznie 1000 zł",k:"earned",v:1000},
+ {id:"e10k",e:"🏦",n:"Restauracyjny potentat",d:"Zarób łącznie 10 000 zł",k:"earned",v:10000},
+ {id:"r1",e:"✏️",n:"Autorski przepis",d:"Stwórz własne danie w kreatorze",k:"recipes",v:1},
+ {id:"r5",e:"📖",n:"Własna książka",d:"Stwórz 5 własnych dań",k:"recipes",v:5},
+ {id:"n3",e:"🎓",n:"Uczeń gastronomii",d:"Zalicz 3 lekcje w szkole",k:"lessons",v:3},
+ {id:"n11",e:"🏅",n:"Mistrz gastronomii",d:"Zalicz wszystkie 11 lekcji",k:"lessons",v:11},
+ {id:"q10",e:"🧠",n:"Pytanie za pytaniem",d:"Odpowiedz poprawnie na 10 pytań dnia",k:"quiz",v:10},
+ {id:"c5",e:"🔥",n:"Płonąca seria",d:"Zrób serię 5 idealnych dań z rzędu",k:"combo",v:5},
+ {id:"v5",e:"🤵",n:"Gość honorowy",d:"Obsłuż 5 klientów VIP",k:"vip",v:5}
+];
 const GRADE=["Szef kuchni kręci głową. Jutro będzie lepiej!","Solidna zmiana. Kuchnia działa.","Świetna robota! Goście wrócą.","Kuchnia na gwiazdkę Michelin! ⭐"]; // przyjęta porcja każdego składnika w daniu, do orientacyjnych kalorii
 
 /* ============ STAN ============ */
 let S={coins:30,day:1,best:0,rep:3,stock:{},hand:null,st:[],q:[],fx:[],pops:[],time:0,earned:0,served:0,lost:0,combo:0,
   stat:{ideal:0,good:0,late:0},spawn:0,running:false,tab:"veg",sound:true,music:true,hints:true,up:{cook:0,burn:0,pat:0,stock:0},focusC:null,bookTab:"pot",
-  dirty:false,learn:true,name:"",special:null,myOrders:true,done:[],quizOK:0,quizTot:0,incidents:0,lesson:null,quiz:null,
+  dirty:false,learn:true,name:"",special:null,myOrders:true,ach:[],tot:{served:0,ideal:0,earned:0,combo:0,vip:0},theme:"cegla",own:["cegla"],chef:0,haptic:true,vfx:true,spk:[],done:[],quizOK:0,quizTot:0,incidents:0,lesson:null,quiz:null,
   easy:true,hard:false,diff:"easy",tutDone:false,tutStep:0,tutResume:false,idle:0,maxLv:1,stars:{},lastLevel:1,dine:[],tables:[]};
 let dirty=true,endData=null,menuMode=true;
 const upCost=u=>u.base*(S.up[u.id]+1);
@@ -663,11 +703,13 @@ const levelOr=(n,fallback)=>validLevel(n)?n:fallback;
 function load(){try{const d=JSON.parse(localStorage.getItem(SAVE_KEY)||"null");if(d&&typeof d==="object"&&!Array.isArray(d)){
   S.coins=Number.isFinite(d.coins)?Math.max(0,d.coins):30;S.day=levelOr(d.day,1);S.best=Number.isFinite(d.best)?Math.max(0,d.best):0;S.rep=Number.isFinite(d.rep)?Math.max(0,Math.min(5,d.rep)):3;S.sound=d.sound!==false;S.music=d.music!==false;S.hints=d.hints!==false;
   S.diff=d.diff||(d.easy===false?"normal":"easy");S.easy=S.diff==="easy";S.hard=S.diff==="hard";S.tutDone=!!d.tutDone;S.maxLv=Math.max(S.day,levelOr(d.maxLv,S.day));S.stars={};if(d.stars&&typeof d.stars==="object"&&!Array.isArray(d.stars))for(const [k,v] of Object.entries(d.stars)){if(validLevel(Number(k))&&Number.isInteger(v)&&v>=1&&v<=3)S.stars[k]=v;}S.day=S.maxLv;
-  S.myOrders=d.myOrders!==false;S.name=typeof d.name==="string"?d.name.replace(/[^\p{L}\p{N} \-]/gu,"").trim().slice(0,12):"";S.learn=d.learn!==false;S.done=Array.isArray(d.done)?d.done:[];S.quizOK=d.quizOK||0;S.quizTot=d.quizTot||0;
+  S.myOrders=d.myOrders!==false;S.theme=typeof d.theme==="string"&&/^[a-z]{3,12}$/.test(d.theme)?d.theme:"cegla";S.own=Array.isArray(d.own)?d.own.filter(x=>typeof x==="string"&&/^[a-z]{3,12}$/.test(x)).slice(0,20):["cegla"];if(!S.own.includes("cegla"))S.own.push("cegla");if(!S.own.includes(S.theme))S.theme="cegla";S.chef=Number.isInteger(d.chef)&&d.chef>=0&&d.chef<12?d.chef:0;S.haptic=d.haptic!==false;S.vfx=d.vfx!==false;S.ach=Array.isArray(d.ach)?d.ach.filter(x=>typeof x==="string"&&/^[a-z0-9]{2,6}$/.test(x)).slice(0,60):[];S.tot={served:0,ideal:0,earned:0,combo:0,vip:0};if(d.tot&&typeof d.tot==="object")for(const k of Object.keys(S.tot)){const v=d.tot[k];if(Number.isFinite(v)&&v>=0)S.tot[k]=Math.min(1e9,Math.floor(v));}
+  S.name=typeof d.name==="string"?d.name.replace(/[^\p{L}\p{N} \-]/gu,"").trim().slice(0,12):"";S.learn=d.learn!==false;S.done=Array.isArray(d.done)?d.done:[];S.quizOK=d.quizOK||0;S.quizTot=d.quizTot||0;
   if(d.up&&typeof d.up==="object")for(const k of Object.keys(S.up)){if(Number.isInteger(d.up[k])&&d.up[k]>=0&&d.up[k]<=3)S.up[k]=d.up[k];}}}catch(e){}}
-function save(){try{if(!validLevel(S.day))S.day=levelOr(S.maxLv,1);S.maxLv=Math.max(S.day,levelOr(S.maxLv,S.day));localStorage.setItem(SAVE_KEY,JSON.stringify({coins:S.coins,day:S.day,best:S.best,rep:S.rep,sound:S.sound,music:S.music,hints:S.hints,up:S.up,learn:S.learn,name:S.name,myOrders:S.myOrders,done:S.done,quizOK:S.quizOK,quizTot:S.quizTot,diff:S.diff,easy:S.easy,tutDone:S.tutDone,maxLv:S.maxLv,stars:S.stars}));}catch(e){}}
+function save(){try{if(!validLevel(S.day))S.day=levelOr(S.maxLv,1);S.maxLv=Math.max(S.day,levelOr(S.maxLv,S.day));localStorage.setItem(SAVE_KEY,JSON.stringify({coins:S.coins,day:S.day,best:S.best,rep:S.rep,sound:S.sound,music:S.music,hints:S.hints,up:S.up,learn:S.learn,name:S.name,theme:S.theme,own:S.own,chef:S.chef,haptic:S.haptic,vfx:S.vfx,ach:S.ach,tot:S.tot,myOrders:S.myOrders,done:S.done,quizOK:S.quizOK,quizTot:S.quizTot,diff:S.diff,easy:S.easy,tutDone:S.tutDone,maxLv:S.maxLv,stars:S.stars}));}catch(e){}}
 const unlocked=()=>RECIPES.filter(r=>r.day<=S.day);
 const chefName=()=>S.name?" "+S.name:"";
+const TH=()=>THEMES.find(t=>t.id===S.theme&&S.own.includes(t.id))||THEMES[0];
 const usedIng=()=>{const s=new Set();unlocked().concat(MY).forEach(r=>r.ing.forEach(i=>s.add(i)));return s;};
 const target=()=>Math.round((80+8*S.day)*(S.easy?.75:S.hard?1.25:1));
 const maxPat=()=>Math.min(180,Math.max(70,180-S.day*2.3))*(1+.15*S.up.pat)*(S.easy?1:S.hard?.65:.8); // klient czeka do 3 minut
@@ -678,7 +720,7 @@ const activeStations=()=>STN.map((s,i)=>i).filter(i=>unlocked().concat(MY).some(
 function freshStation(t){return {type:t,items:[],state:"idle",t:0,time:0,dish:null,age:0};}
 function newDay(){
   S.time=dayTime();S.earned=0;S.served=0;S.lost=0;S.hand=null;S.spawn=1;S.combo=0;S.stat={ideal:0,good:0,late:0};S.dirty=false;S.incidents=0;
-  S.q=[];S.fx=[];S.pops=[];S.dine=[];S.tables=[];S.focusC=null;S.event=null;S.evtT=40+Math.random()*25;
+  S.q=[];S.fx=[];S.pops=[];S.dine=[];S.tables=[];S.focusC=null;S.event=null;S.spk=[];S.evtT=40+Math.random()*25;
   document.getElementById("evt").classList.remove("on");
   S.st=STN.map(s=>freshStation(s.type));
   usedIng().forEach(i=>{S.stock[i]=Math.max(S.stock[i]||0,3+S.up.stock);});
@@ -781,6 +823,24 @@ function decodeBackup(text){
   }catch(e){return {err:"Nie udało się odczytać kodu."};}
 }
 const mkId=()=>"my_"+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+/* osiągnięcia: wartości postępu i lista nowo zdobytych */
+function achValue(k,s){
+  const t=s.tot||{};
+  switch(k){
+    case "served":return t.served||0;
+    case "ideal":return t.ideal||0;
+    case "earned":return t.earned||0;
+    case "combo":return t.combo||0;
+    case "vip":return t.vip||0;
+    case "levels":return Object.keys(s.stars||{}).filter(x=>s.stars[x]>0).length;
+    case "stars3":return Object.keys(s.stars||{}).filter(x=>s.stars[x]===3).length;
+    case "recipes":return MY.length;
+    case "lessons":return (s.done||[]).length;
+    case "quiz":return s.quizOK||0;
+  }
+  return 0;
+}
+const achNew=s=>ACH.filter(a=>!(s.ach||[]).includes(a.id)&&achValue(a.k,s)>=a.v);
 /* uzupełnia przepis o pola potrzebne grze */
 const finishRecipe=(r,id)=>({id:id||mkId(),name:r.name,e:r.e,st:r.st,ing:[...r.ing],note:r.note||"",time:5,price:myPrice(r.ing),day:0,mine:true});
 /* wczytuje listę z tekstu JSON zapisanego w localStorage (odporne na uszkodzone dane) */
@@ -902,13 +962,13 @@ function musicStart(){
   if(mTimer)return;
   mTimer=setInterval(()=>{
     if(!S.music||document.hidden||!S.running)return;
-    const ch=CH[Math.floor(mStep/8)%4];
-    tone(ch[[0,1,2,3,2,1,2,1][mStep%8]],.45,"triangle",.035,0,"m");
-    if(mStep%8===0)tone(ch[0]/2,.9,"sine",.05,0,"m");
+    const ch=CH[Math.floor(mStep/8)%4],km=[1,1.122,1.26,1.335,1.498][Math.min(4,Math.floor((S.day-1)/10))];
+    tone(ch[[0,1,2,3,2,1,2,1][mStep%8]]*km,.45,"triangle",.035,0,"m");
+    if(mStep%8===0)tone(ch[0]/2*km,.9,"sine",.05,0,"m");
     mStep++;
   },330);
 }
-const haptic=ms=>{try{navigator.vibrate&&navigator.vibrate(ms);}catch(e){}};
+const haptic=ms=>{try{if(S.haptic!==false)navigator.vibrate&&navigator.vibrate(ms);}catch(e){}};
 
 /* ============ POMOCNICZE ============ */
 let toastT=0;
@@ -1020,15 +1080,18 @@ function custTap(i){
   const tip=Math.round(pf*4*(1+(S.rep-3)*.1));
   const isSp=!!(S.special&&d.rid===S.special.id);
   const pay=Math.round((d.base+(o.k==="free"?5:0))*mult*comb*(S.event&&S.event.type==="happy"?1.5:1)*(isSp?1.5:1))+tip;
-  o.got=true;c.lastDish=d.e;S.coins+=pay;S.earned+=pay;S.hand=null;
-  if(q.k===3){S.combo++;S.stat.ideal++;}else{S.combo=0;if(q.k===2)S.stat.good++;else S.stat.late++;}
+  o.got=true;c.lastDish=d.e;S.coins+=pay;S.earned+=pay;S.hand=null;S.tot.served++;S.tot.earned+=pay;if(c.type==="vip")S.tot.vip++;
+  if(q.k===3){S.combo++;S.stat.ideal++;S.tot.ideal++;}else{S.combo=0;if(q.k===2)S.stat.good++;else S.stat.late++;}
+  S.tot.combo=Math.max(S.tot.combo,S.combo);
   S.rep=Math.max(0,Math.min(5,S.rep+(pf>.5?.05:.02)+(q.k===3?.04:0)-(q.k===1?.03:0)-(note?.05:0)));
   S.pops.push({x:c.x,t:0,txt:"+"+pay+" zł",col:"#ffd25e"});
   if(q.k===3)S.pops.push({x:c.x,t:-.25,dy:1.3,txt:"⭐ Idealne!",col:"#fff"});
+  if(q.k===3&&S.vfx!==false){for(let i=0;i<16;i++)S.spk.push({x:c.x,y:CT-U*2.6,vx:(Math.random()-.5)*W*.35,vy:-Math.random()*H*.45-H*.1,t:0,c:rnd(["#ffd25e","#fff3b0","#ff9a4a","#ffffff"])});}
   S.pops.push({x:c.x,t:-.45,dy:2.6,txt:(pf>.6?"😍 ":pf>.3?"🙂 ":"😅 ")+rnd(q.k===3?SAY.ideal:q.k===2?SAY.good:SAY.late),col:"#fff"});
   say("+"+pay+" zł · "+q.l+(isSp?" · 🌟 danie dnia ×1,5":"")+(c.type==="vip"?" · VIP 👑":"")+note+(S.combo>=2?" · seria x"+S.combo+" 🔥":"")+(fifo?" · ℹ️ W gastronomii obsługujemy według kolejki":""));
   sfx.coin();haptic(20);dirty=true;rewardFx(c,d,q,pay);
   if(c.orders.every(x=>x.got)){S.served++;leave(i,true);}
+  checkAch();
 }
 function sceneTap(e){
   const r=cv.getBoundingClientRect(),x=e.clientX-r.left;
@@ -1074,6 +1137,7 @@ function tick(dt){
   });
   S.dine=S.dine.filter(d=>!d.dead);
   S.pops.forEach(p=>p.t+=dt);S.pops=S.pops.filter(p=>p.t<1.3);
+  S.spk.forEach(s=>{s.t+=dt;s.x+=s.vx*dt;s.y+=s.vy*dt;s.vy+=H*1.2*dt;});S.spk=S.spk.filter(s=>s.t<.9);
   S.st.forEach(st=>{
     if(st.state==="cooking"){
       st.t+=dt;
@@ -1109,7 +1173,7 @@ function endDay(){
   S.maxLv=Math.max(S.maxLv,nextLevel);
   S.day=ok?S.maxLv:S.day;
   const fresh=ok?RECIPES.filter(r=>r.day===S.day):[];
-  save();
+  save();checkAch();
   endData={ok,stars,tg,fresh,revs:reviews()};
   if(ok)sfx.tada();
   if(S.learn)startQuiz();else showEnd();
@@ -1161,7 +1225,7 @@ function lessonView(){
     return;
   }
   const pass=st.score>=Math.ceil(L.q.length*2/3),first=pass&&!S.done.includes(L.id);
-  if(first){S.done.push(L.id);S.coins+=25;save();sfx.tada();}
+  if(first){S.done.push(L.id);S.coins+=25;save();sfx.tada();checkAch();}
   const all=S.done.length===LESSONS.length;
   overlay(`<h2>${pass?"Lekcja zaliczona! 🎉":"Spróbuj jeszcze raz 💪"}</h2><div class="stars">${pass?"⭐":"☆"}</div>
     <p>Wynik quizu: <b>${st.score} z ${L.q.length}</b>${first?"<br>Nagroda: <b>+25 zł</b>":""}</p>
@@ -1213,9 +1277,10 @@ function resize(){
   const B=mk();paintFG(B[1]);fg=B[0];
 }
 function paintBG(a){
-  let gr=a.createLinearGradient(0,0,0,FL);gr.addColorStop(0,"#8f3d2d");gr.addColorStop(1,"#6a281f");
+  const T=TH();
+  let gr=a.createLinearGradient(0,0,0,FL);gr.addColorStop(0,T.wall[0]);gr.addColorStop(1,T.wall[1]);
   a.fillStyle=gr;a.fillRect(0,0,W,FL);
-  a.strokeStyle="rgba(255,225,190,.13)";a.lineWidth=1;
+  a.strokeStyle=T.brick;a.lineWidth=1;
   const bh=Math.max(7,U*.8),bw=bh*2.4;
   for(let y=0,r=0;y<FL;y+=bh,r++){
     a.beginPath();a.moveTo(0,y+.5);a.lineTo(W,y+.5);
@@ -1227,7 +1292,7 @@ function paintBG(a){
   a.fillStyle="#6a432d";a.fillRect(0,wy,W,2.5);
   a.strokeStyle="rgba(0,0,0,.3)";
   for(let x=0;x<W;x+=U*3){a.beginPath();a.moveTo(x+.5,wy+3);a.lineTo(x+.5,FL);a.stroke();}
-  gr=a.createLinearGradient(0,FL,0,H);gr.addColorStop(0,"#a4723f");gr.addColorStop(1,"#6a4425");
+  gr=a.createLinearGradient(0,FL,0,H);gr.addColorStop(0,T.floor[0]);gr.addColorStop(1,T.floor[1]);
   a.fillStyle=gr;a.fillRect(0,FL,W,H-FL);
   a.strokeStyle="rgba(0,0,0,.2)";
   for(let y=FL+U*1.2,i=0;y<H;y+=U*1.2,i++){
@@ -1474,6 +1539,7 @@ function draw(){
   S.q.forEach(c=>person(c,1,0));
   g.drawImage(fg,0,0,W,H);
   S.q.forEach(bubble);
+  S.spk.forEach(s=>{g.save();g.globalAlpha=Math.max(0,1-s.t/.9);g.fillStyle=s.c;g.beginPath();g.arc(s.x,s.y,Math.max(1.5,U*.24*(1-s.t/.9)+1),0,7);g.fill();g.restore();});
   S.pops.forEach(p=>{
     if(p.t<0)return;
     const k=p.t/1.3;g.save();g.globalAlpha=Math.min(1,(1-k*k)*1.6);g.font=`bold ${U*(p.txt.length>14?.82:1.1)}px system-ui,sans-serif,${EF}`;g.textAlign="center";
@@ -1620,6 +1686,7 @@ function appSVG(type,on){
   });
   $("time").textContent="⏱ "+Math.max(0,Math.ceil(S.time))+"s";$("time").classList.toggle("warn",S.running&&S.time>0&&S.time<20);
   $("coins").textContent="💰 "+S.coins+" zł";
+  {const av=document.querySelector(".avatar");if(av&&av.firstChild&&av.firstChild.nodeType===3&&av.firstChild.nodeValue!==CHEFS[S.chef])av.firstChild.nodeValue=CHEFS[S.chef];}
   $("rep").textContent="★ "+S.rep.toFixed(1);
   $("day").textContent="Poziom "+S.day+" · "+CHAPTERS[Math.min(4,Math.floor((S.day-1)/10))];$("title").textContent=titleOf()+chefName();
   const cb=$("combo");cb.style.display=S.combo>=2?"inline-block":"none";cb.textContent="🔥 x"+S.combo;
@@ -1663,15 +1730,21 @@ function showBook(){
 }
 const diffName=()=>({easy:"Łatwy",normal:"Normalny",hard:"Trudny"})[S.diff]||"Łatwy";
 function setDiff(id){S.diff=id;S.easy=id==="easy";S.hard=id==="hard";save();}
+const LOGO=`<svg class="k-home-logo" viewBox="0 0 440 150" role="img" aria-label="Gotuj i Mroź">
+<circle cx="72" cy="76" r="60" fill="#f0762d" stroke="#fff3dc" stroke-width="6"/>
+<path d="M44 62a17 17 0 0 1 9-28 21 21 0 0 1 38-4 18 18 0 0 1 14 31z" fill="#fff"/><rect x="48" y="60" width="48" height="17" rx="4" fill="#fff"/>
+<g stroke="#bfe9ff" stroke-width="5" stroke-linecap="round"><path d="M72 86v32M58 94l28 16M86 94L58 110"/></g>
+<text x="150" y="80" font-family="Georgia,serif" font-weight="900" font-size="60" fill="#fff3dc" stroke="#3a120d" stroke-width="1.5" paint-order="stroke">Gotuj</text>
+<text x="150" y="134" font-family="Georgia,serif" font-weight="900" font-size="54" fill="#ffd25e" stroke="#3a120d" stroke-width="1.5" paint-order="stroke">i <tspan fill="#fff3dc">Mroź</tspan></text></svg>`;
 function updateHome(){
-  const known=unlocked().length;
-  $("home").querySelector(".hm-in").innerHTML=`<div class="hm-l"><div class="hm-chef">👩‍🍳</div><h1>Gotuj <span>i</span> Mroź</h1><p>Prowadź restaurację i ucz się gastronomii</p>
-    <div class="hm-chips"><span>⭐ ${S.rep.toFixed(1)}</span><span>🎚️ ${diffName()}</span><span>🗺️ Poziom ${S.day}/50</span><span>💰 ${S.coins} zł</span></div></div>
-    <div class="hm-r"><button class="hbtn play" data-act="startday">▶ ${S.day>1?"KONTYNUUJ · poziom "+S.day:"GRAJ"}</button>
-      <div class="hrow"><button class="hbtn" data-act="map"><b>🗺️</b>Poziomy<small>${S.maxLv} z 50</small></button><button class="hbtn" data-act="school"><b>🎓</b>Szkoła<small>${S.done.length} z ${LESSONS.length} lekcji</small></button></div>
-      <div class="hrow"><button class="hbtn" data-act="book"><b>📖</b>Książka<small>${known} z ${RECIPES.length} · moje: ${MY.length}</small></button><button class="hbtn" data-act="creator"><b>✏️</b>Kreator dań<small>własne przepisy</small></button></div>
-      <div class="hrow"><button class="hbtn" data-act="how"><b>❓</b>Jak grać<small>zasady i samouczek</small></button><button class="hbtn" data-act="settings"><b>⚙️</b>Ustawienia<small>trudność, dźwięk</small></button></div></div>
-    <div class="hm-ver">Gotuj i Mroź · wersja 2.4</div>`;
+  const kd=(typeof K!=="undefined")?(K.load(),{rank:K.rank(),st:K.total(),max:K_RECIPES.length*3}):{rank:"",st:0,max:0};
+  $("home").querySelector(".hm-in").innerHTML=`<div class="hm-l">${LOGO}<p>Gotuj prawdziwe polskie przepisy i ucz się gastronomii</p>
+    <div class="hm-chips"><span>${CHEFS[S.chef]} ${esc(S.name||kd.rank)}</span><span>⭐ ${kd.st}/${kd.max}</span><span>💰 ${S.coins} zł</span></div></div>
+    <div class="hm-r"><button class="hbtn play" data-act="kplay"><span>🍳 KUCHNIA SZEFA<small>${esc(kd.rank)}</small></span></button>
+      <button class="hbtn quick" data-act="startday"><b>⚡</b><span>Szybka zmiana (klasyczna)<small>poziom ${S.day} z 50 · ${diffName()}</small></span></button>
+      <div class="hrow3"><button class="hbtn" data-act="kplay"><b>📖</b>Księga<small>${K_RECIPES.length} przepisów</small></button><button class="hbtn" data-act="school"><b>🎓</b>Szkoła<small>${S.done.length}/${LESSONS.length}</small></button><button class="hbtn" data-act="creator"><b>✏️</b>Kreator<small>moje: ${MY.length}</small></button></div>
+      <div class="hrow3"><button class="hbtn" data-act="room"><b>🏅</b>Pokój szefa<small>${S.ach.length}/${ACH.length} 🏆</small></button><button class="hbtn" data-act="book"><b>🔎</b>Produkty<small>kalorie, alergeny</small></button><button class="hbtn" data-act="settings"><b>⚙️</b>Ustawienia<small>dźwięk, trudność</small></button></div></div>
+    <button class="hq" data-act="how" title="Jak grać">❓</button><div class="hm-ver">Gotuj i Mroź · wersja 3.0</div>`;
 }
 function menu(){
   menuMode=true;S.running=false;S.guide=null;coachClear();closeOv();
@@ -1684,7 +1757,7 @@ function showSettings(){
   overlay(`<h2>⚙️ Ustawienia</h2>
     <div class="setrow"><span>Poziom trudności<small>Zmienisz go w każdej chwili</small></span><div class="seg">${["easy","normal","hard"].map(k=>`<button class="${S.diff===k?"on":""}" data-act="diff" data-id="${k}">${D[k]}</button>`).join("")}</div></div>
     <div class="diffd">${desc}</div>
-    ${tg("sound","🔊 Dźwięki","kliknięcia, monety, urządzenia")}${tg("music","🎵 Muzyka","spokojna muzyka w tle")}${tg("hints","💡 Podpowiedzi","pokazuj składniki w zamówieniach")}${tg("learn","🧠 Tryb nauki","lekcje, pytanie dnia")}${tg("myOrders","⭐ Moje dania u gości","goście zamawiają też Twoje przepisy")}
+    ${tg("sound","🔊 Dźwięki","kliknięcia, monety, urządzenia")}${tg("music","🎵 Muzyka","spokojna muzyka w tle")}${tg("hints","💡 Podpowiedzi","pokazuj składniki w zamówieniach")}${tg("learn","🧠 Tryb nauki","lekcje, pytanie dnia")}${tg("myOrders","⭐ Moje dania u gości","goście zamawiają też Twoje przepisy")}${tg("haptic","📳 Wibracje","krótkie drgania telefonu w grze")}${tg("vfx","💥 Efekty ekranu","wstrząsy, konfetti i iskry")}
     <div class="setrow"><span>Poradnik<small>pokaż pierwszy poradnik jeszcze raz</small></span><div class="seg"><button data-act="resettut">Pokaż</button></div></div>
     <div class="setrow"><span>Postęp w grze<small>poziom ${S.maxLv}/50 · ukończone: ${Object.keys(S.stars).length}</small></span><div class="seg"><button data-act="resetprog" style="${S._confirmReset?"background:#e5484d;color:#fff;border-color:#e5484d":""}">${S._confirmReset?"Na pewno? Kliknij jeszcze raz":"Zresetuj"}</button></div></div>
     ${menuMode?`<div class="setrow"><span>💾 Kopia zapasowa<small>postęp i własne przepisy jako kod (bez internetu)</small></span><div class="seg"><button data-act="bk_backup">Zapisz</button><button data-act="bk_restore">Przywróć</button></div></div>`:""}
@@ -1793,11 +1866,49 @@ function copyShare(){
   try{if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(SH.text).then(()=>say("Skopiowano 📋"),fallback);return;}}catch(e){}
   fallback();
 }
-const MYACT=/^(c_|bk_|creator$|briefgo$|redotut$)/;
+const MYACT=/^(c_|bk_|rm_|creator$|room$|kplay$|briefgo$|redotut$)/;
+function showAch(a,n){
+  let el=document.getElementById("ach");if(!el){el=document.createElement("div");el.id="ach";document.body.appendChild(el);}
+  el.innerHTML="🏆 "+esc(a.n)+"<br><small>"+esc(a.d)+" · +25 zł"+(n>1?" (+"+(n-1)+" więcej)":"")+"</small>";
+  el.classList.add("on");clearTimeout(el._t);el._t=setTimeout(()=>el.classList.remove("on"),3400);
+}
+function checkAch(){
+  const n=achNew(S);if(!n.length)return;
+  n.forEach(a=>{S.ach.push(a.id);S.coins+=25;});
+  save();showAch(n[0],n.length);sfx.tada();
+}
+let RT="ach";
+function showRoom(tab){
+  RT=tab||RT||"ach";
+  const tabs=[["ach","🏆 Osiągnięcia"],["th","🎨 Wnętrza"],["chef","👩‍🍳 Szef"],["stat","📊 Statystyki"]];
+  let body="";
+  if(RT==="ach"){
+    body=`<p class="sub">Zdobyte: ${S.ach.length}/${ACH.length} · każde daje +25 zł</p>`+ACH.map(a=>{const done=S.ach.includes(a.id),v=Math.min(a.v,achValue(a.k,S));
+      return `<div class="rec ${done?"":"lock"}"><span class="re">${done?a.e:"🔒"}</span><div><b>${a.n}</b><small>${a.d} · ${v}/${a.v}</small></div><span class="rp">${done?"✅":""}</span></div>`;}).join("");
+  }else if(RT==="th"){
+    body=`<p class="sub">Zmień wygląd swojej restauracji. Masz ${S.coins} zł.</p>`+THEMES.map(t=>{const own=S.own.includes(t.id),use=S.theme===t.id;
+      return `<div class="rec"><span class="re">${t.e}</span><div><b>${t.n}</b><small>${own?"Posiadasz":t.cost+" zł"}</small></div>${use?`<span class="rp">✅ używane</span>`:own?`<button class="bigbtn sm" style="margin-left:auto" data-act="rm_use" data-id="${t.id}">Użyj</button>`:`<button class="bigbtn sm" style="margin-left:auto;${S.coins<t.cost?"opacity:.45":""}" data-act="rm_buy" data-id="${t.id}">Kup ${t.cost} zł</button>`}</div>`;}).join("");
+  }else if(RT==="chef"){
+    body=`<p class="sub">Wybierz, jak wygląda Twój szef kuchni</p><div class="egrid" style="justify-content:center">${CHEFS.map((c,i)=>`<button class="eg ${S.chef===i?"on":""}" style="width:58px;height:58px;font-size:32px" data-act="rm_chef" data-id="${i}">${c}</button>`).join("")}</div>`;
+  }else{
+    const done=Object.keys(S.stars).filter(k=>S.stars[k]>0).length,st=Object.values(S.stars).reduce((a,b)=>a+b,0);
+    const rows=[["🍽️","Podanych dań",fmt(S.tot.served)],["⭐","Idealnych dań",fmt(S.tot.ideal)],["💰","Zarobione łącznie",fmt(S.tot.earned)+" zł"],["🏆","Najlepsza zmiana",fmt(S.best)+" zł"],["🗺️","Ukończone poziomy",done+" z 50"],["✨","Zebrane gwiazdki",st+" z 150"],["🔥","Najdłuższa seria idealnych",S.tot.combo],["🤵","Obsłużeni VIP-y",S.tot.vip],["📖","Znane przepisy",unlocked().length+" z "+RECIPES.length],["✏️","Własne przepisy",MY.length],["🎓","Zaliczone lekcje",S.done.length+" z "+LESSONS.length],["🧠","Poprawne odpowiedzi",S.quizTot?S.quizOK+" z "+S.quizTot:"–"]];
+    body=rows.map(r=>`<div class="rec"><span class="re">${r[0]}</span><div><b>${r[1]}</b></div><span class="rp">${r[2]}</span></div>`).join("");
+  }
+  overlay(`<h2>🏅 Pokój szefa</h2><div class="btabs">${tabs.map(t=>`<button class="btab ${RT===t[0]?"on":""}" data-act="rm_tab" data-id="${t[0]}">${t[1]}</button>`).join("")}</div>${body}<button class="bigbtn" data-act="closebook">Wróć do menu</button>`);
+}
 function creatorAct(a,el){
   const id=el.dataset.id;
   switch(a){
     case "creator": if(menuMode)creatorOpen();return true;
+    case "room": if(menuMode)showRoom("ach");return true;
+    case "kplay": if(menuMode&&typeof K!=="undefined")K.open();return true;
+    case "rm_tab": if(menuMode)showRoom(id);return true;
+    case "rm_use": {const t=THEMES.find(x=>x.id===id);if(t&&S.own.includes(t.id)){S.theme=t.id;save();resize();showRoom("th");}return true;}
+    case "rm_buy": {const t=THEMES.find(x=>x.id===id);if(!t||S.own.includes(t.id))return true;
+      if(S.coins<t.cost){say("Za mało pieniędzy: potrzeba "+t.cost+" zł");sfx.bad();return true;}
+      S.coins-=t.cost;S.own.push(t.id);S.theme=t.id;save();resize();sfx.tada();showRoom("th");return true;}
+    case "rm_chef": {const i=+id;if(Number.isInteger(i)&&i>=0&&i<CHEFS.length){S.chef=i;save();sfx.put();showRoom("chef");}return true;}
     case "c_st": if(CR){CR.st=id;creatorView();}return true;
     case "c_add": if(CR){if(CR.ing.length>=4){say("Maksymalnie 4 składniki");sfx.bad();}else if(hasIng(id)){CR.ing.push(id);sfx.put();creatorView();}}return true;
     case "c_rm": if(CR){CR.ing.splice(+el.dataset.i,1);sfx.put();creatorView();}return true;
@@ -1816,7 +1927,7 @@ function creatorAct(a,el){
       if(!base){say("Nie można zapisać tego przepisu");return true;}
       const i=CR.id?MY.findIndex(r=>r.id===CR.id):-1;
       if(i>=0)MY[i]=finishRecipe(base,CR.id);else MY.push(finishRecipe(base));
-      saveMy();sfx.tada();say("Zapisano: "+base.e+" "+base.name);CR=null;S.bookTab="my";showBackToBook();return true;
+      saveMy();checkAch();sfx.tada();say("Zapisano: "+base.e+" "+base.name);CR=null;S.bookTab="my";showBackToBook();return true;
     }
     case "bk_open": recipeDetail(id);return true;
     case "bk_prod": if(hasIng(id))prodCard(id);return true;
@@ -1843,7 +1954,7 @@ function creatorAct(a,el){
         if(MY.length>=MAX_MY||dupOf(r.st,r.ing)){skipped++;continue;}
         MY.push(finishRecipe(r));added++;
       }
-      if(added)saveMy();
+      if(added){saveMy();checkAch();}
       IMPT="";S.bookTab="my";showBackToBook();sfx.tada();
       say(added?("Dodano przepisów: "+added+(skipped?" (pominięto: "+skipped+")":"")):"Nic nie dodano: takie przepisy już masz");
       return true;
@@ -1921,7 +2032,7 @@ document.addEventListener("pointerdown",e=>{
   if(el.dataset.act==="resettut"){e.preventDefault();S.tutDone=false;save();say("Poradnik pokaże się na początku poziomu 1");return;}
   if(el.dataset.act==="resetprog"){e.preventDefault();
     if(!S._confirmReset){S._confirmReset=true;showSettings();return;}
-    S._confirmReset=false;S.day=1;S.maxLv=1;S.stars={};S.coins=30;S.rep=3;S.best=0;S.up={cook:0,burn:0,pat:0,stock:0};S.done=[];S.tutDone=false;S.quizOK=0;S.quizTot=0;save();menu();return;}
+    S._confirmReset=false;S.day=1;S.maxLv=1;S.stars={};S.coins=30;S.rep=3;S.best=0;S.up={cook:0,burn:0,pat:0,stock:0};S.done=[];S.tutDone=false;S.quizOK=0;S.quizTot=0;S.ach=[];S.tot={served:0,ideal:0,earned:0,combo:0,vip:0};save();menu();return;}
   if(el.dataset.act==="closeset"){e.preventDefault();S._confirmReset=false;if(menuMode)menu();else showPause(true);return;}
   if(el.dataset.act==="pause"){e.preventDefault();if(!menuMode)showPause();return;}
   if(el.dataset.act==="resume"){e.preventDefault();closeOv();S.running=!!S._wasRunning;return;}
@@ -1959,7 +2070,7 @@ document.addEventListener("pointerdown",e=>{
     if(st.pick!==null||qi<0||qi>=L.q.length)return;
     st.pick=+el.dataset.i;if(st.pick===L.q[qi].c){st.score++;sfx.coin();}else sfx.bad();lessonView();return;}
   if(a==="qans"){const Z=S.quiz;if(!Z||Z.done)return;Z.pick=+el.dataset.i;Z.done=true;S.quizTot++;
-    if(Z.pick===Z.q.c){S.quizOK++;S.coins+=15;sfx.coin();}else sfx.bad();save();renderQuiz();return;}
+    if(Z.pick===Z.q.c){S.quizOK++;S.coins+=15;sfx.coin();}else sfx.bad();save();checkAch();renderQuiz();return;}
   if(a==="qnext"){showEnd();return;}
   if(a==="booktab"){S.bookTab=el.dataset.id;overlay(bookHTML());return;}
   if(a==="upgrade"){
@@ -1977,7 +2088,7 @@ document.addEventListener("pointerdown",e=>{
   act(el.dataset);
 });
 /* ---------- efekty: monety, konfetti, wstrząsy, loty ---------- */
-function shake(){const a=document.getElementById("app");if(!a)return;a.classList.remove("shake");void a.offsetWidth;a.classList.add("shake");}
+function shake(){if(S.vfx===false)return;const a=document.getElementById("app");if(!a)return;a.classList.remove("shake");void a.offsetWidth;a.classList.add("shake");}
 function flyEmoji(x0,y0,x1,y1,txt,dur){
   const el=document.createElement("div");el.className="fly";el.textContent=txt;document.body.appendChild(el);
   const a=el.animate([{transform:`translate(${x0-15}px,${y0-15}px) scale(.8) rotate(-10deg)`,opacity:1},
@@ -1996,7 +2107,7 @@ function coinBurst(x,y,n){
     a.onfinish=()=>el.remove();
   },i*50);
 }
-function confetti(){
+function confetti(){if(S.vfx===false)return;
   const cols=["#ffd25e","#ff7a2f","#3cb371","#4aa8ff","#e5484d","#c678dd"];
   for(let i=0;i<70;i++){
     const el=document.createElement("div");el.className="cf";el.style.left=Math.random()*100+"vw";el.style.background=cols[i%cols.length];
@@ -2260,6 +2371,7 @@ function loop(now){
 history.pushState({g:1},"");
 let backWarned=false;
 window.addEventListener("popstate",()=>{
+  if(typeof K!=="undefined"&&K.active()){K.back();history.pushState({g:1},"");return;}
   const ovOn=$("ov").classList.contains("on");
   if(!menuMode&&S.running&&!ovOn&&!S.guide){showPause();history.pushState({g:1},"");return;}
   if(!menuMode&&(endData||(ovOn&&!S._wasRunning))){menu();history.pushState({g:1},"");return;}
@@ -2271,5 +2383,13 @@ load();loadMy();S.st=STN.map(s=>freshStation(s.type));
 usedIng().forEach(i=>{S.stock[i]=3;});
 render();resize();splashRun();requestAnimationFrame(loop);
 </script>
+<script src="js/k-data.js"></script>
+<script src="js/k-engine.js"></script>
+<script src="js/k-more.js"></script>
+<script src="js/k-more2.js"></script>
+<script src="js/k-quiz.js"></script>
+<script src="js/k-dishes.js"></script>
+<script src="js/k-art.js"></script>
+<script src="js/k-ui.js"></script>
 </body>
 </html>

@@ -5,7 +5,6 @@ const vm=require('node:vm');
 const path=require('node:path');
 const root=path.join(__dirname,'..');
 const html=fs.readFileSync(path.join(root,'www/index.html'),'utf8');
-const original=fs.readFileSync(path.join(root,'index.html'),'utf8');
 const android=fs.readFileSync(path.join(root,'android/app/src/main/assets/public/index.html'),'utf8');
 function extract(name){
   const re=new RegExp('function '+name+'\\s*\\(');
@@ -28,12 +27,12 @@ function extract(name){
 function harness(saved){
   const storage={value:saved===undefined?null:JSON.stringify(saved),setItem(k,v){assert.equal(k,'gotuj_i_mroz_v2');this.value=v;},getItem(){return this.value;}};
   const S={coins:30,day:1,best:0,rep:3,sound:true,music:true,hints:true,diff:'easy',easy:true,hard:false,tutDone:false,maxLv:1,stars:{},learn:true,done:[],quizOK:0,quizTot:0,up:{cook:0,burn:0,pat:0,stock:0},earned:0,running:true,st:[],q:[]};
-  const ctx={S,SAVE_KEY:'gotuj_i_mroz_v2',localStorage:storage,RECIPES:[],reviews:()=>[],sfx:{tada(){}},startQuiz(){},showEnd(){},target:()=>100,unlocked:()=>[],Math,JSON,Object,Number};
+  const ctx={S,SAVE_KEY:'gotuj_i_mroz_v2',localStorage:storage,RECIPES:[],reviews:()=>[],sfx:{tada(){}},startQuiz(){},showEnd(){},checkAch(){},target:()=>100,unlocked:()=>[],Math,JSON,Object,Number};
   vm.createContext(ctx);
   vm.runInContext("const validLevel=n=>Number.isInteger(n)&&n>=1&&n<=50;const levelOr=(n,fallback)=>validLevel(n)?n:fallback;"+extract('load')+';'+extract('save')+';'+extract('endDay'),ctx);
   return {ctx,S,storage,load:()=>vm.runInContext('load()',ctx),save:()=>vm.runInContext('save()',ctx),endDay:()=>vm.runInContext('endDay()',ctx)};
 }
-test('three game copies remain identical',()=>{assert.equal(original,html);assert.equal(android,html);});
+test('android assets contain the same game as www',()=>{assert.equal(android,html);for(const f of ['js/k-data.js','js/k-engine.js','js/k-ui.js','css/k.css'])assert.equal(fs.readFileSync(path.join(root,'android/app/src/main/assets/public',f),'utf8'),fs.readFileSync(path.join(root,'www',f),'utf8'),f);});
 test('all 50 levels unlock sequentially and level 50 is capped',()=>{
   const h=harness();h.S.learn=false;
   for(let level=1;level<=50;level++){
