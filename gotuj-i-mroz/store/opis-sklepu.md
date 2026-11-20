@@ -13,8 +13,8 @@ Klienci wchodzą drzwiami, ustawiają się w kolejce przy ladzie i czekają na s
 
 GOTUJ I MROŹ
 • Garnek, patelnia, piekarnik, mikrofalówka i zamrażarka – pięć urządzeń do obsługi jednocześnie.
-• Chwyć składnik palcem i wrzuć go do urządzenia, a gotowe danie przeciągnij do klienta. Możesz też po prostu dotykać.
-• Warzywa, owoce, mięso, nabiał i produkty spiżarni – 46 składników.
+• Wystarczy dotykać: dotknij składnik, a sam trafi do urządzenia, dotknij gotowe danie, a pójdzie do klienta, który o nie prosi.
+• Warzywa, owoce, mięso, nabiał i produkty spiżarni – 45 składników.
 • 72 prawdziwe przepisy: żurek, bigos, pierogi, schabowy, pizza, lasagne, szarlotka, lody, sorbety i wiele więcej.
 
 
@@ -32,13 +32,21 @@ WIĘCEJ FRAJDY
 • Pierwsze zamówienie (omlet) poprowadzi Cię krok po kroku: uczysz się, wykonując je. Przycisk ❓ pokazuje obrazkową instrukcję i gdzie co jest.
 • Poziom łatwy (domyślny) daje więcej czasu i mniej klientów. Gdy nic nie robisz, animowana ręka pokazuje, co dokąd przeciągnąć.
 
+KREATOR DAŃ
+• Wymyśl własny przepis: wybierz urządzenie, 2–4 składniki, nazwę i ikonę, na przykład hot-doga z serem. Gra liczy cenę, kalorie i alergeny.
+• Goście zamawiają Twoje dania, a przepisami możesz wymienić się ze znajomymi za pomocą kodu. Działa bez internetu.
+• Książka kucharska pokazuje kalorie i alergeny każdego dania, a karty 45 produktów podpowiadają, jak je przechowywać i mrozić.
+
 SZKOŁA GASTRONOMII
-• 8 lekcji z quizami: higiena i HACCP, temperatury i mrożenie, techniki gotowania, przechowywanie i FIFO, alergeny, obsługa gościa, bezpieczeństwo pracy, kuchnia bez marnowania żywności.
+• 11 lekcji z quizami: higiena i HACCP, temperatury i mrożenie, techniki gotowania, przechowywanie i FIFO, alergeny, 14 alergenów w UE, mrożenie w praktyce, zdrowy talerz, obsługa gościa, bezpieczeństwo pracy, kuchnia bez marnowania żywności.
 • Pytanie dnia po każdej zmianie i Certyfikat Mistrza Gastronomii.
 • Naucz się zasad pracy w prawdziwej kuchni: myj ręce po surowym mięsie, uważaj na alergeny gości, obsługuj według kolejki.
 
 WŁASNE DANIA
 Nie znasz przepisu? Wrzuć dowolne 2–4 składniki do urządzenia i stwórz własne danie. Możliwych kombinacji jest prawie milion!
+
+POCZUJ SIĘ JAK SZEF KUCHNI
+• Wpisz swoje imię, poznaj danie dnia (+50% zapłaty), słuchaj, co mówią goście, i odbierz ocenę szefa po każdej zmianie.
 
 CZUJ SIĘ JAK PRAWDZIWA KUCHARKA
 • Wyjmij danie we właściwym momencie – idealne ⭐ płaci więcej, przypalone traci wartość.

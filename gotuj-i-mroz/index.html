@@ -13,7 +13,7 @@ html,body{margin:0;height:100%;overflow:hidden;background:var(--bg);color:var(--
   touch-action:manipulation;-webkit-tap-highlight-color:transparent}
 button{font:inherit;color:inherit}
 #app{height:100vh;height:100dvh;padding:max(6px,env(safe-area-inset-top)) max(6px,env(safe-area-inset-right)) max(6px,env(safe-area-inset-bottom)) max(6px,env(safe-area-inset-left));
-  display:grid;gap:6px;grid-template-columns:1fr;grid-template-rows:auto minmax(0,1.05fr) minmax(0,.95fr) auto;
+  display:grid;gap:6px;grid-template-columns:1fr;grid-template-rows:auto minmax(100px,1.05fr) minmax(98px,.95fr) auto;
   grid-template-areas:"hud" "cust" "stat" "side"}
 @media (orientation:landscape){
   #app{grid-template-columns:minmax(0,1.75fr) minmax(0,1fr);grid-template-rows:auto minmax(0,1.32fr) minmax(0,.82fr);
@@ -77,7 +77,7 @@ button{font:inherit;color:inherit}
 @keyframes wob{from{transform:rotate(-6deg)}to{transform:rotate(6deg)}}
 .st .slots{display:flex;gap:1px;min-height:20px;font-size:clamp(14px,3.2vh,22px);justify-content:center;flex-wrap:wrap;line-height:1.1}
 .st .msg{font-size:clamp(9px,1.7vh,12px);font-weight:700;text-align:center;line-height:1.1}
-.st .clr{position:absolute;top:2px;right:2px;border:0;background:rgba(0,0,0,.15);border-radius:50%;width:20px;height:20px;font-size:10px;cursor:pointer;line-height:1;padding:0}
+.st .clr{position:absolute;top:2px;right:2px;border:0;background:rgba(0,0,0,.15);border-radius:50%;width:28px;height:28px;font-size:12px;cursor:pointer;line-height:1;padding:0}
 .st .go{background:var(--accent);color:#fff;border:0;border-radius:8px;font-weight:900;font-size:12px;padding:4px 8px;box-shadow:0 2px 0 #b04a12;cursor:pointer}
 .bar{height:7px;width:100%;background:rgba(0,0,0,.18);border-radius:5px;overflow:hidden}
 .bar i{display:block;height:100%;width:0}
@@ -110,7 +110,9 @@ button{font:inherit;color:inherit}
 .tab .dot{display:inline-block;width:9px;height:9px;border-radius:50%;background:#ff5a3c;margin-left:3px;vertical-align:middle}
 @media (max-width:900px){.tab .tl{display:none}}
 #tray{background:linear-gradient(#8a5a37,#6b4428);border-radius:0 0 12px 12px;box-shadow:var(--shadow);padding:8px 6px 6px;display:grid;grid-template-columns:repeat(auto-fill,minmax(60px,1fr));gap:8px;align-content:start;overflow:auto;min-height:0;flex:1;border:2px solid #4a2d19}
-@media (orientation:portrait){#tray{flex:none;max-height:26vh}}
+@media (orientation:portrait){#tray{flex:none;max-height:19vh}}
+@media (orientation:portrait) and (max-height:620px){#tray{max-height:15vh}#mission{display:none}.tab{padding:3px 1px}.tab .ti{font-size:14px}#recipe{padding:3px 8px}}
+@media (max-height:420px){.st .msg{font-size:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}.tab{padding:3px 1px}}
 .tile{position:relative;border:2px solid #e3c79a;background:var(--cream);border-radius:12px;padding:3px 2px 2px;text-align:center;cursor:pointer;min-height:54px;color:var(--ink)}
 .tile.held{border-color:var(--accent);background:#ffe1bd;transform:translateY(-2px)}
 .tile.out{opacity:.8;background:#e3dccf}
@@ -119,8 +121,8 @@ button{font:inherit;color:inherit}
 .tile .te{font-size:22px;line-height:1.1}
 .tile .tn{font-size:9px;font-weight:700;line-height:1}
 .tile .badge{position:absolute;top:-6px;left:-4px;background:var(--ink);color:#fff;border-radius:999px;min-width:19px;height:19px;font-size:10px;font-weight:800;display:flex;align-items:center;justify-content:center;padding:0 4px}
-.tile .plus{position:absolute;top:-6px;right:-4px;background:var(--ok);color:#fff;border:0;border-radius:999px;height:19px;font-size:9px;font-weight:800;padding:0 5px;cursor:pointer}
-#toast{position:fixed;left:50%;top:52px;transform:translateX(-50%);background:rgba(20,10,5,.92);color:#fff;padding:7px 16px;border-radius:999px;font-weight:700;font-size:14px;pointer-events:none;opacity:0;transition:opacity .2s;max-width:90vw;text-align:center;z-index:5}
+.tile .plus{position:absolute;top:-6px;right:-4px;background:var(--ok);color:#fff;border:0;border-radius:999px;height:19px;font-size:9px;font-weight:800;padding:0 5px;line-height:19px;pointer-events:none}
+#toast{position:fixed;left:50%;top:52px;transform:translateX(-50%);background:rgba(20,10,5,.92);color:#fff;padding:7px 16px;border-radius:999px;font-weight:700;font-size:14px;pointer-events:none;opacity:0;transition:opacity .2s;max-width:90vw;text-align:center;z-index:120}
 #toast.on{opacity:1}
 /* okna */
 #ov{position:fixed;inset:0;background:rgba(20,10,5,.72);display:none;align-items:center;justify-content:center;padding:10px;z-index:10}
@@ -145,6 +147,29 @@ button{font:inherit;color:inherit}
 .btabs{display:flex;gap:4px;margin:6px 0;flex-wrap:wrap;justify-content:center}
 .btab{border:0;border-radius:999px;padding:6px 12px;font-weight:800;font-size:13px;background:#e3c79a;cursor:pointer}
 .btab.on{background:var(--accent);color:#fff}
+input,textarea{-webkit-user-select:text;user-select:text}
+.goalbox{background:#fff0c9;border:2px solid #f0c36a;border-radius:12px;padding:8px 10px;margin:8px 0;font-size:15px}
+.goalbox small{font-size:12px;font-weight:700;opacity:.85}
+.crrow{text-align:left;margin:8px 0;font-size:14px}
+.crrow small{opacity:.7}
+.cin{width:100%;margin-top:4px;border:2px solid #e3c79a;border-radius:10px;padding:8px 10px;font:inherit;font-size:15px;background:#fff;color:var(--ink);resize:vertical}
+.cin:focus{outline:3px solid rgba(240,118,45,.45);border-color:var(--accent)}
+.csel{display:flex;flex-wrap:wrap;gap:5px;min-height:34px;margin:5px 0;align-items:center}
+.cchip{background:#fff;border:2px solid var(--accent);border-radius:999px;padding:4px 10px;font-weight:800;font-size:13px;cursor:pointer}
+.cat{font-weight:900;font-size:12px;margin:8px 0 3px;opacity:.75}
+.igrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(64px,1fr));gap:5px}
+.ig{background:#fff;border:2px solid #e3c79a;border-radius:10px;padding:4px 2px;cursor:pointer;line-height:1.1;min-height:48px}
+.ig span{display:block;font-size:22px}
+.ig small{display:block;font-size:10px;font-weight:800}
+.egrid{display:flex;flex-wrap:wrap;gap:4px;margin-top:4px}
+.eg{background:#fff;border:2px solid #e3c79a;border-radius:10px;font-size:22px;width:42px;height:42px;cursor:pointer;padding:0}
+.eg.on{border-color:var(--accent);background:#ffe3c7;box-shadow:0 0 0 2px rgba(240,118,45,.4)}
+.crprev{border-radius:10px;padding:8px 10px;margin:8px 0;font-size:13px;font-weight:700;text-align:left}
+.crbar{position:sticky;bottom:-14px;background:var(--cream);padding:4px 0 2px;margin-top:6px;border-top:2px solid #e3c79a}
+.crbar .crprev{margin:4px 0}
+.crbar .bigbtn{margin-top:2px}
+.crprev.ok{background:#d8f3e2}
+.crprev.no{background:#ffe3d6}
 .review{background:#fff;border-radius:10px;padding:6px 10px;margin:5px 0;text-align:left;font-size:13px;font-style:italic;border-left:4px solid var(--gold)}
 .review small{display:block;font-style:normal;opacity:.7}
 .newr{display:flex;flex-wrap:wrap;gap:4px;justify-content:center;margin:4px 0}
@@ -268,6 +293,8 @@ button{font:inherit;color:inherit}
 @keyframes evtp{to{transform:translateX(-50%) scale(1.05)}}
 #mission{display:block;font-size:10px;font-weight:700;opacity:.95;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 button:active,.tile:active,.chip:active{transform:scale(.94)}
+.chip,.st{touch-action:none}
+.pill.warn{background:#c2261c;color:#fff;animation:pulse .5s infinite alternate}
 .st:active{transform:scale(.97)}
 .st.dim{opacity:.5;filter:saturate(.5)}
 .tile.dimmed{opacity:.55}
@@ -413,7 +440,8 @@ const RECIPES=[ // id, nazwa, emoji, urządzenie, składniki, czas, cena, dzień
  ["kiwi","Sorbet kiwi","🥝","frz","kiwi kiwi cytryna",5,16,8],
  ["lodyorzech","Lody orzechowe","🥜","frz","orzechy mleko czekolada",5,20,9]
 ].map(a=>({id:a[0],name:a[1],e:a[2],st:a[3],ing:a[4].split(" "),time:a[5],price:a[6],day:(a[7]-1)*2+1}));
-const R=id=>RECIPES.find(r=>r.id===id);
+let MY=[]; // własne przepisy gracza (localStorage)
+const R=id=>RECIPES.find(r=>r.id===id)||MY.find(r=>r.id===id);
 const SAVE_KEY="gotuj_i_mroz_v2";
 const dayTime=()=>Math.min(240,150+S.day*3); // czas poziomu w sekundach
 const CHAPTERS=["Bar mleczny","Restauracja rodzinna","Bistro","Restauracja z gwiazdką","Mistrzostwa kuchni"];
@@ -512,7 +540,35 @@ const LESSONS=[
   q:[
   {q:"Co zrobić z nadmiarem gotowych porcji, których nie sprzedałaś?",a:["Wyrzucić od razu","Szybko schłodzić, opisać i zamrozić","Zostawić na blacie do rana"],c:1,w:"Szybkie schłodzenie i zamrożenie zachowuje bezpieczeństwo i jakość."},
   {q:"Do czego użyć czystych obierek warzyw?",a:["Do bulionu warzywnego","Zawsze do kosza","Do zmywarki"],c:0,w:"Obierki z umytych warzyw nadają bulionowi smak."},
-  {q:"Co pomaga ograniczać straty?",a:["FIFO i planowanie","Kupowanie na oko","Brak notatek"],c:0,w:"Planowanie i rotacja zapasów to podstawa."}]}
+  {q:"Co pomaga ograniczać straty?",a:["FIFO i planowanie","Kupowanie na oko","Brak notatek"],c:0,w:"Planowanie i rotacja zapasów to podstawa."}]},
+ {id:"mrozenie",icon:"🧊",title:"Mrożenie w praktyce",cards:[
+  "Mrożenie niczego nie poprawia, tylko zatrzymuje jakość z chwili zamrożenia. Mroź świeże, dobre produkty.",
+  "Porcjuj przed zamrożeniem. Małe, płaskie porcje zamarzają szybko i równo, a rozmrażasz tylko tyle, ile potrzeba. W pojemniku zostaw trochę miejsca, bo zamarzająca woda zwiększa objętość.",
+  "Opisz każdy pojemnik: nazwa i data. Orientacyjnie: mięso mielone ok. 3 miesiące, kawałki mięsa i drób nawet 6–9 miesięcy, tłuste ryby 2–3 miesiące, zupy i gotowe dania 2–3 miesiące. Dłużej jest bezpiecznie, ale pogarsza się smak i konsystencja.",
+  "Gorące potrawy szybko schładzaj (np. w płaskich pojemnikach) i wkładaj do lodówki lub zamrażarki najlepiej w ciągu 2 godzin od ugotowania. Ugotowany ryż i makaron też schładzaj od razu.",
+  "Rozmrażaj w lodówce albo w szczelnym woreczku w zimnej wodzie, a w mikrofalówce tylko wtedy, gdy zaraz gotujesz. Raz rozmrożonej surowej żywności nie mrozimy ponownie. Z rozmrożonego mięsa możesz ugotować danie i dopiero je zamrozić."],
+  q:[
+  {q:"Ile mniej więcej można trzymać w zamrażarce mięso mielone?",a:["Około 3 miesięcy","Tylko 2 dni","Dokładnie 5 lat"],c:0,w:"Mięso mielone najlepiej zużyć w ok. 3 miesiące. Dłuższe mrożenie jest bezpieczne, ale gorsze w smaku."},
+  {q:"W ciągu ilu godzin od ugotowania warto schłodzić potrawę i schować do lodówki?",a:["W ciągu około 2 godzin","Po całej nocy na blacie","Za 8 godzin"],c:0,w:"Im krócej potrawa stoi w strefie niebezpiecznej, tym mniej bakterii się namnoży."},
+  {q:"Dlaczego w pojemniku z zupą zostawiamy trochę miejsca?",a:["Bo zamarzająca woda zwiększa objętość","Bo zupa wyparuje","Bo tak wygląda ładniej"],c:0,w:"Woda po zamarznięciu zajmuje więcej miejsca, a pełny pojemnik może pęknąć."},
+  {q:"Jak najlepiej rozmrażać mięso?",a:["W lodówce","W kuchni na blacie przez cały dzień","W gorącej wodzie"],c:0,w:"W lodówce temperatura jest bezpieczna i stała."}]},
+ {id:"talerz",icon:"🥗",title:"Zdrowy talerz",cards:[
+  "Zdrowy talerz to połowa warzyw i owoców (więcej warzyw), około jedna czwarta produktów zbożowych (pełnoziarniste są najlepsze) i około jedna czwarta produktów białkowych: ryby, jaja, mięso, rośliny strączkowe, nabiał.",
+  "Kalorie to energia z jedzenia. Zapotrzebowanie zależy od wieku, wzrostu i aktywności, więc nie ma jednej liczby dla wszystkich. Wartości w grze są orientacyjne i nie zastępują porady dietetyka.",
+  "Ogranicz cukier, sól i tłuszcze twarde. Smak podkręcaj ziołami, czosnkiem lub sokiem z cytryny. Pij wodę, a słodkie napoje zostaw na wyjątkowe okazje.",
+  "Różnorodność jest kluczem. Im więcej kolorów warzyw i owoców na talerzu, tym więcej różnych witamin i składników mineralnych."],
+  q:[
+  {q:"Jaką część zdrowego talerza powinny zajmować warzywa i owoce?",a:["Około połowy","Prawie nic","Tylko 5%"],c:0,w:"Połowa talerza to warzywa i owoce, z przewagą warzyw."},
+  {q:"Czym podkręcić smak zamiast dużą ilością soli?",a:["Ziołami, czosnkiem, sokiem z cytryny","Jeszcze większą ilością soli","Cukrem"],c:0,w:"Zioła i cytryna dodają smaku bez dodatkowej soli."},
+  {q:"Czy kalorie w grze to dokładne dane medyczne?",a:["Nie, są orientacyjne","Tak, co do jednej kalorii","Tak, zastępują dietetyka"],c:0,w:"To przybliżone wartości edukacyjne. Indywidualne zalecenia wydaje lekarz lub dietetyk."}]},
+ {id:"alergeny14",icon:"📋",title:"14 alergenów w UE",cards:[
+  "W UE oznacza się 14 grup alergenów: zboża z glutenem, skorupiaki, jaja, ryby, orzeszki ziemne, soję, mleko, orzechy (np. laskowe, włoskie), seler, gorczycę, sezam, siarczyny, łubin i mięczaki.",
+  "W restauracji gość ma prawo zapytać o alergeny w daniu. Kucharz powinien znać skład każdej potrawy i nigdy nie zgadywać.",
+  "W grze alergeny w daniach rozpoznajemy po składnikach: mąka, makaron i chleb to gluten, ser, mleko i masło to nabiał, jajko to jaja, krewetki to skorupiaki. Karta składnika w książce kucharskiej pokazuje, co zawiera."],
+  q:[
+  {q:"Ile grup alergenów trzeba oznaczać w UE?",a:["14","5","100"],c:0,w:"Lista obejmuje 14 grup alergenów."},
+  {q:"Który składnik z gry jest skorupiakiem?",a:["Krewetki","Ryba","Jajko"],c:0,w:"Krewetki to skorupiaki. Ryby to osobna grupa alergenów."},
+  {q:"Co zrobisz, gdy nie wiesz, czy w daniu jest alergen?",a:["Sprawdzę skład i zapytam kuchnię","Zgadnę","Nic nie powiem gościowi"],c:0,w:"Przy alergiach nigdy nie zgadujemy."}]}
 ];
 const QBANK=LESSONS.flatMap(l=>l.q.map(x=>Object.assign({lesson:l.title},x)));
 const TIPS=[
@@ -527,13 +583,77 @@ const TIPS=[
  "reakcja Maillarda sprawia, że smażone mięso jest rumiane i aromatyczne?",
  "przepełniona patelnia dusi jedzenie zamiast je rumienić?",
  "gotowe porcje trzeba szybko schłodzić, zanim trafią do zamrażarki?",
- "w gastronomii goście są obsługiwani według kolejki?"
+ "w gastronomii goście są obsługiwani według kolejki?",
+ "mięso mielone w zamrażarce najlepiej zużyć w ciągu około 3 miesięcy?",
+ "gorące potrawy warto schłodzić i schować do lodówki w ciągu około 2 godzin?",
+ "połowę zdrowego talerza powinny zajmować warzywa i owoce?",
+ "ugotowany ryż trzeba szybko schłodzić, bo przetrzymany w cieple jest ryzykowny?",
+ "krewetki to skorupiaki, a ryba to osobna grupa alergenów?",
+ "możesz stworzyć własny przepis w Kreatorze dań i wymienić się nim ze znajomymi?"
 ];
+/* karty składników: [kcal na 100 g (orientacyjnie), przechowywanie, mrożenie] */
+const FACTS={
+ pomidor:[18,"Trzymaj w temperaturze pokojowej, w lodówce traci smak.","Surowy po rozmrożeniu mięknie, więc mroź go jako sos lub przecier."],
+ marchewka:[41,"W lodówce, w szufladzie na warzywa, kilka tygodni.","Przed mrożeniem krótko sparz, żeby zachowała kolor i smak."],
+ cebula:[40,"W suchym, ciemnym i przewiewnym miejscu, nie w lodówce.","Pokrojoną można zamrozić, ale po rozmrożeniu nadaje się tylko do gotowania."],
+ czosnek:[149,"W suchym, przewiewnym miejscu poza lodówką.","Obrany lub rozdrobniony możesz mrozić w małych porcjach."],
+ ziemniak:[77,"W ciemnym i chłodnym miejscu. Nie trzymaj ich razem z cebulą.","Surowe ciemnieją, więc mroź je ugotowane, np. jako puree."],
+ papryka:[31,"W lodówce, do 1–2 tygodni.","Pokrojoną można zamrozić do gotowania i pieczenia."],
+ ogorek:[15,"W lodówce, w szufladzie na warzywa, kilka dni.","Prawie się nie nadaje do mrożenia, bo po rozmrożeniu jest wodnisty."],
+ grzyb:[22,"W lodówce, w papierowej torebce, kilka dni.","Mroź po krótkim podsmażeniu."],
+ kapusta:[25,"W lodówce. W całości dłużej, pokrojona tylko kilka dni.","Po krótkim sparzeniu nadaje się do mrożenia."],
+ brokul:[34,"W lodówce, kilka dni.","Sparz 2–3 minuty i mroź. Zachowa kolor i witaminy."],
+ baklazan:[25,"W chłodnym miejscu lub w lodówce, kilka dni.","Mroź po upieczeniu lub podsmażeniu."],
+ dynia:[26,"W całości długo w chłodnym miejscu, pokrojoną trzymaj w lodówce.","Pokrojona w kostkę lub jako puree dobrze znosi mrożenie."],
+ jablko:[52,"W lodówce wytrzyma kilka tygodni.","Plasterki lub mus nadają się do mrożenia."],
+ truskawka:[32,"W lodówce 1–3 dni. Myj tuż przed jedzeniem.","Mroź w jednej warstwie, potem przesyp do pojemnika. Nie sklejają się."],
+ banan:[89,"W temperaturze pokojowej. W lodówce skórka ciemnieje.","Obrany i pokrojony jest idealny do lodów bananowych."],
+ jagoda:[57,"W lodówce, kilka dni.","Bardzo dobrze znosi mrożenie."],
+ wisnia:[50,"W lodówce, kilka dni.","Mroź bez pestek, w jednej warstwie."],
+ cytryna:[29,"W lodówce, kilka tygodni.","Sok i skórkę możesz mrozić w małych porcjach."],
+ pomarancza:[47,"W chłodnym miejscu lub w lodówce, kilka tygodni.","Najlepiej mrozić sok lub skórkę."],
+ winogrono:[34,"Cały w temperaturze pokojowej, pokrojony w lodówce.","Kostki melona mroź do koktajli i granity."],
+ brzoskwinia:[39,"Dojrzewa w temperaturze pokojowej, dojrzałą trzymaj w lodówce.","Pokrojona i skropiona cytryną nadaje się do mrożenia."],
+ ananas:[50,"Cały w temperaturze pokojowej, pokrojony w lodówce.","Kawałki mroź do smoothie."],
+ mango:[60,"Dojrzewa w temperaturze pokojowej, potem w lodówce.","Kostki świetnie się mrożą, np. do sorbetu."],
+ arbuz:[30,"Cały w chłodnym miejscu, pokrojony w lodówce.","Kostki bez pestek mroź na sorbet lub granitę."],
+ kokos:[354,"Wiórki w suchym miejscu, miąższ w lodówce.","Starty miąższ możesz zamrozić."],
+ kiwi:[61,"Dojrzewa w temperaturze pokojowej, potem w lodówce.","Obrane i pokrojone nadaje się do sorbetu."],
+ kurczak:[120,"Surowy na dolnej półce lodówki, 1–2 dni, w temperaturze do 4°C.","Mroź w porcjach, do 6–9 miesięcy. Rozmrażaj w lodówce."],
+ wolowina:[200,"Surowa na dolnej półce lodówki, 1–3 dni (mielona 1–2).","Kawałki do ok. 6 miesięcy, mielona do ok. 3 miesięcy."],
+ schab:[145,"Surowy na dolnej półce lodówki, 1–3 dni.","Do ok. 4–6 miesięcy."],
+ boczek:[541,"W lodówce. Po otwarciu zużyj w ciągu kilku dni.","Plastry mroź do ok. 1–2 miesięcy."],
+ kielbasa:[300,"W lodówce. Po otwarciu zużyj w ciągu kilku dni.","Do ok. 1–2 miesięcy."],
+ ryba:[90,"Świeża w najchłodniejszym miejscu lodówki, 1–2 dni.","Chuda do ok. 6 miesięcy, tłusta ok. 2–3 miesięcy."],
+ krewetki:[99,"Świeże w lodówce 1–2 dni.","Surowe do ok. 3–6 miesięcy. Rozmrażaj w lodówce."],
+ jajko:[143,"W lodówce, całe i czyste, bez pęknięć.","Nie mroź w skorupce. Rozbite i wymieszane można zamrozić."],
+ ser:[356,"W lodówce, w szczelnym opakowaniu.","Twardy ser można zamrozić. Po rozmrożeniu się kruszy, więc użyj do zapiekania."],
+ mleko:[50,"W lodówce (0–4°C). Po otwarciu zużyj w kilka dni.","Można zamrozić, ale po rozmrożeniu może się rozwarstwić."],
+ maslo:[717,"W lodówce, w papierze lub pudełku.","Dobrze znosi mrożenie, nawet kilka miesięcy."],
+ maka:[364,"Sucho i szczelnie zamknięta, z dala od wilgoci.","Nie wymaga mrożenia."],
+ ryz:[365,"Suchy, w szczelnym pojemniku. Ugotowany szybko schłodź i schowaj do lodówki.","Ugotowany można zamrozić w porcjach."],
+ makaron:[357,"Suchy, w szczelnym pojemniku.","Ugotowany można zamrozić w porcjach."],
+ chleb:[265,"W przewiewnym pojemniku. W lodówce szybciej czerstwieje.","Pokrojony świetnie się mrozi, wyjmujesz tyle kromek, ile trzeba."],
+ czekolada:[546,"W chłodnym, suchym miejscu.","Zwykle nie trzeba jej mrozić."],
+ miod:[304,"Szczelnie zamknięty, w temperaturze pokojowej.","Nie wymaga mrożenia."],
+ orzechy:[600,"W suchym, chłodnym miejscu, w szczelnym pojemniku.","Można mrozić, żeby nie jełczały."],
+ oliwki:[160,"Niedojrzałe w temperaturze pokojowej, dojrzałe w lodówce.","Miąższ rozgnieciony z cytryną można zamrozić."]
+};
+const PORTION_G=80;
+/* kwestie klientów: gracz ma poczuć się jak szef kuchni w prawdziwej restauracji */
+const SAY={
+ arrive:["Dzień dobry! Co dziś polecacie?","Strasznie jestem głodny!","Słyszałem, że tu gotują najlepiej.","Poproszę coś pysznego!","Mam tylko chwilę na obiad.","Zapach z kuchni jest cudowny!"],
+ ideal:["Palce lizać!","Perfekcyjne!","Jak u mamy!","Smak mistrza!","Brawo dla kucharza!"],
+ good:["Smaczne, dziękuję!","Bardzo dobre!","Mmm, całkiem nieźle.","Poproszę przepis!"],
+ late:["Trochę przypieczone…","Mogło być lepiej.","Hmm, za długo na ogniu."],
+ leave:["Czekałem za długo!","Nie mam już czasu…","Idę gdzie indziej!"]
+};
+const GRADE=["Szef kuchni kręci głową. Jutro będzie lepiej!","Solidna zmiana. Kuchnia działa.","Świetna robota! Goście wrócą.","Kuchnia na gwiazdkę Michelin! ⭐"]; // przyjęta porcja każdego składnika w daniu, do orientacyjnych kalorii
 
 /* ============ STAN ============ */
 let S={coins:30,day:1,best:0,rep:3,stock:{},hand:null,st:[],q:[],fx:[],pops:[],time:0,earned:0,served:0,lost:0,combo:0,
   stat:{ideal:0,good:0,late:0},spawn:0,running:false,tab:"veg",sound:true,music:true,hints:true,up:{cook:0,burn:0,pat:0,stock:0},focusC:null,bookTab:"pot",
-  dirty:false,learn:true,done:[],quizOK:0,quizTot:0,incidents:0,lesson:null,quiz:null,
+  dirty:false,learn:true,name:"",special:null,myOrders:true,done:[],quizOK:0,quizTot:0,incidents:0,lesson:null,quiz:null,
   easy:true,hard:false,diff:"easy",tutDone:false,tutStep:0,tutResume:false,idle:0,maxLv:1,stars:{},lastLevel:1,dine:[],tables:[]};
 let dirty=true,endData=null,menuMode=true;
 const upCost=u=>u.base*(S.up[u.id]+1);
@@ -543,17 +663,18 @@ const levelOr=(n,fallback)=>validLevel(n)?n:fallback;
 function load(){try{const d=JSON.parse(localStorage.getItem(SAVE_KEY)||"null");if(d&&typeof d==="object"&&!Array.isArray(d)){
   S.coins=Number.isFinite(d.coins)?Math.max(0,d.coins):30;S.day=levelOr(d.day,1);S.best=Number.isFinite(d.best)?Math.max(0,d.best):0;S.rep=Number.isFinite(d.rep)?Math.max(0,Math.min(5,d.rep)):3;S.sound=d.sound!==false;S.music=d.music!==false;S.hints=d.hints!==false;
   S.diff=d.diff||(d.easy===false?"normal":"easy");S.easy=S.diff==="easy";S.hard=S.diff==="hard";S.tutDone=!!d.tutDone;S.maxLv=Math.max(S.day,levelOr(d.maxLv,S.day));S.stars={};if(d.stars&&typeof d.stars==="object"&&!Array.isArray(d.stars))for(const [k,v] of Object.entries(d.stars)){if(validLevel(Number(k))&&Number.isInteger(v)&&v>=1&&v<=3)S.stars[k]=v;}S.day=S.maxLv;
-  S.learn=d.learn!==false;S.done=Array.isArray(d.done)?d.done:[];S.quizOK=d.quizOK||0;S.quizTot=d.quizTot||0;
+  S.myOrders=d.myOrders!==false;S.name=typeof d.name==="string"?d.name.replace(/[^\p{L}\p{N} \-]/gu,"").trim().slice(0,12):"";S.learn=d.learn!==false;S.done=Array.isArray(d.done)?d.done:[];S.quizOK=d.quizOK||0;S.quizTot=d.quizTot||0;
   if(d.up&&typeof d.up==="object")for(const k of Object.keys(S.up)){if(Number.isInteger(d.up[k])&&d.up[k]>=0&&d.up[k]<=3)S.up[k]=d.up[k];}}}catch(e){}}
-function save(){try{if(!validLevel(S.day))S.day=levelOr(S.maxLv,1);S.maxLv=Math.max(S.day,levelOr(S.maxLv,S.day));localStorage.setItem(SAVE_KEY,JSON.stringify({coins:S.coins,day:S.day,best:S.best,rep:S.rep,sound:S.sound,music:S.music,hints:S.hints,up:S.up,learn:S.learn,done:S.done,quizOK:S.quizOK,quizTot:S.quizTot,diff:S.diff,easy:S.easy,tutDone:S.tutDone,maxLv:S.maxLv,stars:S.stars}));}catch(e){}}
+function save(){try{if(!validLevel(S.day))S.day=levelOr(S.maxLv,1);S.maxLv=Math.max(S.day,levelOr(S.maxLv,S.day));localStorage.setItem(SAVE_KEY,JSON.stringify({coins:S.coins,day:S.day,best:S.best,rep:S.rep,sound:S.sound,music:S.music,hints:S.hints,up:S.up,learn:S.learn,name:S.name,myOrders:S.myOrders,done:S.done,quizOK:S.quizOK,quizTot:S.quizTot,diff:S.diff,easy:S.easy,tutDone:S.tutDone,maxLv:S.maxLv,stars:S.stars}));}catch(e){}}
 const unlocked=()=>RECIPES.filter(r=>r.day<=S.day);
-const usedIng=()=>{const s=new Set();unlocked().forEach(r=>r.ing.forEach(i=>s.add(i)));return s;};
+const chefName=()=>S.name?" "+S.name:"";
+const usedIng=()=>{const s=new Set();unlocked().concat(MY).forEach(r=>r.ing.forEach(i=>s.add(i)));return s;};
 const target=()=>Math.round((80+8*S.day)*(S.easy?.75:S.hard?1.25:1));
 const maxPat=()=>Math.min(180,Math.max(70,180-S.day*2.3))*(1+.15*S.up.pat)*(S.easy?1:S.hard?.65:.8); // klient czeka do 3 minut
 const maxQ=()=>{const n=S.day<5?3:S.day<15?4:5;return S.easy?Math.min(n,4):S.hard?Math.min(5,n+1):n;};
 const rnd=a=>a[Math.floor(Math.random()*a.length)];
 const titleOf=()=>TITLES[Math.min(TITLES.length-1,Math.floor((S.day-1)/5))];
-const activeStations=()=>STN.map((s,i)=>i).filter(i=>unlocked().some(r=>r.st===STN[i].type));
+const activeStations=()=>STN.map((s,i)=>i).filter(i=>unlocked().concat(MY).some(r=>r.st===STN[i].type));
 function freshStation(t){return {type:t,items:[],state:"idle",t:0,time:0,dish:null,age:0};}
 function newDay(){
   S.time=dayTime();S.earned=0;S.served=0;S.lost=0;S.hand=null;S.spawn=1;S.combo=0;S.stat={ideal:0,good:0,late:0};S.dirty=false;S.incidents=0;
@@ -564,6 +685,7 @@ function newDay(){
   const avail=CATS.filter(c=>[...usedIng()].some(i=>ING[i].c===c[0]));
   if(!avail.some(c=>c[0]===S.tab))S.tab=avail[0][0];
   S.mission=pickMission();
+  S.special=S.day>=2?rnd(unlocked()):null; // danie dnia: +50% zapłaty
   S.running=true;dirty=true;
 }
 /* kombinatoryka: ile różnych własnych dań jest możliwych (2-4 składniki, 4 urządzenia) */
@@ -573,18 +695,111 @@ const fmt=n=>n.toString().replace(/\B(?=(\d{3})+(?!\d))/g," ");
 
 /* ============ DANIA ============ */
 function dishOf(r){return {rid:r.id,name:r.name,e:r.e,ing:r.ing,base:r.price,st:r.st};}
-function customDish(type,items){
-  const def=STN.find(s=>s.type===type);
+function dishBase(items){
   const cats=new Set(items.map(i=>ING[i].c));
   const val=items.reduce((s,i)=>s+ING[i].p,0);
   const syn=cats.size>=3?1.45:cats.size===2?1.2:1;
+  return Math.max(8,Math.round((val*1.6+3)*syn));
+}
+function customDish(type,items){
+  const def=STN.find(s=>s.type===type);
   const names=[...new Set(items)].map(i=>ING[i].n);
-  return {rid:"custom",st:type,name:def.noun+": "+names.join(" + "),e:def.ce,ing:[...items],base:Math.max(8,Math.round((val*1.6+3)*syn))};
+  return {rid:"custom",st:type,name:def.noun+": "+names.join(" + "),e:def.ce,ing:[...items],base:dishBase(items)};
 }
 function subMS(a,b){const p=[...b];for(const x of a){const i=p.indexOf(x);if(i<0)return false;p.splice(i,1);}return true;}
 const key=a=>[...a].sort().join("|");
-function findRecipe(type,items){const k=key(items);return unlocked().find(r=>r.st===type&&key(r.ing)===k);}
-const hasLonger=(type,items)=>unlocked().some(r=>r.st===type&&r.ing.length>items.length&&subMS(items,r.ing));
+const pool=()=>unlocked().concat(MY);
+function findRecipe(type,items){const k=key(items);return pool().find(r=>r.st===type&&key(r.ing)===k);}
+const hasLonger=(type,items)=>pool().some(r=>r.st===type&&r.ing.length>items.length&&subMS(items,r.ing));
+
+/* @@CREATOR-PURE-START */
+/* ---------- kreator dań: logika (bez DOM, testowana w tests/) ---------- */
+const EMOJIS=["🌭","🍔","🍕","🥪","🌮","🌯","🥙","🍝","🍜","🍲","🥘","🍛","🍣","🍤","🥗","🥞","🧇","🍳","🥓","🍗","🍖","🥩","🍟","🍞","🥐","🥨","🧀","🍰","🧁","🍪","🍫","🍩","🍦","🍨","🍧","🥤","🍹","🍓","🍋","🥑"];
+const MAX_MY=30,KEY_MY="gotuj_i_mroz_moje",CODE_TAG="GM1:";
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const hasIng=id=>typeof id==="string"&&Object.prototype.hasOwnProperty.call(ING,id);
+const kcalOf=ing=>Math.round(ing.reduce((s,i)=>s+FACTS[i][0]*PORTION_G/100,0)/5)*5;
+const allergensOf=ing=>Object.keys(AL).filter(g=>dishHas(g,ing));
+const myPrice=ing=>dishBase(ing)+2;
+const cleanName=s=>typeof s==="string"?s.normalize("NFC").replace(/[^\p{L}\p{N} \-.,'!()+]/gu,"").replace(/\s+/g," ").trim().slice(0,24):"";
+const cleanNote=s=>typeof s==="string"?s.replace(/[\u0000-\u001f\u007f<>&"]/g," ").replace(/\s+/g," ").trim().slice(0,140):"";
+/* zwraca czysty przepis albo null */
+function sanitizeRecipe(o){
+  if(!o||typeof o!=="object"||Array.isArray(o))return null;
+  const name=cleanName(o.name);if(name.length<2)return null;
+  if(!STN.some(s=>s.type===o.st))return null;
+  if(!Array.isArray(o.ing)||o.ing.length<2||o.ing.length>4||!o.ing.every(hasIng))return null;
+  const def=STN.find(s=>s.type===o.st);
+  return {name,e:EMOJIS.includes(o.e)?o.e:def.ce,st:o.st,ing:[...o.ing],note:cleanNote(o.note)};
+}
+/* czy taki przepis (urządzenie + skład) już istnieje w grze lub w moich przepisach */
+function dupOf(st,ing,exceptId){
+  const k=key(ing);
+  return RECIPES.find(r=>r.st===st&&key(r.ing)===k)||MY.find(r=>r.id!==exceptId&&r.st===st&&key(r.ing)===k)||null;
+}
+const b64e=s=>btoa(unescape(encodeURIComponent(s)));
+const b64d=s=>decodeURIComponent(escape(atob(s)));
+function encodeRecipes(list){
+  return CODE_TAG+b64e(JSON.stringify(list.slice(0,MAX_MY).map(r=>({n:r.name,e:r.e,s:r.st,i:r.ing,t:r.note||""}))));
+}
+/* wczytuje kod (także wklejony razem z tekstem). Zwraca {list,bad,err} */
+function decodeRecipes(text){
+  try{
+    if(typeof text!=="string"||text.length>40000)return {list:[],bad:0,err:"Kod jest za długi."};
+    const m=/GM1:([A-Za-z0-9+\/=_-]+)/.exec(text);
+    if(!m)return {list:[],bad:0,err:"Nie znaleziono kodu przepisu (zaczyna się od GM1:)."};
+    let arr=JSON.parse(b64d(m[1].replace(/-/g,"+").replace(/_/g,"/")));
+    if(!Array.isArray(arr))arr=[arr];
+    const list=[];let bad=0;
+    for(const x of arr.slice(0,MAX_MY)){
+      const r=x&&typeof x==="object"?sanitizeRecipe({name:x.n,e:x.e,st:x.s,ing:x.i,note:x.t}):null;
+      if(r)list.push(r);else bad++;
+    }
+    return {list,bad,err:list.length?"":"Kod nie zawiera poprawnych przepisów."};
+  }catch(e){return {list:[],bad:0,err:"Nie udało się odczytać kodu."};}
+}
+/* kopia zapasowa całego postępu + własnych przepisów jako kod tekstowy (bez serwera) */
+const BACKUP_TAG="GM2:";
+function encodeBackup(save,my){
+  return BACKUP_TAG+b64e(JSON.stringify({v:1,s:save,m:my.slice(0,MAX_MY).map(r=>({n:r.name,e:r.e,s:r.st,i:r.ing,t:r.note||""}))}));
+}
+function decodeBackup(text){
+  try{
+    if(typeof text!=="string"||text.length>60000)return {err:"Kod jest za długi."};
+    const m=/GM2:([A-Za-z0-9+\/=_-]+)/.exec(text);
+    if(!m)return {err:"Nie znaleziono kodu kopii zapasowej (zaczyna się od GM2:)."};
+    const o=JSON.parse(b64d(m[1].replace(/-/g,"+").replace(/_/g,"/")));
+    if(!o||o.v!==1||!o.s||typeof o.s!=="object"||Array.isArray(o.s))return {err:"To nie jest kopia zapasowa tej gry."};
+    const my=[],seen=new Set();
+    for(const x of (Array.isArray(o.m)?o.m:[]).slice(0,MAX_MY)){
+      const r=x&&typeof x==="object"?sanitizeRecipe({name:x.n,e:x.e,st:x.s,ing:x.i,note:x.t}):null;
+      if(!r)continue;const k=r.st+":"+key(r.ing);
+      if(seen.has(k)||RECIPES.some(b=>b.st+":"+key(b.ing)===k))continue;
+      seen.add(k);my.push(r);
+    }
+    return {save:o.s,my,err:""};
+  }catch(e){return {err:"Nie udało się odczytać kodu."};}
+}
+const mkId=()=>"my_"+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+/* uzupełnia przepis o pola potrzebne grze */
+const finishRecipe=(r,id)=>({id:id||mkId(),name:r.name,e:r.e,st:r.st,ing:[...r.ing],note:r.note||"",time:5,price:myPrice(r.ing),day:0,mine:true});
+/* wczytuje listę z tekstu JSON zapisanego w localStorage (odporne na uszkodzone dane) */
+function parseMy(raw){
+  const out=[],seen=new Set();
+  try{
+    const arr=JSON.parse(raw||"[]");
+    if(!Array.isArray(arr))return out;
+    for(const x of arr){
+      if(out.length>=MAX_MY)break;
+      const r=sanitizeRecipe(x);if(!r)continue;
+      const id=typeof x.id==="string"&&/^my_[a-z0-9]{3,24}$/.test(x.id)&&!seen.has(x.id)?x.id:null;
+      const f=finishRecipe(r,id);seen.add(f.id);out.push(f);
+    }
+  }catch(e){}
+  return out;
+}
+/* @@CREATOR-PURE-END */
+
 function quality(st){
   const b=burnAfter();
   if(st.type==="frz")return st.age<=12?Q.perfect:Q.good;
@@ -600,6 +815,8 @@ const HAIRS=["#2b1a12","#5a3420","#8a5a2b","#d9b45a","#b8b8b8","#a33a22"];
 const SHIRTS=["#3b82c4","#d0503f","#4aa36a","#e2a63b","#8e5bc4","#2f9aa8","#c9567f","#5f6b78"];
 function makeOrder(){
   if(S.day>=8&&Math.random()<Math.min(.3,.1+S.day*.005))return {k:"free",need:rnd([...usedIng()]),got:false};
+  if(S.special&&Math.random()<.3)return {k:"rec",rid:S.special.id,got:false};
+  if(S.myOrders!==false&&MY.length&&S.day>=2&&Math.random()<.18)return {k:"rec",rid:rnd(MY).id,got:false};
   return {k:"rec",rid:rnd(unlocked()).id,got:false};
 }
 function makeCust(){
@@ -672,7 +889,7 @@ function noiseBurst(dur,vol){
   }catch(e){}
 }
 const sfx={
-  take:()=>beep(520,.07),put:()=>beep(380,.09,"triangle"),
+  take:()=>beep(520,.07),chop:()=>{noiseBurst(.05,.05);beep(220,.04,"square",.05);},put:()=>beep(380,.09,"triangle"),
   done:()=>{beep(660,.1,"triangle",.14);beep(880,.15,"triangle",.14,.1);},
   coin:()=>{beep(988,.08,"square",.08);beep(1318,.16,"square",.08,.08);},
   bad:()=>{beep(160,.25,"sawtooth",.1);shake();},sizzle:()=>noiseBurst(.4,.06),burn:()=>{beep(110,.4,"sawtooth",.12);shake();},buy:()=>beep(700,.06,"square",.06),
@@ -725,7 +942,7 @@ function act(d){
         if(S.coins<ING[id].p){say("Brak "+ING[id].n.toLowerCase()+" i brak pieniędzy 💸");sfx.bad();break;}
         S.coins-=ING[id].p;sfx.buy();
       }else S.stock[id]--;
-      S.hand={t:"ing",id};sfx.take();dirty=true;
+      S.hand={t:"ing",id};sfx.take();if(ING[id].c==="veg"||ING[id].c==="meat")sfx.chop();dirty=true;
       if(isRaw(id)&&hyg()&&!S.dirty){S.dirty=true;say("⚠️ Surowy produkt! Po jego użyciu umyj ręce 🧼");}
       break;
     }
@@ -801,14 +1018,15 @@ function custTap(i){
   if(c.type==="vip"){mult*=1.8;}
   const comb=1+Math.min(.5,S.combo*.1);
   const tip=Math.round(pf*4*(1+(S.rep-3)*.1));
-  const pay=Math.round((d.base+(o.k==="free"?5:0))*mult*comb*(S.event&&S.event.type==="happy"?1.5:1))+tip;
+  const isSp=!!(S.special&&d.rid===S.special.id);
+  const pay=Math.round((d.base+(o.k==="free"?5:0))*mult*comb*(S.event&&S.event.type==="happy"?1.5:1)*(isSp?1.5:1))+tip;
   o.got=true;c.lastDish=d.e;S.coins+=pay;S.earned+=pay;S.hand=null;
   if(q.k===3){S.combo++;S.stat.ideal++;}else{S.combo=0;if(q.k===2)S.stat.good++;else S.stat.late++;}
   S.rep=Math.max(0,Math.min(5,S.rep+(pf>.5?.05:.02)+(q.k===3?.04:0)-(q.k===1?.03:0)-(note?.05:0)));
   S.pops.push({x:c.x,t:0,txt:"+"+pay+" zł",col:"#ffd25e"});
-  if(q.k===3)S.pops.push({x:c.x-12,t:-.25,txt:"⭐ Idealne!",col:"#fff"});
-  S.pops.push({x:c.x+14,t:-.45,txt:pf>.6?"😍":pf>.3?"🙂":"😅",col:"#fff"});
-  say("+"+pay+" zł · "+q.l+(c.type==="vip"?" · VIP 👑":"")+note+(S.combo>=2?" · seria x"+S.combo+" 🔥":"")+(fifo?" · ℹ️ W gastronomii obsługujemy według kolejki":""));
+  if(q.k===3)S.pops.push({x:c.x,t:-.25,dy:1.3,txt:"⭐ Idealne!",col:"#fff"});
+  S.pops.push({x:c.x,t:-.45,dy:2.6,txt:(pf>.6?"😍 ":pf>.3?"🙂 ":"😅 ")+rnd(q.k===3?SAY.ideal:q.k===2?SAY.good:SAY.late),col:"#fff"});
+  say("+"+pay+" zł · "+q.l+(isSp?" · 🌟 danie dnia ×1,5":"")+(c.type==="vip"?" · VIP 👑":"")+note+(S.combo>=2?" · seria x"+S.combo+" 🔥":"")+(fifo?" · ℹ️ W gastronomii obsługujemy według kolejki":""));
   sfx.coin();haptic(20);dirty=true;rewardFx(c,d,q,pay);
   if(c.orders.every(x=>x.got)){S.served++;leave(i,true);}
 }
@@ -825,10 +1043,12 @@ function tick(dt){
   if(!S.running)return;
   if(S.time>0&&!S.guide)S.time-=dt;
   eventTick(dt);
+  S.sndT=(S.sndT||0)-dt;
+  if(S.sndT<=0){S.sndT=.55;S.st.forEach(st=>{if(st.state!=="cooking")return;if(st.type==="pan")noiseBurst(.28,.035);else if(st.type==="pot")beep(150+Math.random()*90,.09,"sine",.03);});}
   if(S.time>0){
     S.spawn-=dt;
     if(S.spawn<=0){
-      if(S.q.length<maxQ()){S.q.push(makeCust());sfx.door();dirty=true;}
+      if(S.q.length<maxQ()){S.q.push(makeCust());sfx.door();dirty=true;S.pops.push({x:slotX(S.q.length-1),t:0,dy:3,txt:rnd(SAY.arrive),col:"#fff"});}
       S.spawn=(Math.max(6,13-S.day*.18)+Math.random()*3)/(1+(S.rep-3)*.08)*(S.easy?1.15:S.hard?.8:1)*(S.event&&S.event.type==="rush"?.5:1);
     }
   }
@@ -836,7 +1056,7 @@ function tick(dt){
     const c=S.q[i];c.p-=dt;
     if(c.p<=0){
       S.lost++;S.combo=0;S.rep=Math.max(0,S.rep-.2);
-      S.pops.push({x:c.x,t:0,txt:"😠 bez zapłaty",col:"#ffb4a8"});
+      S.pops.push({x:c.x,t:0,dy:1.3,txt:"😠 "+rnd(SAY.leave),col:"#ffb4a8"});
       leave(i,false);say("Klient wyszedł niezadowolony 😠 — nie zapłacił");sfx.bad();
     }
   }
@@ -958,8 +1178,9 @@ function shopHTML(){
 function showEnd(){
   const {ok,stars,tg,fresh,revs}=endData;
   if(ok)setTimeout(confetti,250);
-  overlay(`<h2>${ok?"Poziom zaliczony! 🎉":"Spróbuj jeszcze raz 💪"}</h2>
+  overlay(`<h2>${ok?"Zmiana zaliczona! 🎉":"Spróbuj jeszcze raz 💪"}</h2>
     <div class="stars">${"⭐".repeat(stars)}${"☆".repeat(3-stars)}</div>
+    <p class="sub"><i>„${GRADE[stars]}”</i></p>
     <div class="stats"><div>Zarobek<b>${S.earned} zł</b></div><div>Cel<b>${tg} zł</b></div><div>Obsłużeni<b>${S.served}</b></div><div>Stracone<b>${S.lost}</b></div><div>Ocena<b>★ ${S.rep.toFixed(1)}</b></div>${S.learn?`<div>Incydenty<b>${S.incidents}</b></div>`:""}</div>
     ${S.learn?`<p class="sub">💡 Czy wiesz, że ${rnd(TIPS)}</p>`:""}
     <button class="bigbtn" data-act="startday">${ok?(S.day>=50&&S.stars[50]?"Zagraj jeszcze raz ▶":"Poziom "+S.day+" ▶"):"Powtórz poziom ▶"}</button>
@@ -1255,9 +1476,10 @@ function draw(){
   S.q.forEach(bubble);
   S.pops.forEach(p=>{
     if(p.t<0)return;
-    const k=p.t/1.3;g.save();g.globalAlpha=1-k*k;g.font=`bold ${U*1.2}px system-ui,sans-serif,${EF}`;g.textAlign="center";
+    const k=p.t/1.3;g.save();g.globalAlpha=Math.min(1,(1-k*k)*1.6);g.font=`bold ${U*(p.txt.length>14?.82:1.1)}px system-ui,sans-serif,${EF}`;g.textAlign="center";
     g.lineWidth=3;g.strokeStyle="rgba(40,20,10,.85)";g.fillStyle=p.col;
-    const y=CT-U*1.6-k*U*2.2;g.strokeText(p.txt,p.x,y);g.fillText(p.txt,p.x,y);g.restore();
+    const tw=g.measureText(p.txt).width,px=Math.max(tw/2+4,Math.min(W-tw/2-4,p.x));
+    const y=CT-U*1.6-k*U*1.6-(p.dy||0)*U;g.strokeText(p.txt,px,y);g.fillText(p.txt,px,y);g.restore();
   });
 }
 
@@ -1278,7 +1500,7 @@ function render(){
     rc=`<div class="rc-head"><span class="rc-e">🚪</span><div><b>Czekamy na klientów…</b><small>Gdy ktoś wejdzie, tu pojawi się przepis krok po kroku</small></div></div>`;
   }else if(F.free){
     const nd=ING[F.o.need];
-    let hint="👆 Weź "+nd.e+" "+nd.n+", dorzuć dowolny składnik do jednego urządzenia i dotknij jego przycisku (Gotuj, Smaż, Piecz, Grzej lub Mroź)";
+    let hint="👆 Dotknij "+nd.e+" "+nd.n+", potem dotknij urządzenie. Dorzuć dowolny składnik i dotknij przycisku urządzenia (Gotuj, Smaż, Piecz, Grzej lub Mroź)";
     if(S.hand&&S.hand.t==="dish")hint=orderMatches(F.o,S.hand.dish)?"🍽️ Pasuje! Dotknij tego klienta":"🍽️ Dotknij klienta z zieloną ramką";
     const al=F.o.avoid?AL[F.o.avoid]:null;
     if(al&&!(S.hand&&S.hand.t==="dish"))hint="🚫 Gość uczulony na "+al.n+" "+al.e+"! Nie dawaj składników z tym alergenem. "+hint;
@@ -1289,19 +1511,19 @@ function render(){
     const r=F.r,sn=STN[F.stIdx];
     let hint="";
     if(S.hand&&S.hand.t==="dish")hint="🍽️ Dotknij klienta z zieloną ramką";
-    else if(F.st.state==="done"&&F.st.dish&&F.st.dish.rid===r.id)hint="✋ Gotowe! Dotknij: "+sn.name+" (szybko = idealne ⭐)";
+    else if(F.st.state==="done"&&F.st.dish&&F.st.dish.rid===r.id)hint="✋ Gotowe! Dotknij: "+sn.name+" (szybko = ⭐)";
     else if(F.st.state==="cooking"&&F.st.dish&&F.st.dish.rid===r.id)hint="⏳ "+sn.doing+"… zajmij się następnym zamówieniem";
     else if(F.st.state==="burnt")hint="🔥 Przypalone! Dotknij: "+sn.name+", żeby wyrzucić";
     else if(F.st.state!=="idle")hint="⏳ "+sn.name+" jest zajęta — poczekaj albo ✖";
     else if(S.hand&&S.hand.t==="ing")hint=need.has(S.hand.id)?"👉 Wrzuć do: "+sn.e+" "+sn.name:(S.hints?"❌ Tego składnika nie potrzeba — odłóż 🗑️":"👉 Wrzuć do: "+sn.e+" "+sn.name);
-    else if(S.hints){const nx=F.chips.find(x=>!x.done);if(nx){const cat=CATS.find(c=>c[0]===ING[nx.id].c);hint="👆 Chwyć "+ING[nx.id].e+" "+ING[nx.id].n+" (zakładka "+cat[1]+" "+cat[2]+") i wrzuć do: "+sn.e+" "+sn.name;}
+    else if(S.hints){const nx=F.chips.find(x=>!x.done);if(nx){const cat=CATS.find(c=>c[0]===ING[nx.id].c);hint="👆 Dotknij "+ING[nx.id].e+" "+ING[nx.id].n;}
       else if(F.st.state==="idle")hint="▶ Dotknij „"+STN[F.stIdx].btn.slice(2)+"” w urządzeniu";}
     else hint="📖 Sprawdź przepis w książce kucharskiej";
     {const nD=F.chips.filter(x=>x.done).length,tot=F.chips.length+2;let cur=nD;
       if(F.st.state==="cooking"||F.st.state==="done")cur=F.chips.length;
       if(S.hand&&S.hand.t==="dish")cur=F.chips.length+1;
       hint="KROK "+(cur+1)+" z "+tot+" · "+hint;}
-    rc=`<div class="rc-head"><span class="rc-e">${r.e}</span><div><b>${r.name}</b><small>${r.price} zł · ⏱ ${r.time} s</small></div><span class="rc-st">${sn.e} ${sn.name}</span></div>`+
+    rc=`<div class="rc-head"><span class="rc-e">${r.e}</span><div><b>${esc(r.name)}</b><small>${r.price} zł · ⏱ ${r.time} s${S.special&&S.special.id===r.id?" · 🌟 danie dnia":""}</small></div><span class="rc-st">${sn.e} ${sn.name}</span></div>`+
       (S.hints?`<div class="rc-row">${F.chips.map((x,i)=>{const stk=S.stock[x.id]||0,held=S.hand&&S.hand.t==="ing"&&S.hand.id===x.id&&!x.done;
         return (i?`<span class="rc-plus">+</span>`:"")+`<div class="chip ${x.done?"done":""} ${held?"held":""}" ${x.done?"":`data-act="ing" data-id="${x.id}"`}>${ING[x.id].e}<i>${x.done?"✓":stk}</i></div>`;}).join("")}
         <span class="rc-arrow">➜</span><span class="rc-dish">${r.e}</span></div>`:"")+
@@ -1328,12 +1550,13 @@ function render(){
       ${m?`<button class="go" data-act="cook" data-i="${i}">${def.btn}</button>`:`<div class="msg" id="sm${i}">${msg}</div>`}</div>`;
   }).join("");
   // ręka
-  let h="✋ W ręku: nic";
+  let h="✋ Ręce wolne";
   if(S.hand){
     if(S.hand.t==="ing"){const x=ING[S.hand.id];h=`✋ <span class="he">${x.e}</span> ${x.n}`;}
     else h=`✋ <span class="he">${S.hand.dish.e}</span> ${S.hand.dish.name} · ${S.hand.q.l}`;
   }
   $("hand").innerHTML=h;
+  $("handbar").style.display=(S.hand||(hyg()&&S.dirty))?"":"none";
   $("wash").classList.toggle("dirty",!!(hyg()&&S.dirty));$("wash").style.display=(hyg()&&S.dirty)?"":"none";
   // spiżarnia
   const used=usedIng();
@@ -1343,7 +1566,7 @@ function render(){
   $("tray").innerHTML=Object.keys(ING).filter(id=>ING[id].c===S.tab&&used.has(id)).sort((a,b)=>(need.has(b)?1:0)-(need.has(a)?1:0)).map(id=>{
     const x=ING[id],n=S.stock[id]||0,held=S.hand&&S.hand.t==="ing"&&S.hand.id===id;
     return `<div class="tile ${held?"held":""} ${n?"":"out"} ${need.has(id)&&!held?"need":""} ${need.size&&!need.has(id)&&!held?"dimmed":""}" data-act="ing" data-id="${id}">
-      <span class="badge">${n}</span><button class="plus" data-act="buy" data-id="${id}">+${x.p}zł</button>
+      <span class="badge">${n}</span><span class="plus">+${x.p}zł</span>
       <div class="te">${x.e}</div><div class="tn">${n?x.n:"Kup "+x.p+" zł"}</div></div>`;
   }).join("");
   updateBars();
@@ -1395,10 +1618,10 @@ function appSVG(type,on){
     b.style.width=(f*100)+"%";if(col)b.style.background=col;
     if(st.state==="cooking"){const sm=$("sm"+i);if(sm)sm.textContent=STN[i].doing+"… "+Math.max(1,Math.ceil(st.time-st.t))+" s";}
   });
-  $("time").textContent="⏱ "+Math.max(0,Math.ceil(S.time))+"s";
+  $("time").textContent="⏱ "+Math.max(0,Math.ceil(S.time))+"s";$("time").classList.toggle("warn",S.running&&S.time>0&&S.time<20);
   $("coins").textContent="💰 "+S.coins+" zł";
   $("rep").textContent="★ "+S.rep.toFixed(1);
-  $("day").textContent="Poziom "+S.day+" · "+CHAPTERS[Math.min(4,Math.floor((S.day-1)/10))];$("title").textContent=titleOf();
+  $("day").textContent="Poziom "+S.day+" · "+CHAPTERS[Math.min(4,Math.floor((S.day-1)/10))];$("title").textContent=titleOf()+chefName();
   const cb=$("combo");cb.style.display=S.combo>=2?"inline-block":"none";cb.textContent="🔥 x"+S.combo;
   const stress=S.q.some(c=>c.p/c.max<.25),happy=S.pops.some(p=>p.txt.startsWith("+")&&p.t<1);
   $("mood").textContent=stress?"😰":happy?"😄":"😊";
@@ -1412,14 +1635,26 @@ function appSVG(type,on){
 function overlay(html){$("ovbox").innerHTML=html;$("ov").classList.add("on");}
 function closeOv(){$("ov").classList.remove("on");}
 function bookHTML(){
+  LASTD=null;
   const tab=S.bookTab,total=RECIPES.length,known=unlocked().length;
-  const list=RECIPES.filter(r=>r.st===tab).sort((a,b)=>a.day-b.day);
-  return `<h2>📖 Książka kucharska</h2><p class="sub">Znasz ${known} z ${total} przepisów · własnych dań możesz wymyślić prawie ${fmt(combos(Object.keys(ING).length))}</p>
-    <div class="btabs">${STN.map(s=>`<button class="btab ${tab===s.type?"on":""}" data-act="booktab" data-id="${s.type}">${s.e} ${s.name}</button>`).join("")}</div>`+
-    list.map(r=>r.day<=S.day?
-      `<div class="rec"><span class="re">${r.e}</span><div><b>${r.name}</b><span class="ri">${r.ing.map(x=>ING[x].e).join("")}</span> <small>${r.ing.map(x=>ING[x].n).join(", ")}</small></div><span class="rp">${r.price} zł</span></div>`:
+  const tabs=STN.map(s=>`<button class="btab ${tab===s.type?"on":""}" data-act="booktab" data-id="${s.type}">${s.e} ${s.name}</button>`).join("")+
+    `<button class="btab ${tab==="my"?"on":""}" data-act="booktab" data-id="my">⭐ Moje (${MY.length})</button><button class="btab ${tab==="prod"?"on":""}" data-act="booktab" data-id="prod">🥫 Produkty</button>`;
+  let body="";
+  const row=r=>`<div class="rec" data-act="bk_open" data-id="${r.id}" style="cursor:pointer"><span class="re">${r.e}</span><div><b>${esc(r.name)}</b><span class="ri">${r.ing.map(x=>ING[x].e).join("")}</span> <small>${r.ing.map(x=>ING[x].n).join(", ")}</small></div><span class="rp">${r.price} zł</span></div>`;
+  if(tab==="my"){
+    body=(MY.length?MY.map(row).join(""):`<p class="sub">Nie masz jeszcze własnych przepisów. Stwórz pierwszy, na przykład hot-doga! Goście będą go zamawiać w grze.</p>`)+
+      (menuMode?`<div class="mset" style="margin-top:8px"><button data-act="bk_new">➕ Nowy przepis</button><button data-act="bk_import">📥 Wczytaj kod</button>${MY.length?`<button data-act="bk_shareall">📤 Udostępnij wszystkie</button>`:""}</div>`:`<p class="sub">Kreator dań jest dostępny w menu głównym.</p>`);
+  }else if(tab==="prod"){
+    body=CATS.map(([k,ic,n])=>`<div class="cat">${ic} ${n}</div><div class="igrid">`+Object.keys(ING).filter(id=>ING[id].c===k).map(id=>`<button class="ig" data-act="bk_prod" data-id="${id}"><span>${ING[id].e}</span><small>${ING[id].n}</small></button>`).join("")+`</div>`).join("")+
+      `<p class="sub" style="margin-top:6px">Dotknij produkt, aby zobaczyć kalorie, alergeny oraz zasady przechowywania i mrożenia.</p>`;
+  }else{
+    const list=RECIPES.filter(r=>r.st===tab).sort((a,b)=>a.day-b.day);
+    body=list.map(r=>r.day<=S.day?row(r):
       `<div class="rec lock"><span class="re">🔒</span><div><b>???</b><small>Odblokuje się na poziomie ${r.day}</small></div></div>`).join("")+
-    `<p class="sub" style="margin-top:8px">💡 Nie znasz przepisu? Wrzuć dowolne 2–4 składniki do urządzenia i dotknij przycisku urządzenia (Gotuj, Smaż, Piecz, Grzej, Mroź) — wyjdzie własne danie. Im więcej rodzajów składników (warzywa + mięso + nabiał…), tym smaczniejsze i droższe.</p>
+    `<p class="sub" style="margin-top:8px">💡 Dotknij przepis, aby zobaczyć kalorie i alergeny. Nie znasz przepisu? Wrzuć 2–4 składniki do urządzenia i dotknij jego przycisku, a wyjdzie własne danie. Własnych dań możesz wymyślić prawie ${fmt(combos(Object.keys(ING).length))}!</p>`;
+  }
+  return `<h2>📖 Książka kucharska</h2><p class="sub">Znasz ${known} z ${total} przepisów · własnych: ${MY.length}</p>
+    <div class="btabs">${tabs}</div>${body}
     <button class="bigbtn" data-act="closebook">${menuMode?"Wróć do menu":"Wróć do gry"}</button>`;
 }
 function showBook(){
@@ -1434,9 +1669,9 @@ function updateHome(){
     <div class="hm-chips"><span>⭐ ${S.rep.toFixed(1)}</span><span>🎚️ ${diffName()}</span><span>🗺️ Poziom ${S.day}/50</span><span>💰 ${S.coins} zł</span></div></div>
     <div class="hm-r"><button class="hbtn play" data-act="startday">▶ ${S.day>1?"KONTYNUUJ · poziom "+S.day:"GRAJ"}</button>
       <div class="hrow"><button class="hbtn" data-act="map"><b>🗺️</b>Poziomy<small>${S.maxLv} z 50</small></button><button class="hbtn" data-act="school"><b>🎓</b>Szkoła<small>${S.done.length} z ${LESSONS.length} lekcji</small></button></div>
-      <div class="hrow"><button class="hbtn" data-act="book"><b>📖</b>Przepisy<small>${known} z ${RECIPES.length}</small></button><button class="hbtn" data-act="how"><b>❓</b>Jak grać<small>krótka instrukcja</small></button></div>
-      <button class="hbtn" data-act="settings"><b>⚙️</b><span>Ustawienia<small>trudność, dźwięk, nauka</small></span></button></div>
-    <div class="hm-ver">Gotuj i Mroź · wersja 1.0</div>`;
+      <div class="hrow"><button class="hbtn" data-act="book"><b>📖</b>Książka<small>${known} z ${RECIPES.length} · moje: ${MY.length}</small></button><button class="hbtn" data-act="creator"><b>✏️</b>Kreator dań<small>własne przepisy</small></button></div>
+      <div class="hrow"><button class="hbtn" data-act="how"><b>❓</b>Jak grać<small>zasady i samouczek</small></button><button class="hbtn" data-act="settings"><b>⚙️</b>Ustawienia<small>trudność, dźwięk</small></button></div></div>
+    <div class="hm-ver">Gotuj i Mroź · wersja 2.3</div>`;
 }
 function menu(){
   menuMode=true;S.running=false;S.guide=null;coachClear();closeOv();
@@ -1449,9 +1684,11 @@ function showSettings(){
   overlay(`<h2>⚙️ Ustawienia</h2>
     <div class="setrow"><span>Poziom trudności<small>Zmienisz go w każdej chwili</small></span><div class="seg">${["easy","normal","hard"].map(k=>`<button class="${S.diff===k?"on":""}" data-act="diff" data-id="${k}">${D[k]}</button>`).join("")}</div></div>
     <div class="diffd">${desc}</div>
-    ${tg("sound","🔊 Dźwięki","kliknięcia, monety, urządzenia")}${tg("music","🎵 Muzyka","spokojna muzyka w tle")}${tg("hints","💡 Podpowiedzi","pokazuj składniki w zamówieniach")}${tg("learn","🧠 Tryb nauki","lekcje, pytanie dnia")}
+    ${tg("sound","🔊 Dźwięki","kliknięcia, monety, urządzenia")}${tg("music","🎵 Muzyka","spokojna muzyka w tle")}${tg("hints","💡 Podpowiedzi","pokazuj składniki w zamówieniach")}${tg("learn","🧠 Tryb nauki","lekcje, pytanie dnia")}${tg("myOrders","⭐ Moje dania u gości","goście zamawiają też Twoje przepisy")}
     <div class="setrow"><span>Poradnik<small>pokaż pierwszy poradnik jeszcze raz</small></span><div class="seg"><button data-act="resettut">Pokaż</button></div></div>
     <div class="setrow"><span>Postęp w grze<small>poziom ${S.maxLv}/50 · ukończone: ${Object.keys(S.stars).length}</small></span><div class="seg"><button data-act="resetprog" style="${S._confirmReset?"background:#e5484d;color:#fff;border-color:#e5484d":""}">${S._confirmReset?"Na pewno? Kliknij jeszcze raz":"Zresetuj"}</button></div></div>
+    ${menuMode?`<div class="setrow"><span>💾 Kopia zapasowa<small>postęp i własne przepisy jako kod (bez internetu)</small></span><div class="seg"><button data-act="bk_backup">Zapisz</button><button data-act="bk_restore">Przywróć</button></div></div>`:""}
+    <div class="setrow"><span>👨‍🍳 Imię szefa kuchni<small>pojawi się obok Twojego tytułu</small></span><input class="cin" data-f="chef" maxlength="12" placeholder="np. Ania" value="${esc(S.name||"")}" style="width:130px;margin:0" autocomplete="off"></div>
     <button class="bigbtn" data-act="closeset">Gotowe</button>`);
 }
 function showPause(keep){
@@ -1473,10 +1710,203 @@ function splashRun(){
   },60);
   sp.addEventListener("pointerdown",()=>{if(performance.now()-t0>900)finish();});
 }
+/* ============ KREATOR DAŃ, KSIĄŻKA, ZAPOWIEDŹ POZIOMU (UI) ============ */
+let CR=null,SH=null,IMPT="",LASTD=null;
+function loadMy(){try{MY=parseMy(localStorage.getItem(KEY_MY));}catch(e){MY=[];}}
+function saveMy(){try{localStorage.setItem(KEY_MY,JSON.stringify(MY.map(r=>({id:r.id,name:r.name,e:r.e,st:r.st,ing:r.ing,note:r.note}))));}catch(e){}}
+const stDef=t=>STN.find(s=>s.type===t);
+const allergenText=ing=>{const a=allergensOf(ing);return a.length?a.map(g=>AL[g].e+" "+AL[g].n).join(", "):"brak (z 6 grup alergenów w grze)";};
+function showBackToBook(){LASTD=null;overlay(bookHTML());}
+function creatorOpen(pre){
+  pre=pre||{};
+  CR={id:pre.id||null,name:pre.name||"",e:pre.e||"",st:pre.st||"pan",ing:pre.ing?[...pre.ing]:[],note:pre.note||""};
+  creatorView();
+}
+function creatorPreview(){
+  if(CR.ing.length<2)return {ok:false,html:"Wybierz co najmniej 2 składniki (maksymalnie 4)."};
+  const d=dupOf(CR.st,CR.ing,CR.id);
+  if(d)return {ok:false,html:"⚠️ Taki przepis już istnieje: <b>"+esc(d.e+" "+d.name)+"</b>. Zmień skład lub urządzenie."};
+  return {ok:true,html:`💰 cena <b>${myPrice(CR.ing)} zł</b> · ⏱ 5 s · 🔥 ok. <b>${kcalOf(CR.ing)} kcal</b> w porcji<br>🚫 Alergeny: ${allergenText(CR.ing)}`};
+}
+function creatorView(){
+  const box=$("ovbox"),sc=box.scrollTop;
+  const sel=CR.ing.map((id,i)=>`<span class="cchip" data-act="c_rm" data-i="${i}">${ING[id].e} ${ING[id].n} ✖</span>`).join("")||`<span class="sub">nic jeszcze nie wybrano</span>`;
+  const grid=CATS.map(([k,ic,n])=>`<div class="cat">${ic} ${n}</div><div class="igrid">`+Object.keys(ING).filter(id=>ING[id].c===k).map(id=>`<button class="ig" data-act="c_add" data-id="${id}"><span>${ING[id].e}</span><small>${ING[id].n}</small></button>`).join("")+`</div>`).join("");
+  const stb=STN.map(s=>`<button class="${CR.st===s.type?"on":""}" data-act="c_st" data-id="${s.type}">${s.e} ${s.name}</button>`).join("");
+  const ems=EMOJIS.map(x=>`<button class="eg ${CR.e===x?"on":""}" data-act="c_e" data-id="${x}">${x}</button>`).join("");
+  const p=creatorPreview();
+  overlay(`<h2>✏️ ${CR.id?"Edytuj przepis":"Kreator dań"}</h2><p class="sub">Wymyśl własne danie: urządzenie, 2–4 składniki, nazwa i ikona. Zapisane przepisy trafiają do książki kucharskiej, a goście mogą je zamawiać.</p>
+   ${CR.id?"":`<button class="bigbtn alt sm" data-act="c_tpl">🌭 Wczytaj przykład: Hot-dog z serem</button>`}
+   <div class="crrow"><b>1. Urządzenie</b><div class="seg" style="justify-content:flex-start;margin-top:4px">${stb}</div></div>
+   <div class="crrow"><b>2. Składniki</b> <small>(${CR.ing.length}/4 · dotknij, aby dodać)</small><div class="csel">${sel}</div>${grid}</div>
+   <div class="crrow"><b>3. Nazwa</b><input class="cin" data-f="name" maxlength="24" placeholder="np. Hot-dog z serem" value="${esc(CR.name)}" autocomplete="off"></div>
+   <div class="crrow"><b>4. Ikona</b><div class="egrid">${ems}</div></div>
+   <div class="crrow"><b>5. Opis</b> <small>(opcjonalnie)</small><textarea class="cin" data-f="note" maxlength="140" rows="2" placeholder="Jak przygotować, wskazówki…">${esc(CR.note)}</textarea></div>
+   <div class="crbar"><div class="crprev ${p.ok?"ok":"no"}">${p.html}</div>
+   <button class="bigbtn" data-act="c_save">💾 Zapisz przepis</button><button class="bigbtn alt" data-act="c_cancel">Anuluj</button></div>`);
+  box.scrollTop=sc;
+}
+function recipeDetail(id){
+  const r=R(id);if(!r){showBackToBook();return;}
+  LASTD=id;
+  const def=stDef(r.st),mine=!!r.mine,sure=S._delId===r.id;
+  const rows=[...new Set(r.ing)].map(i=>{const n=r.ing.filter(x=>x===i).length;
+    return `<div class="rec" data-act="bk_prod" data-id="${i}" style="cursor:pointer"><span class="re">${ING[i].e}</span><div><b>${ING[i].n}${n>1?" ×"+n:""}</b><small>ok. ${FACTS[i][0]} kcal / 100 g</small></div><span class="rp">ℹ️</span></div>`;}).join("");
+  overlay(`<h2>${r.e} ${esc(r.name)}</h2><p class="sub">${def.e} ${def.name} · ⏱ ${r.time} s · 💰 ${r.price} zł${mine?" · ⭐ moje danie":""}</p>${rows}
+   <div class="expl">🔥 Orientacyjnie ok. <b>${kcalOf(r.ing)} kcal</b> w porcji (przyjmujemy ok. ${PORTION_G} g każdego składnika).<br>🚫 Alergeny: ${allergenText(r.ing)}.</div>
+   ${r.note?`<div class="lcard" style="font-size:14px">📝 ${esc(r.note)}</div>`:""}
+   <div class="mset" style="margin-top:8px">${menuMode?`<button data-act="bk_remix" data-id="${r.id}">✏️ Zrób własną wersję</button>`:""}
+    ${mine?`<button data-act="bk_share" data-id="${r.id}">📤 Udostępnij</button>`:""}
+    ${mine&&menuMode?`<button data-act="bk_edit" data-id="${r.id}">✏️ Edytuj</button><button data-act="bk_del" data-id="${r.id}" style="${sure?"background:#e5484d;color:#fff":""}">${sure?"Na pewno? Dotknij jeszcze raz":"🗑️ Usuń"}</button>`:""}</div>
+   <button class="bigbtn alt" data-act="bk_back">◀ Wróć do książki</button>`);
+}
+function prodCard(id){
+  const i=ING[id],f=FACTS[id],cat=CATS.find(c=>c[0]===i.c);
+  const als=Object.keys(AL).filter(g=>AL[g].ing.includes(id));
+  const uses=RECIPES.filter(r=>r.ing.includes(id)).length+MY.filter(r=>r.ing.includes(id)).length;
+  overlay(`<h2>${i.e} ${i.n}</h2><p class="sub">${cat[1]} ${cat[2]} · w grze ${i.p} zł</p>
+   <div class="lcard">🔥 Ok. <b>${f[0]} kcal</b> na 100 g (surowy, orientacyjnie)</div>
+   <div class="lcard">🚫 Alergeny: ${als.length?als.map(g=>AL[g].e+" "+AL[g].n).join(", "):"brak (z 6 grup alergenów w grze)"}</div>
+   <div class="lcard">🧊 Przechowywanie: ${f[1]}</div>
+   <div class="lcard">❄️ Mrożenie: ${f[2]}</div>
+   <p class="sub">Używany w ${uses} przepisach.</p>
+   ${LASTD?`<button class="bigbtn alt" data-act="bk_open" data-id="${LASTD}">◀ Wróć do przepisu</button>`:`<button class="bigbtn alt" data-act="bk_back">◀ Wróć do książki</button>`}`);
+}
+function shareView(list,title){
+  const code=encodeRecipes(list);
+  const txt=list.map(r=>r.e+" "+r.name+": "+r.ing.map(i=>ING[i].n).join(", ")+" ("+stDef(r.st).name+")").join("\n");
+  SH={code,text:"Mój przepis z gry Gotuj i Mroź:\n"+txt+"\nKod (Książka kucharska > Moje > Wczytaj kod):\n"+code};
+  overlay(`<h2>📤 Udostępnij</h2><p class="sub">${esc(title)}</p><p>Wyślij ten tekst znajomemu. W jego grze: Książka kucharska ▶ Moje ▶ Wczytaj kod.</p>
+   <textarea class="cin" id="shta" readonly rows="5">${esc(SH.text)}</textarea>
+   <div class="mset" style="margin:6px 0"><button data-act="bk_copy">📋 Kopiuj</button>${navigator.share?`<button data-act="bk_nshare">📤 Wyślij…</button>`:""}</div>
+   <button class="bigbtn alt" data-act="bk_back">◀ Wróć</button>`);
+}
+function importView(msg){
+  overlay(`<h2>📥 Wczytaj przepis</h2><p>Wklej kod przepisu od znajomego (zaczyna się od <b>GM1:</b>).</p>
+   <textarea class="cin" data-f="imp" rows="4" placeholder="GM1:…">${esc(IMPT)}</textarea>
+   ${msg?`<div class="crprev no">${msg}</div>`:""}
+   <button class="bigbtn" data-act="bk_doimport">Wczytaj</button><button class="bigbtn alt" data-act="bk_back">Anuluj</button>`);
+}
+function copyShare(){
+  const ta=$("shta");if(!ta||!SH)return;
+  const fallback=()=>{ta.focus();ta.select();let ok=false;try{ok=document.execCommand("copy");}catch(e){}say(ok?"Skopiowano 📋":"Zaznacz tekst i skopiuj ręcznie");};
+  try{if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(SH.text).then(()=>say("Skopiowano 📋"),fallback);return;}}catch(e){}
+  fallback();
+}
+const MYACT=/^(c_|bk_|creator$|briefgo$|redotut$)/;
+function creatorAct(a,el){
+  const id=el.dataset.id;
+  switch(a){
+    case "creator": if(menuMode)creatorOpen();return true;
+    case "c_st": if(CR){CR.st=id;creatorView();}return true;
+    case "c_add": if(CR){if(CR.ing.length>=4){say("Maksymalnie 4 składniki");sfx.bad();}else if(hasIng(id)){CR.ing.push(id);sfx.put();creatorView();}}return true;
+    case "c_rm": if(CR){CR.ing.splice(+el.dataset.i,1);sfx.put();creatorView();}return true;
+    case "c_e": if(CR){CR.e=CR.e===id?"":id;creatorView();}return true;
+    case "c_tpl": if(CR){creatorOpen({name:"Hot-dog z serem",e:"🌭",st:"pan",ing:["chleb","kielbasa","ser","cebula"],note:"Podgrzej bułkę, dodaj kiełbasę, ser i cebulę. Pamiętaj o umyciu rąk po surowych produktach."});}return true;
+    case "c_cancel": CR=null;showBackToBook();return true;
+    case "c_save": {
+      if(!CR)return true;
+      const name=cleanName(CR.name);
+      if(name.length<2){say("Wpisz nazwę przepisu (min. 2 znaki)");sfx.bad();return true;}
+      if(CR.ing.length<2){say("Wybierz co najmniej 2 składniki");sfx.bad();return true;}
+      const d=dupOf(CR.st,CR.ing,CR.id);
+      if(d){say("Taki przepis już istnieje: "+d.name);sfx.bad();return true;}
+      if(!CR.id&&MY.length>=MAX_MY){say("Masz już "+MAX_MY+" własnych przepisów. Usuń któryś.");sfx.bad();return true;}
+      const base=sanitizeRecipe({name,e:CR.e,st:CR.st,ing:CR.ing,note:CR.note});
+      if(!base){say("Nie można zapisać tego przepisu");return true;}
+      const i=CR.id?MY.findIndex(r=>r.id===CR.id):-1;
+      if(i>=0)MY[i]=finishRecipe(base,CR.id);else MY.push(finishRecipe(base));
+      saveMy();sfx.tada();say("Zapisano: "+base.e+" "+base.name);CR=null;S.bookTab="my";showBackToBook();return true;
+    }
+    case "bk_open": recipeDetail(id);return true;
+    case "bk_prod": if(hasIng(id))prodCard(id);return true;
+    case "bk_back": S._delId=null;showBackToBook();return true;
+    case "bk_new": if(menuMode)creatorOpen();return true;
+    case "bk_remix": {const r=R(id);if(r&&menuMode)creatorOpen({name:(r.name+" (moja wersja)").slice(0,24),e:r.e,st:r.st,ing:r.ing});return true;}
+    case "bk_edit": {const r=MY.find(x=>x.id===id);if(r&&menuMode)creatorOpen(r);return true;}
+    case "bk_del": {
+      if(!menuMode)return true;
+      if(S._delId!==id){S._delId=id;recipeDetail(id);return true;}
+      S._delId=null;MY=MY.filter(r=>r.id!==id);saveMy();say("Przepis usunięty");S.bookTab="my";showBackToBook();return true;
+    }
+    case "bk_share": {const r=MY.find(x=>x.id===id);if(r)shareView([r],r.e+" "+r.name);return true;}
+    case "bk_shareall": if(MY.length)shareView(MY,"Wszystkie moje przepisy ("+MY.length+")");return true;
+    case "bk_copy": copyShare();return true;
+    case "bk_nshare": try{navigator.share({title:"Gotuj i Mroź",text:SH.text}).catch(()=>{});}catch(e){}return true;
+    case "bk_import": if(menuMode){IMPT="";importView();}return true;
+    case "bk_doimport": {
+      if(!menuMode)return true;
+      const res=decodeRecipes(IMPT);
+      if(res.err){importView(esc(res.err));return true;}
+      let added=0,skipped=res.bad;
+      for(const r of res.list){
+        if(MY.length>=MAX_MY||dupOf(r.st,r.ing)){skipped++;continue;}
+        MY.push(finishRecipe(r));added++;
+      }
+      if(added)saveMy();
+      IMPT="";S.bookTab="my";showBackToBook();sfx.tada();
+      say(added?("Dodano przepisów: "+added+(skipped?" (pominięto: "+skipped+")":"")):"Nic nie dodano: takie przepisy już masz");
+      return true;
+    }
+    case "bk_settings": showSettings();return true;
+    case "bk_backup": {
+      save();saveMy();
+      let sv={};try{sv=JSON.parse(localStorage.getItem(SAVE_KEY)||"{}");}catch(e){}
+      const code=encodeBackup(sv,MY);
+      SH={code,text:"Kopia zapasowa gry Gotuj i Mroź (poziom "+S.maxLv+", własne przepisy: "+MY.length+"). Zachowaj ten tekst. Aby przywrócić: Ustawienia > Przywróć kopię i wklej kod:\n"+code};
+      overlay(`<h2>💾 Kopia zapasowa</h2><p>Skopiuj ten tekst i zachowaj go (np. w notatkach lub wiadomości do siebie). Zawiera Twój postęp i własne przepisy.</p>
+       <textarea class="cin" id="shta" readonly rows="5">${esc(SH.text)}</textarea>
+       <div class="mset" style="margin:6px 0"><button data-act="bk_copy">📋 Kopiuj</button>${navigator.share?`<button data-act="bk_nshare">📤 Wyślij…</button>`:""}</div>
+       <button class="bigbtn alt" data-act="bk_settings">◀ Wróć do ustawień</button>`);
+      return true;
+    }
+    case "bk_restore": {
+      if(!menuMode)return true;
+      IMPT="";
+      overlay(`<h2>📥 Przywróć kopię</h2><p>Wklej kod kopii zapasowej (zaczyna się od <b>GM2:</b>). <b>Zastąpi obecny postęp i własne przepisy.</b></p>
+       <textarea class="cin" data-f="imp" rows="4" placeholder="GM2:…"></textarea>
+       <button class="bigbtn" data-act="bk_dorestore">Przywróć</button><button class="bigbtn alt" data-act="bk_settings">Anuluj</button>`);
+      return true;
+    }
+    case "bk_dorestore": {
+      if(!menuMode)return true;
+      const res=decodeBackup(IMPT);
+      if(res.err){say(res.err);sfx.bad();return true;}
+      try{localStorage.setItem(SAVE_KEY,JSON.stringify(res.save));}catch(e){say("Nie udało się zapisać");return true;}
+      load();MY=res.my.map(r=>finishRecipe(r));saveMy();save();IMPT="";sfx.tada();
+      say("Przywrócono: poziom "+S.maxLv+", własne przepisy: "+MY.length);menu();return true;
+    }
+    case "briefgo": closeOv();S.running=true;beep(660,.12,"triangle");return true;
+    case "redotut":
+      S.day=1;S.tutDone=false;endData=null;menuMode=false;closeOv();$("home").classList.remove("on");
+      newDay();render();musicStart();guideStart();return true;
+  }
+  return false;
+}
+function showBrief(){
+  S.running=false;S._wasRunning=false;
+  const tg=target(),fresh=RECIPES.filter(r=>r.day===S.day);
+  overlay(`<h2>Zmiana ${S.day} · ${CHAPTERS[Math.min(4,Math.floor((S.day-1)/10))]}</h2><p class="sub">${titleOf()}${chefName()} · trudność: ${diffName()}</p>
+   <div class="goalbox"><b>🎯 Cel: zarób ${tg} zł</b><br><small>w ${fmtT(dayTime())} · ⭐ ${tg} zł · ⭐⭐ ${Math.round(tg*1.4)} zł · ⭐⭐⭐ ${Math.round(tg*1.9)} zł</small></div>
+   ${S.special?`<div class="goalbox" style="background:#fff7d6"><b>🌟 Danie dnia: ${S.special.e} ${esc(S.special.name)}</b><br><small>za to danie dostajesz o 50% więcej</small></div>`:""}
+   ${fresh.length?`<p><b>🔓 Nowe przepisy na tym poziomie</b></p><div class="newr">${fresh.map(r=>`<span>${r.e} ${r.name}</span>`).join("")}</div>`:""}
+   ${S.learn?`<p class="sub">💡 Czy wiesz, że ${rnd(TIPS)}</p>`:""}
+   <button class="bigbtn" data-act="briefgo">▶ Start</button><button class="bigbtn alt" data-act="menu">Menu</button>`);
+}
+$("ovbox").addEventListener("input",e=>{
+  const t=e.target,f=t&&t.dataset&&t.dataset.f;if(!f)return;
+  if(f==="imp")IMPT=t.value;else if(f==="chef"){S.name=t.value.replace(/[^\p{L}\p{N} \-]/gu,"").slice(0,12);save();}else if(CR&&(f==="name"||f==="note"))CR[f]=t.value;
+});
+document.addEventListener("click",e=>{
+  const el=e.target.closest&&e.target.closest("[data-act]");
+  if(el&&MYACT.test(el.dataset.act)){e.preventDefault();creatorAct(el.dataset.act,el);}
+});
+
 /* ============ START ============ */
 document.addEventListener("pointerdown",e=>{
   S.idle=0;hideHandHint();
   const el=e.target.closest("[data-act]");if(!el)return;
+  if(MYACT.test(el.dataset.act))return;
   if(el.dataset.act==="tnext"){e.preventDefault();if(S.tutStep>=TUT.length-1)endTutorial();else{S.tutStep++;showCoach();}return;}
   if(el.dataset.act==="tskip"){e.preventDefault();endTutorial();return;}
   if(el.dataset.act==="help"){e.preventDefault();showHow();return;}
@@ -1507,20 +1937,19 @@ document.addEventListener("pointerdown",e=>{
   if(S.running&&a==="station"){
     const sti=S.st[+el.dataset.i];
     if(sti&&sti.state==="done"&&!S.hand){
-      DR={kind:"dish",i:+el.dataset.i,x0:e.clientX,y0:e.clientY,pid:e.pointerId,touch:e.pointerType==="touch",started:false,armed:e.pointerType!=="touch"};
-      if(DR.touch)DR.timer=setTimeout(()=>{if(DR){DR.armed=true;haptic(12);}},160);
+      DR={kind:"dish",i:+el.dataset.i,x0:e.clientX,y0:e.clientY,pid:e.pointerId,touch:e.pointerType==="touch",started:false,armed:true};
       return;
     }
   }
   if(a==="scene"){if(S.running)sceneTap(e);return;}
   if(a==="startday"){menuMode=false;endData=null;closeOv();$("home").classList.remove("on");newDay();render();beep(660,.12,"triangle");musicStart();
-    if(!S.tutDone)guideStart();return;}
+    if(!S.tutDone)guideStart();else showBrief();return;}
   if(a==="hints"){S.hints=!S.hints;save();menu();return;}
   if(a==="learn"){S.learn=!S.learn;save();menu();return;}
   if(a==="menu"){S.day=S.maxLv;save();menu();return;}
   if(a==="school"){showSchool();return;}
   if(a==="map"){showMap();return;}
-  if(a==="playlv"){const level=Number(el.dataset.i);if(!validLevel(level)||level>S.maxLv)return;S.day=level;endData=null;menuMode=false;closeOv();$("home").classList.remove("on");newDay();render();musicStart();if(!S.tutDone)guideStart();return;}
+  if(a==="playlv"){const level=Number(el.dataset.i);if(!validLevel(level)||level>S.maxLv)return;S.day=level;endData=null;menuMode=false;closeOv();$("home").classList.remove("on");newDay();render();musicStart();if(!S.tutDone)guideStart();else showBrief();return;}
   if(a==="lesson"){S.lesson={id:el.dataset.id,step:0,score:0,pick:null};lessonView();return;}
   if(a==="lprev"){S.lesson.step=Math.max(0,S.lesson.step-1);lessonView();return;}
   if(a==="lnext"){const st=S.lesson,L=LESSONS.find(x=>x.id===st.id);
@@ -1630,22 +2059,29 @@ function pickMission(){
 const panIdx=()=>STN.findIndex(s=>s.type==="pan");
 const GSTEPS=[
  {e:"👀",t:"Klient chce OMLET 🍳. Zamówienie jest nad jego głową.",btn:"Dalej ▶"},
- {e:"🥚",t:"Chwyć JAJKO i przeciągnij na PATELNIĘ",wait:()=>S.st[panIdx()].items.length>=1},
+ {e:"🥚",t:"Dotknij JAJKO. Samo trafi na patelnię",wait:()=>S.st[panIdx()].items.length>=1},
  {e:"🥚",t:"Jeszcze jedno JAJKO!",wait:()=>S.st[panIdx()].items.length>=2},
  {e:"🧀",t:"Teraz SER!",wait:()=>S.st[panIdx()].items.length>=3},
  {e:"🍳",t:"Smaży się… poczekaj kilka sekund",wait:()=>S.st[panIdx()].state==="done"},
- {e:"✋",t:"Gotowe! Przeciągnij omlet do klienta",wait:()=>S.served>=1},
- {e:"🎉",t:"Brawo! Pierwsza zapłata! Teraz grasz sama.",btn:"Zaczynamy ▶"}
+ {e:"✋",t:"Gotowe! Dotknij patelnię, a omlet pójdzie do klienta",wait:()=>S.served>=1},
+ {e:"🎉",t:()=>"Brawo! Pierwsza zapłata! Teraz grasz sama. Cel poziomu: zarób "+target()+" zł (pasek u góry).",btn:"Zaczynamy ▶"}
 ];
 function howStrip(){
-  const s=[["👀","Zobacz zamówienie"],["🥚","Chwyć składnik"],["🍳","Wrzuć do urządzenia"],["🍽️","Podaj klientowi"],["💰","Zapłata!"]];
+  const s=[["👀","Zobacz zamówienie"],["🥚","Dotknij składnik"],["🍳","Sam trafi do urządzenia"],["🍽️","Dotknij gotowe danie"],["💰","Zapłata!"]];
   return `<div class="how">`+s.map((x,i)=>(i?`<span class="ar">➜</span>`:"")+`<div class="hs"><i>${i+1}</i><b>${x[0]}</b><small>${x[1]}</small></div>`).join("")+`</div>`;
 }
 function showHow(){
   S._wasRunning=S.running;S.running=false;
   overlay(`<h2>❓ Jak grać?</h2>${howStrip()}
-    <div class="howtips"><div>⏱ Klient czeka do 3 minut. Patrz na licznik nad jego głową.</div><div>⭐ Wyjmij danie szybko = idealne i więcej pieniędzy.</div><div>🎯 Zrób zadanie dnia, a dostaniesz premię.</div></div>
+    <div class="howtips">
+      <div>🎯 <b>Cel poziomu:</b> zarób tyle złotych, ile pokazuje pasek u góry. Im więcej, tym więcej gwiazdek (⭐ cel, ⭐⭐ ×1,4, ⭐⭐⭐ ×1,9).</div>
+      <div>⏱ <b>Klient czeka.</b> Nad głową ma licznik. Im szybciej go obsłużysz, tym większy napiwek. Gdy czas minie, odchodzi bez zapłaty.</div>
+      <div>⭐ <b>Wyjmij danie na czas.</b> Zielony pasek to idealne danie. Gdy poczekasz zbyt długo, danie się przypali.</div>
+      <div>✏️ <b>Nie znasz przepisu?</b> Wrzuć 2–4 składniki do urządzenia i dotknij jego przycisku. Dobre pomysły zapisz w Kreatorze dań.</div>
+      <div>🧼 <b>Higiena:</b> na poziomie Normalnym i Trudnym (od poziomu 3) myj ręce po surowym mięsie, rybach i jajkach.</div>
+    </div>
     <button class="bigbtn" data-act="closehow">${menuMode?"Wróć do menu":"Wróć do gry ▶"}</button>
+    <button class="bigbtn alt" data-act="redotut">🎓 Powtórz samouczek</button>
     ${menuMode?"":`<button class="bigbtn alt" data-act="showwhere">📍 Pokaż, gdzie co jest</button>`}`);
 }
 function guideStart(){
@@ -1659,7 +2095,7 @@ function guideStart(){
 }
 function guideHTML(){
   const st=GSTEPS[S.guide.step];
-  return `<div class="rc-head"><span class="rc-e" style="font-size:34px">${st.e}</span><div><b style="font-size:15px">${st.t}</b><small>Poradnik · krok ${S.guide.step+1} z ${GSTEPS.length}</small></div></div>`+
+  return `<div class="rc-head"><span class="rc-e" style="font-size:34px">${st.e}</span><div><b style="font-size:15px">${typeof st.t==="function"?st.t():st.t}</b><small>Poradnik · krok ${S.guide.step+1} z ${GSTEPS.length}</small></div></div>`+
     (st.btn?`<button class="gbtn" data-act="gnext">${st.btn}</button>`:`<div class="rc-hint">👆 Zrób to, a pójdziemy dalej</div>`)+
     `<button class="gskip" data-act="gskip">Pomiń poradnik</button>`;
 }
@@ -1685,9 +2121,9 @@ function guideTick(){
 const TUT=[
  {t:"Witaj, szefowo kuchni! 👩‍🍳 To jest RESTAURACJA. Klienci przychodzą do lady i czekają. Nad głową każdego widzisz, czego chce (obrazek dania i składniki).",el:"#cust"},
  {t:"To jest KARTA PRZEPISU. Mówi, co ugotować, z czego i w jakim urządzeniu. Podpowiedź pod spodem prowadzi Cię krok po kroku.",el:"#recipe"},
- {t:"To jest SPIŻARNIA. Złap składnik i PRZECIĄGNIJ go do urządzenia (albo tylko go dotknij). Złote ramki pokazują, co jest potrzebne.",el:"#tray"},
+ {t:"To jest SPIŻARNIA. DOTKNIJ składnik, a sam trafi do właściwego urządzenia. Złote ramki pokazują, co jest potrzebne.",el:"#tray"},
  {t:"To jest KUCHNIA: garnek, patelnia, piekarnik, mikrofalówka i zamrażarka. Wrzuć tu składniki. Podświetlone urządzenie jest właściwe.",el:"#stat"},
- {t:"Gdy danie jest gotowe, PRZECIĄGNIJ je do klienta przy ladzie (albo dotknij danie, a potem klienta). Zdążysz na czas, to zapłacą! Powodzenia! 🍀",el:"#cust"}
+ {t:"Gdy danie jest gotowe, DOTKNIJ urządzenie z gotowym daniem, a danie samo trafi do klienta, który o nie prosi. Zdążysz na czas, to zapłacą! Powodzenia! 🍀",el:"#cust"}
 ];
 function coachClear(){document.querySelectorAll(".coach").forEach(n=>n.classList.remove("coach"));$("coach").classList.remove("on");}
 function showCoach(){
@@ -1740,6 +2176,20 @@ function updateHandHint(){
   ],{duration:1900,iterations:Infinity,easing:"ease-in-out"});
 }
 const dirtyNow=()=>!!DR;
+/* prosta obsługa jednym dotknięciem: składnik sam trafia do właściwego urządzenia, gotowe danie samo idzie do klienta, który o nie prosi */
+function autoDrop(){
+  if(!S.running||!S.hand||S.hand.t!=="ing")return;
+  const F=focusInfo();if(!F||F.free)return;
+  const id=S.hand.id;
+  if(!F.chips.some(c=>!c.done&&c.id===id)||F.st.state!=="idle")return;
+  stationTap(F.stIdx);
+}
+function autoServe(){
+  if(!S.running||!S.hand||S.hand.t!=="dish")return;
+  const d=S.hand.dish,fits=c=>c.orders.some(o=>!o.got&&orderMatches(o,d));
+  let idx=S.q.indexOf(S.focusC);if(idx<0||!fits(S.q[idx]))idx=S.q.findIndex(fits);
+  if(idx>=0)custTap(idx);
+}
 /* ---------- przeciąganie ---------- */
 let DR=null;
 function ghostShow(txt){let g=document.getElementById("ghost");if(!g){g=document.createElement("div");g.id="ghost";document.body.appendChild(g);}g.textContent=txt;g.style.display="block";document.body.classList.add("dragging");return g;}
@@ -1766,8 +2216,8 @@ document.addEventListener("pointermove",e=>{
 document.addEventListener("pointerup",e=>{
   if(!DR||e.pointerId!==DR.pid)return;
   const d=DR;clearTimeout(d.timer);DR=null;
-  if(!d.started){ // zwykłe dotknięcie
-    if(d.kind==="ing")act({act:"ing",id:d.id});else act({act:"station",i:d.i});
+  if(!d.started){ // zwykłe dotknięcie: jedno dotknięcie wystarcza
+    if(d.kind==="ing"){act({act:"ing",id:d.id});autoDrop();}else{act({act:"station",i:d.i});autoServe();}
     return;
   }
   ghostHide();
@@ -1806,7 +2256,18 @@ function loop(now){
   draw();
   requestAnimationFrame(loop);
 }
-load();S.st=STN.map(s=>freshStation(s.type));
+/* przycisk „Wstecz” w Androidzie: w grze pauza, w oknach zamknięcie, w menu dopiero drugi raz wyjście */
+history.pushState({g:1},"");
+let backWarned=false;
+window.addEventListener("popstate",()=>{
+  const ovOn=$("ov").classList.contains("on");
+  if(!menuMode&&S.running&&!ovOn&&!S.guide){showPause();history.pushState({g:1},"");return;}
+  if(!menuMode&&(endData||(ovOn&&!S._wasRunning))){menu();history.pushState({g:1},"");return;}
+  if(!menuMode){if(ovOn){closeOv();S.running=!!S._wasRunning;}else if(S.guide)showPause();else menu();history.pushState({g:1},"");return;}
+  if(ovOn){menu();history.pushState({g:1},"");return;}
+  if(!backWarned){backWarned=true;say("Naciśnij „Wstecz” jeszcze raz, aby wyjść");history.pushState({g:1},"");setTimeout(()=>{backWarned=false;},2500);}
+});
+load();loadMy();S.st=STN.map(s=>freshStation(s.type));
 usedIng().forEach(i=>{S.stock[i]=3;});
 render();resize();splashRun();requestAnimationFrame(loop);
 </script>
