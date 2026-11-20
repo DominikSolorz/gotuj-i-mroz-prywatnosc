@@ -42,3 +42,6 @@ Bez zmian: offline, bez reklam, zakupów, analityki i nowych uprawnień; dane ty
 ## Wersja 2.3 (versionCode 5)
 - **Kopia zapasowa / przywracanie** (Ustawienia w menu): cały postęp (poziomy, gwiazdki, monety, ulepszenia, lekcje, imię) i własne przepisy jako kod `GM2:…`. Działa bez internetu i bez serwera, więc deklaracje Play (brak zbierania danych, offline) zostają bez zmian. Pozwala przenieść grę na nowy telefon albo ją odzyskać po reinstalacji.
 - **Dlaczego nie ma backendu:** serwer lub chmura oznaczałyby zbieranie danych, uprawnienie do internetu i zmianę deklaracji Data safety oraz polityki prywatności. Kod kopii jest bezpiecznym zamiennikiem.
+
+## Wersja 2.4 (versionCode 6)
+- Układ pionowy na bardzo małych ekranach (np. 320×568): spiżarnia nie wystaje już poza ekran (audyt na 320×568, 360×600, 360×640, 375×667).

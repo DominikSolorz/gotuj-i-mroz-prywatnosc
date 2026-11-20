@@ -111,7 +111,7 @@ button{font:inherit;color:inherit}
 @media (max-width:900px){.tab .tl{display:none}}
 #tray{background:linear-gradient(#8a5a37,#6b4428);border-radius:0 0 12px 12px;box-shadow:var(--shadow);padding:8px 6px 6px;display:grid;grid-template-columns:repeat(auto-fill,minmax(60px,1fr));gap:8px;align-content:start;overflow:auto;min-height:0;flex:1;border:2px solid #4a2d19}
 @media (orientation:portrait){#tray{flex:none;max-height:19vh}}
-@media (orientation:portrait) and (max-height:620px){#tray{max-height:15vh}#mission{display:none}.tab{padding:3px 1px}.tab .ti{font-size:14px}#recipe{padding:3px 8px}}
+@media (orientation:portrait) and (max-height:620px){#app{grid-template-rows:auto minmax(84px,1fr) minmax(92px,.9fr) auto}#tray{max-height:14vh}#hud{padding:3px 6px}#mission{display:none}.tab{padding:3px 1px}.tab .ti{font-size:14px}#recipe{padding:3px 8px}}
 @media (max-height:420px){.st .msg{font-size:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}.tab{padding:3px 1px}}
 .tile{position:relative;border:2px solid #e3c79a;background:var(--cream);border-radius:12px;padding:3px 2px 2px;text-align:center;cursor:pointer;min-height:54px;color:var(--ink)}
 .tile.held{border-color:var(--accent);background:#ffe1bd;transform:translateY(-2px)}
@@ -1671,7 +1671,7 @@ function updateHome(){
       <div class="hrow"><button class="hbtn" data-act="map"><b>🗺️</b>Poziomy<small>${S.maxLv} z 50</small></button><button class="hbtn" data-act="school"><b>🎓</b>Szkoła<small>${S.done.length} z ${LESSONS.length} lekcji</small></button></div>
       <div class="hrow"><button class="hbtn" data-act="book"><b>📖</b>Książka<small>${known} z ${RECIPES.length} · moje: ${MY.length}</small></button><button class="hbtn" data-act="creator"><b>✏️</b>Kreator dań<small>własne przepisy</small></button></div>
       <div class="hrow"><button class="hbtn" data-act="how"><b>❓</b>Jak grać<small>zasady i samouczek</small></button><button class="hbtn" data-act="settings"><b>⚙️</b>Ustawienia<small>trudność, dźwięk</small></button></div></div>
-    <div class="hm-ver">Gotuj i Mroź · wersja 2.3</div>`;
+    <div class="hm-ver">Gotuj i Mroź · wersja 2.4</div>`;
 }
 function menu(){
   menuMode=true;S.running=false;S.guide=null;coachClear();closeOv();
