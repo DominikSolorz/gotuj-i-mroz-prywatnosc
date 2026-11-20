@@ -96,16 +96,35 @@ const K=(()=>{
   function foodColor(p,s){const [w0,w1]=s.window;if(p<w0)return mix("#ecdcb8","#d9a441",p/w0);if(p<=w1)return mix("#d9a441","#b3711f",(p-w1+(w1-w0))/(w1-w0)*.5);return mix("#b3711f","#241410",(p-w1)/Math.max(.05,s.burn-w1));}
   function workSVG(st,r){
     const nxt=run?run.r.steps.slice(run.i+1).find(x=>x.type==="heat"||x.type==="balance"):null;
-    const cont=nxt?(nxt.type==="balance"?"garnek":nxt.station==="patelnia"?"patelnia":"bowl"):"board";
-    let kind0;const kind=st.type==="heat"?st.s.station:st.type==="rest"?"rest":st.type==="mix"?"bowl":st.type==="balance"?(/ogień|wrzeni|temperat/i.test(st.s.label||"")?"garnek":"bowl"):(st.type==="wash")?"sink":st.type==="serve"?"plate":(st.type==="seq"||st.type==="tap")?cont:"board";
+    const cont=nxt?(nxt.type==="balance"?"garnek":nxt.station==="patelnia"?"patelnia":nxt.station==="garnek"?"garnek":"bowl"):"board";
+    const kind=st.type==="setup"?"setup":st.type==="heat"?st.s.station:st.type==="rest"?"rest":st.type==="mix"?"bowl":st.type==="balance"?(/ogień|wrzeni|temperat/i.test(st.s.label||"")?"garnek":"bowl"):(st.type==="wash")?"sink":st.type==="serve"?"plate":(st.type==="seq"||st.type==="tap")?(st.s.work||cont):"board";
     const dish=r.e;
     lastKind=kind;switch(kind){
+      case "setup":return `<rect x="-100" y="-24" width="220" height="24" rx="5" fill="#b9a993"/>
+        <g id="kSetupCrumbs" fill="#72563b"><circle cx="-60" cy="-16" r="3"/><circle cx="-10" cy="-10" r="2"/><circle cx="37" cy="-17" r="3"/></g>
+        <rect id="kSetupCloth" x="-80" y="-24" width="27" height="12" rx="3" fill="#61b8bc" opacity="0"/>
+        <rect id="kSetupBoard" x="-76" y="-18" width="91" height="15" rx="4" fill="#c98f4b" opacity="0"/>
+        <g id="kSetupPan" opacity="0"><path d="M59 -14h36" stroke="#634b3d" stroke-width="7" stroke-linecap="round"/><ellipse cx="41" cy="-15" rx="23" ry="9" fill="#44484e" stroke="#23262b" stroke-width="3"/></g>`;
       case "board":return `<rect x="-84" y="-14" width="168" height="14" rx="5" fill="#c98f4b"/><rect x="-84" y="-14" width="168" height="4" rx="2" fill="#e0b070"/><g id="kItems" font-size="26"></g>`;
       case "sink":return `<rect x="-72" y="-18" width="144" height="18" rx="7" fill="#8fa3b5" stroke="#6f7f8e" stroke-width="2"/><rect x="-62" y="-14" width="124" height="8" rx="4" fill="#cfe3f3"/><path d="M60 -18V-72Q60 -84 46 -84H34" stroke="#8a97a4" stroke-width="8" fill="none" stroke-linecap="round"/><rect id="kStream" class="stream" x="31" y="-80" width="5" height="62" rx="2.5" fill="#8fd0ff" opacity="0"/><g id="kSuds"><circle class="bub" cx="-26" cy="-22" r="4" fill="#e6f4ff" stroke="#9fd0f0"/><circle class="bub" style="animation-delay:.25s" cx="-8" cy="-26" r="5" fill="#e6f4ff" stroke="#9fd0f0"/><circle class="bub" style="animation-delay:.5s" cx="12" cy="-23" r="4" fill="#e6f4ff" stroke="#9fd0f0"/><circle class="bub" style="animation-delay:.75s" cx="28" cy="-25" r="5" fill="#e6f4ff" stroke="#9fd0f0"/></g>`;
       case "bowl":return `<path d="M-66 -52Q-66 0 0 0Q66 0 66 -52Z" fill="#e9eef3" stroke="#aab4bd" stroke-width="3"/><ellipse id="kBowlIn" cx="0" cy="-34" rx="56" ry="10" fill="#f6e6a8" opacity="0"/><ellipse cx="0" cy="-52" rx="66" ry="8" fill="#f4f7fa" stroke="#aab4bd" stroke-width="3"/>`;
       case "garnek":return `<rect x="-58" y="-78" width="116" height="78" rx="12" fill="#aab4bd" stroke="#6f7a83" stroke-width="3"/><rect x="-72" y="-62" width="18" height="9" rx="4" fill="#3b4148"/><rect x="54" y="-62" width="18" height="9" rx="4" fill="#3b4148"/><ellipse cx="0" cy="-78" rx="58" ry="9" fill="#d7dde2" stroke="#6f7a83" stroke-width="3"/><ellipse id="kWater" cx="0" cy="-78" rx="50" ry="6" fill="#7fb9d9"/><g id="kBub" opacity="0"><circle class="bub" cx="-22" cy="-78" r="4" fill="#fff"/><circle class="bub" style="animation-delay:.3s" cx="2" cy="-80" r="5" fill="#fff"/><circle class="bub" style="animation-delay:.7s" cx="24" cy="-78" r="4" fill="#fff"/></g><g class="steam" id="kSteam"><path d="M-22 -92q-8-12 0-22M0 -94q-8-14 0-26M22 -92q-8-12 0-22" stroke="#fff" stroke-width="4" fill="none" stroke-linecap="round"/></g>`;
-      case "patelnia":return `<rect x="52" y="-26" width="64" height="11" rx="5" fill="#6a432d"/><path d="M-62 -34H62L54 -6Q0 4 -54 -6Z" fill="#2e3136" stroke="#17191c" stroke-width="3"/><ellipse cx="0" cy="-34" rx="62" ry="11" fill="#44484e" stroke="#17191c" stroke-width="3"/><ellipse id="kFood" cx="-12" cy="-34" rx="30" ry="7" fill="#ecdcb8"/><ellipse id="kFood2" cx="24" cy="-33" rx="20" ry="5" fill="#ecdcb8"/><g class="steam" id="kSteam"><path d="M-26 -50q-8-12 0-22M0 -52q-8-14 0-26M26 -50q-8-12 0-22" stroke="#fff" stroke-width="4" fill="none" stroke-linecap="round"/></g>`;
-      case "piekarnik":return `<rect x="-78" y="-110" width="156" height="110" rx="10" fill="#cfd4d9" stroke="#5f676e" stroke-width="3"/><rect x="-62" y="-80" width="124" height="66" rx="8" fill="#262a2e"/><rect id="kGlow" x="-62" y="-80" width="124" height="66" rx="8" fill="#ff8a2a" opacity="0"/><ellipse id="kFood" cx="0" cy="-34" rx="34" ry="14" fill="#ecdcb8"/><g fill="#33383e"><circle cx="-48" cy="-96" r="5"/><circle cx="-24" cy="-96" r="5"/><circle cx="24" cy="-96" r="5"/><circle cx="48" cy="-96" r="5"/></g><g class="steam" id="kSteam"><path d="M-30 -118q-8-10 0-18M0 -118q-8-12 0-22M30 -118q-8-10 0-18" stroke="#fff" stroke-width="4" fill="none" stroke-linecap="round"/></g>`;
+      case "patelnia":return `<rect x="52" y="-26" width="64" height="11" rx="5" fill="#6a432d"/><path d="M-62 -34H62L54 -6Q0 4 -54 -6Z" fill="#2e3136" stroke="#17191c" stroke-width="3"/><ellipse cx="0" cy="-34" rx="62" ry="11" fill="#44484e" stroke="#17191c" stroke-width="3"/>${st.s.reheat?`<g id="kPanFood" opacity="0">
+        <rect id="kFood" x="-38" y="-43" width="60" height="10" rx="5" fill="#c66f55" stroke="#6e352a" stroke-width="1.5"/>
+        <rect id="kFood2" x="-20" y="-34" width="60" height="10" rx="5" fill="#c66f55" stroke="#6e352a" stroke-width="1.5"/>
+        <path d="M-31 -39h39m-21 9h39" stroke="#ffe0bb" stroke-opacity=".6" stroke-width="1.4" stroke-linecap="round"/></g>`:r.id==="tosty"?`<g id="kPanFood" opacity="0"><path d="M-36 -36q3-9 14-9h35q13 0 18 9l-4 9h-59z" fill="#be7e3f" stroke="#6f3d1f" stroke-width="2"/><path d="M-30 -29H26" stroke="#f5c945" stroke-width="3" stroke-linecap="round"/><path id="kToastTop" d="M-34 -38q6-8 14-8h32q10 0 17 8l-5 6h-54z" fill="#efd9ad" stroke="#a46530" stroke-width="1.5"/></g>`:`<ellipse id="kFood" cx="-12" cy="-34" rx="30" ry="7" fill="#ecdcb8" opacity="0"/><ellipse id="kFood2" cx="24" cy="-33" rx="20" ry="5" fill="#ecdcb8" opacity="0"/>`}<g class="steam" id="kSteam"><path d="M-26 -50q-8-12 0-22M0 -52q-8-14 0-26M26 -50q-8-12 0-22" stroke="#fff" stroke-width="4" fill="none" stroke-linecap="round"/></g>`;
+      case "piekarnik":return `<rect x="-78" y="-110" width="156" height="110" rx="10" fill="#cfd4d9" stroke="#5f676e" stroke-width="3"/>
+        <rect x="-62" y="-80" width="124" height="66" rx="8" fill="#262a2e"/>
+        <rect id="kGlow" x="-62" y="-80" width="124" height="66" rx="8" fill="#ff8a2a" opacity="0"/>
+        <path d="M-57 -25H57m-112 5h110" stroke="#8b969d" stroke-width="2"/>
+        <g id="kHeatFood" opacity="0">${r.id==="zapiekanka"?`<rect x="-43" y="-43" width="86" height="18" rx="9" fill="#9d5e2d"/>
+          <rect id="kFood" x="-41" y="-45" width="82" height="14" rx="7" fill="#ecdcb8"/>
+          <path d="M-29 -39h8m12 2h8m11-3h8m11 3h5" stroke="#754530" stroke-width="3" stroke-linecap="round"/>`:`<ellipse id="kFood" cx="0" cy="-36" rx="34" ry="13" fill="#ecdcb8"/>`}</g>
+        <g id="kOvenClosed" opacity="0"><rect x="-65" y="-83" width="130" height="72" rx="9" fill="#708895" fill-opacity=".25" stroke="#3e474e" stroke-width="4"/>
+          <path d="M-44 -74H44" stroke="#aab6bd" stroke-width="6" stroke-linecap="round"/></g>
+        <path id="kOvenOpen" d="M-65 -13L-75 7H75L65 -13Z" fill="#697781" stroke="#38434c" stroke-width="3"/>
+        <g fill="#33383e"><circle cx="-48" cy="-96" r="5"/><circle cx="-24" cy="-96" r="5"/><circle cx="24" cy="-96" r="5"/><circle cx="48" cy="-96" r="5"/></g>
+        <circle id="kOvenLamp" cx="0" cy="-96" r="4" fill="#75818a"/>`;
       case "rest":return `<ellipse cx="0" cy="-4" rx="72" ry="8" fill="#dcdfe3"/><ellipse id="kDough" cx="0" cy="-22" rx="40" ry="20" fill="#f1dcae" stroke="#d0b27a" stroke-width="3"/><g transform="translate(-92 -50)"><circle r="20" fill="#fff" stroke="#6f7a83" stroke-width="3"/><path id="kHand" d="M0 0V-14" stroke="#d93a2f" stroke-width="3" stroke-linecap="round"/><circle r="2.5" fill="#333"/></g>`;
       case "plate":return `<ellipse cx="0" cy="-4" rx="78" ry="10" fill="#e9eef3" stroke="#b6c0ca" stroke-width="3"/><ellipse cx="0" cy="-7" rx="56" ry="6" fill="#fff"/>${KDISH.g(r.id,-30,-72,60)}`;
     }return "";
@@ -113,20 +132,37 @@ const K=(()=>{
   function updateWork(){
     if(!run||run.finished)return;const st=run.st,s=st.s;
     const set=(id,a,v)=>{const e=$k(id);if(e)e.setAttribute(a,v);};
-    if(st.type==="gather"||st.type==="chop"||st.type==="tap"||st.type==="seq"){
-      const it=$k("kItems");if(it&&!it.dataset.set){it.dataset.set="1";
-        const ids=(st.type==="gather"?s.items:st.type==="seq"?s.order:run.r.ing.slice(0,5).map(x=>x[0])).slice(0,6);
-        it.innerHTML=ids.map((id,i)=>`<text x="${-70+i*28}" y="-18">${ingE(id)}</text>`).join("");}
+    if(st.type==="setup"){
+      set("kSetupCrumbs","opacity",st.pos===0?1:0);
+      set("kSetupCloth","opacity",st.pos===1?1:0);
+      set("kSetupBoard","opacity",st.pos>=2?1:0);
+      set("kSetupPan","opacity",st.pos>=3?1:0);
     }
-    if(st.type==="wash"){const e=$k("kSuds");if(e)e.style.opacity=st.holding?1:.4;const w=$k("kStream");if(w)w.setAttribute("opacity",st.holding?.85:0);}
+    if(st.type==="gather"||st.type==="chop"||st.type==="tap"||st.type==="seq"){
+      const it=$k("kItems");
+      const ids=(st.type==="gather"?st.picked:st.type==="seq"?s.order.slice(0,st.pos):run.r.ing.map(x=>x[0])).slice(0,6);
+      const key=ids.join(",");
+      if(it&&it.dataset.items!==key){
+        it.dataset.items=key;
+        it.innerHTML=ids.map((id,i)=>`<text x="${-70+i*28}" y="-18">${ingE(id)}</text>`).join("");
+      }
+    }
+    if(st.type==="wash"){const washing=st.holding&&!st.ok;const e=$k("kSuds");if(e)e.style.opacity=washing?1:.4;const w=$k("kStream");if(w)w.setAttribute("opacity",washing?.85:0);}
     if(st.type==="balance"){const b=$k("kBub");if(b)b.setAttribute("opacity",st.holding?1:.35);const sm=$k("kSteam");if(sm)sm.classList.add("on");}
     if(st.type==="mix"||st.type==="balance"){const e=$k("kBowlIn");if(e){e.setAttribute("opacity",Math.min(1,.25+(st.type==="mix"?st.held/s.dur:Math.min(1,st.inZone/s.need))*.75));e.setAttribute("fill",st.type==="balance"&&st.level>s.zone[1]?"#ffd9a0":"#f6e6a8");}}
     if(st.type==="heat"){
-      const on=st.started&&!st.taken;const p=st.p,c=foodColor(p,s);
-      ["kFood","kFood2"].forEach(id=>set(id,"fill",c));
+      const on=st.started&&!st.taken;const p=st.p,c=s.reheat?mix("#d68b72","#743b28",p/s.burn):foodColor(p,s);
+      ["kFood","kFood2","kToastTop"].forEach(id=>set(id,"fill",c));
+      if(lastKind==="patelnia"||lastKind==="piekarnik"){
+        const inDevice=on&&!st.heatTransfer;
+        ["kFood","kFood2","kPanFood","kHeatFood"].forEach(id=>set(id,"opacity",inDevice?1:0));
+        set("kOvenClosed","opacity",inDevice?1:0);
+        set("kOvenOpen","opacity",inDevice?0:1);
+        set("kOvenLamp","fill",inDevice?"#ff9c40":"#75818a");
+      }
       const sm=$k("kSteam");if(sm)sm.classList.toggle("on",on);
       const b=$k("kBub");if(b)b.setAttribute("opacity",on?1:0);
-      const gl=$k("kGlow");if(gl)gl.setAttribute("opacity",on?(.25+.45*Math.min(1,p)):0);
+      const gl=$k("kGlow");if(gl)gl.setAttribute("opacity",on&&!st.heatTransfer?(.25+.45*Math.min(1,p)):0);
       const w=$k("kWater");if(w)w.setAttribute("fill",on&&p>.5?"#a8d3ea":"#7fb9d9");
     }
     if(st.type==="rest"){const h=$k("kHand");if(h)h.setAttribute("transform","rotate("+(360*st.t/s.dur)+")");const d=$k("kDough");if(d){const g=st.t/s.dur;d.setAttribute("rx",40+22*g);d.setAttribute("ry",20+14*g);}}
@@ -136,7 +172,7 @@ const K=(()=>{
   function setChef(a,ms){const c=$k("kChef");if(!c)return;c.dataset.a=a;chefT=ms?ms/1000:0;}
   function chefFor(){
     if(!run||run.finished)return "idle";const st=run.st;
-    switch(st.type){case "wash":return st.holding?"wash":"idle";case "mix":return st.holding?"mix":"idle";case "balance":return st.holding?"mix":"idle";
+    switch(st.type){case "wash":return st.holding&&!st.ok?"wash":"idle";case "mix":return st.holding?"mix":"idle";case "balance":return st.holding?"mix":"idle";
       case "heat":return st.started&&!st.taken?(st.s.station==="patelnia"?"fry":st.s.station==="garnek"?"mix":"idle"):"idle";
       case "serve":return st.ok?"serve":"idle";default:return "idle";}
   }
@@ -159,22 +195,27 @@ const K=(()=>{
   }
   function panelHTML(){
     const st=run.st,s=st.s,n=run.r.steps.length,i=run.i;
-    let h=`<div class="kp-h"><span class="n">Krok ${i+1}/${n}</span><b>${KE.TITLES[st.type]}</b><span style="margin-left:auto">${KDISH.svg(run.r.id,38)}</span></div><div class="kp-t">${esc2(shown(s,st))}</div>`;
+    let h=`<div class="kp-h"><span class="n">Krok ${i+1}/${n}</span><b>${s.reheat?"Podgrzewanie":s.station==="piekarnik"?"Pieczenie":KE.TITLES[st.type]}</b><span style="margin-left:auto">${KDISH.svg(run.r.id,38)}</span></div><div class="kp-t">${esc2(shown(s,st))}</div>`;
     const T=run.tier;
     if(T&&T.t>=1&&["gather","seq","heat","balance"].includes(st.type))if(st.type!=="gather"||true)h+=`<button class="kp-hint" data-k="hint"${run.hl<=0?" disabled":""}>💡 Podpowiedź (${run.hl})</button>`;
     switch(st.type){
+      case "setup": {
+        const tasks=[s.tasks[2],s.tasks[0],s.tasks[1]];
+        h+=`<div class="kp-chips">${tasks.map(task=>`<button class="kp-chip" data-k="prepare" data-id="${task.id}">${esc2(task.label)}</button>`).join("")}</div>`;
+        break;
+      }
       case "gather":{const ids=[...s.items,...decoyList(run.r,s,T?T.decoys:2)].sort(()=>Math.random()-.5);
         const amt=Object.fromEntries(run.r.ing);
         h+=`<div class="kp-chips" id="kChips">${ids.map(id=>`<button class="kp-chip" data-k="item" data-id="${id}"><span class="e">${ingE(id)}</span><span>${esc2(ingN(id))}<small>${T&&T.t===0&&amt[id]?esc2(amt[id]):""}</small></span></button>`).join("")}</div><div class="kp-sub">Dotknij tylko te składniki, które są w przepisie.</div>`;break;}
-      case "seq":{const ids=s.order.slice().sort(()=>Math.random()-.5);
+      case "seq":{const ids=[...new Set(s.order)].sort(()=>Math.random()-.5);
         h+=`<div class="kp-chips" id="kChips">${ids.map(id=>`<button class="kp-chip" data-k="item" data-id="${id}"><span class="e">${ingE(id)}</span><span>${esc2(ingN(id))}</span></button>`).join("")}</div><div class="kp-sub">Dotknij w dobrej kolejności.</div>`;break;}
-      case "chop":case "tap":h+=`<button class="kp-big" id="kHit" data-k="hit">${st.type==="chop"?"🔪":"👆"} ${esc2(s.verb)} (<span id="kCnt">0</span>/${s.n})</button>`;break;
-      case "wash":h+=`<button class="kp-big" data-k="hold">🧼 Myj ręce (przytrzymaj)</button>`;break;
+      case "chop":case "tap":h+=`<button class="kp-big" id="kHit" data-k="hit">${st.type==="chop"?"🔪":s.tool==="fork"?"🍴":"👆"} ${esc2(s.verb)} (<span id="kCnt">0</span>/${s.n})</button>`;break;
+      case "wash":h+=`<button class="kp-big" id="kWash" data-k="wash">🧼 Zacznij myć ręce</button><progress id="kWashProgress" value="0" max="${s.need}" aria-label="Postęp mycia rąk"></progress><div class="kp-sub">W kuchni myj ręce mydłem, szorując je przez co najmniej 20 sekund.</div>`;break;
       case "mix":h+=`<button class="kp-big" data-k="hold">🥄 Mieszaj (przytrzymaj)</button>`;break;
       case "balance":h+=`<div class="kp-gauge" id="kGauge"><div class="z" style="left:${s.zone[0]*100}%;width:${(s.zone[1]-s.zone[0])*100}%"></div><div class="m" id="kMark"></div></div><button class="kp-big" data-k="hold">🔥 ${esc2(s.label)} (przytrzymaj)</button><div class="kp-sub">Przytrzymaj, aby wskaźnik rósł, puść, aby opadał. Trzymaj go w zielonej strefie.</div>`;break;
       case "heat":h+=`<div class="kp-temps" id="kTemps">${s.temps.map(t=>`<button data-k="temp" data-id="${t[0]}">${esc2(t[1])}</button>`).join("")}</div>
-        <div class="kp-row"><button class="kp-big" id="kStart" data-k="start">▶ Włóż</button><button class="kp-big alt" id="kTake" data-k="take" disabled>✋ Wyjmij</button>${s.flips?`<button class="kp-big alt" id="kFlip" data-k="flip" disabled>↻ Obróć</button>`:""}</div>
-        <div class="kp-gauge" id="kGauge"><div class="z${T&&!T.showWin?" hid":""}" style="left:${s.window[0]/s.burn*100}%;width:${(s.window[1]-s.window[0])/s.burn*100}%"></div><div class="b" style="right:0"></div><div class="m" id="kMark"></div></div><div class="kp-sub">${T&&!T.showWin?"Obserwuj kolor jedzenia i parę. Wyjmij, gdy danie wygląda na gotowe, ale zanim się przypali.":"Zielone pole to idealny moment. Za późno to przypalenie (czerwona kreska)."}</div>`;break;
+        <div class="kp-row"><button class="kp-big" id="kStart" data-k="start">▶ ${s.reheat?"Połóż parówki":s.station==="piekarnik"?"Włóż do piekarnika":"Włóż"}</button><button class="kp-big alt" id="kTake" data-k="take" disabled>✋ ${s.reheat?"Zdejmij z patelni":s.station==="piekarnik"?"Wyjmij z piekarnika":"Wyjmij"}</button>${s.flips?`<button class="kp-big alt" id="kFlip" data-k="flip" disabled>↻ Obróć</button>`:""}</div>
+        <div class="kp-gauge" id="kGauge"><div class="z${T&&!T.showWin?" hid":""}" style="left:${s.window[0]/s.burn*100}%;width:${(s.window[1]-s.window[0])/s.burn*100}%"></div><div class="b" style="right:0"></div><div class="m" id="kMark"></div></div>${s.reheat||s.station==="piekarnik"?`<p id="kHeatState" class="kp-sub" role="status"></p>`:""}<div class="kp-sub">${T&&!T.showWin?"Obserwuj kolor jedzenia i parę. Wyjmij, gdy danie wygląda na gotowe, ale zanim się przypali.":"Zielone pole to idealny moment. Za późno to przypalenie (czerwona kreska)."}</div>`;break;
       case "rest":h+=`<div class="kp-bar"><i id="kBar"></i></div><button class="kp-big alt" data-k="skip">⏩ Przyspiesz</button>`;break;
       case "serve":if(run.quizQ&&!run.qdone){const q=run.quizQ;h+=`<div class="kp-quiz"><b>🎓 Pytanie szefa</b><p>${esc2(q.q)}</p>${q.o.map((o,k)=>`<button class="kp-chip kq" data-k="quiz" data-id="${k}">${esc2(o)}</button>`).join("")}</div>`;break;}
         h+=run.gl?`<button class="kp-big go" data-k="serve">🍽️ Podaj gościowi</button>`:`<button class="kp-big alt" data-k="glove">🧤 Załóż rękawiczki</button><div class="kp-sub">Gotowe danie podajemy w czystych rękawiczkach jednorazowych.</div>`;break;
@@ -183,7 +224,7 @@ const K=(()=>{
     h+=`<div id="kDone"></div>`;return h;
   }
   let lastKind="board";
-  const STX={sink:{x:170,cx:170,cy:294,front:1},board:{x:300,cx:300,cy:294,front:1},bowl:{x:340,cx:268,cy:306},patelnia:{x:430,cx:352,cy:306},garnek:{x:430,cx:352,cy:306},piekarnik:{x:548,cx:468,cy:306},rest:{x:320,cx:250,cy:306,front:1},plate:{x:320,cx:250,cy:306,front:1}};
+  const STX={setup:{x:310,cx:278,cy:294,front:1},sink:{x:170,cx:170,cy:294,front:1},board:{x:300,cx:300,cy:294,front:1},bowl:{x:340,cx:268,cy:306},patelnia:{x:430,cx:352,cy:306},garnek:{x:430,cx:352,cy:306},piekarnik:{x:548,cx:468,cy:306},rest:{x:320,cx:250,cy:306,front:1},plate:{x:320,cx:250,cy:306,front:1}};
   function chefMove(x,y){const c=$k("kChef");y=y||306;const d=Math.abs(x-chefX)+Math.abs(y-chefY);chefX=x;chefY=y;if(!c)return;
     if(d>4){const ms=Math.max(350,Math.min(1300,d*7));c.style.transition="transform "+ms+"ms ease-in-out";c.classList.add("moving");clearTimeout(chefMoveT);chefMoveT=setTimeout(()=>{const e=$k("kChef");if(e)e.classList.remove("moving");},ms);}
     c.style.transform="translate("+x+"px,"+y+"px) scale(.8)";}
@@ -197,14 +238,30 @@ const K=(()=>{
     const g=id=>$k(id);
     if(st.type==="chop"||st.type==="tap"){const c=g("kCnt");if(c)c.textContent=st.count;}
     if(st.type==="balance"||st.type==="heat"){const m=g("kMark");if(m)m.style.left=(st.type==="balance"?st.level*100:Math.min(100,st.p/s.burn*100))+"%";}
+    if(st.type==="wash"){
+      const button=g("kWash"),progress=g("kWashProgress");
+      if(progress)progress.value=st.held;
+      if(button){
+        button.disabled=st.ok;
+        const label=st.ok?"✓ Ręce umyte":st.holding?"⏸ Wstrzymaj mycie":"🧼 Zacznij myć ręce";
+        if(button.textContent!==label)button.textContent=label;
+      }
+    }
     if(st.type==="rest"){const b=g("kBar");if(b)b.style.width=(st.t/s.dur*100)+"%";}
     if(st.type==="heat"){
       const started=st.started&&!st.taken;
       const tk=g("kTake"),sb=g("kStart"),fl=g("kFlip");
-      if(tk)tk.disabled=!started;if(sb)sb.disabled=st.started||st.taken;if(fl)fl.disabled=!started||!st.flipsLeft.length;
+      const heatState=g("kHeatState");
+      if(heatState){
+        const label=s.station==="piekarnik"
+          ? st.heatTransfer?(st.taken?"Wyjmowanie potrawy.":"Wkładanie potrawy."):st.burnt?"Potrawa się przypaliła.":st.taken?"Potrawa wyjęta.":!st.started?"Piekarnik jest pusty.":st.p<s.window[0]?"Potrawa się piecze.":st.p<=s.window[1]?"Potrawa gotowa do wyjęcia.":"Potrawa zaczyna się za mocno rumienić."
+          :st.burnt?"Za długo na patelni.":st.taken?"Zdjęte z patelni.":!st.started?"Patelnia jest pusta.":st.p<s.window[0]?"Parówki się ogrzewają.":st.p<=s.window[1]?"Parówki gotowe do zdjęcia.":"Parówki zaczynają wysychać.";
+        if(heatState.textContent!==label)heatState.textContent=label;
+      }
+      if(tk)tk.disabled=!started||!!st.heatTransfer;if(sb)sb.disabled=st.started||st.taken;if(fl)fl.disabled=!started||!!st.heatTransfer||!st.flipsLeft.length;
       document.querySelectorAll("#kTemps button").forEach(b=>{b.classList.toggle("on",b.dataset.id===st.temp);b.disabled=st.started||st.taken;});
     }
-    if(st.ok&&!doneShown){doneShown=true;const d=g("kDone");if(d){
+    if(st.ok&&!st.heatTransfer&&!doneShown){doneShown=true;const d=g("kDone");if(d){
       d.innerHTML=(s.why?`<div class="kp-why">💡 <b>Dlaczego tak?</b> ${esc2(s.why)}</div>`:"")+(run.i<run.r.steps.length-1?`<button class="kp-big go" data-k="next">Dalej ▶</button>`:`<button class="kp-big go" data-k="next">Zakończ i oceń ▶</button>`);}
       if(st.type!=="serve")sfx.done&&sfx.done();}
   }
@@ -221,15 +278,51 @@ const K=(()=>{
     const b=e.target.closest("[data-k]");if(!b||!run||run.finished)return;
     const k=b.dataset.k,st=run.st,id=b.dataset.id;
     switch(k){
+      case "prepare":{
+        const before=run.mistakes.length;
+        if(KE.act(run,"prepare",id)){
+          b.classList.add("ok");b.disabled=true;
+          sfx.put&&sfx.put();setChef("drop",350);
+          updateWork();updatePanel();
+        }else if(run.mistakes.length>before)toast(run.mistakes[run.mistakes.length-1].msg);
+        break;
+      }
+      case "wash":if(KE.act(run,"hold",!st.holding))updatePanel();break;
       case "item":{const before=run.mistakes.length;const ok=KE.act(run,"item",id);
-        if(ok){b.classList.add("ok");sfx.put&&sfx.put();setChef("serve",250);dropIng(id);}
+        if(ok){b.classList.add("ok");sfx.put&&sfx.put();setChef("drop",640);moveToWork(ingE(id));}
         else if(run.mistakes.length>before){b.classList.remove("bad");void b.offsetWidth;b.classList.add("bad");sfx.bad&&sfx.bad();toast(run.mistakes[run.mistakes.length-1].msg);}
         break;}
-      case "hit":{if(KE.act(run,"hit")){sfx.chop&&sfx.chop();setChef(st.type==="chop"?"chop":"serve",260);haptic&&haptic(8);}break;}
+      case "hit":{if(KE.act(run,"hit")){sfx.chop&&sfx.chop();setChef(st.type==="chop"?"chop":st.s.tool==="fork"?"fork":"serve",260);haptic&&haptic(8);}break;}
       case "temp":KE.act(run,"temp",id);sfx.put&&sfx.put();break;
-      case "start":{const bef=run.mistakes.length;if(KE.act(run,"start")){sfx.put&&sfx.put();}else if(run.mistakes.length>bef)toast(run.mistakes[run.mistakes.length-1].msg);break;}
-      case "take":KE.act(run,"take");sfx.take&&sfx.take();break;
-      case "flip":{const bef=run.mistakes.length;setChef("flip",450);const ok=KE.act(run,"flip");if(ok)toast("Dobrze obrócone! ✔");else if(run.mistakes.length>bef)toast(run.mistakes[run.mistakes.length-1].msg);sfx.put&&sfx.put();break;}
+      case "start":{
+        const before=run.mistakes.length;
+        if(KE.act(run,"start")){
+          sfx.put&&sfx.put();
+          setChef("drop",640);
+          if(!moveHeatFood(st,false))moveToWork(st.s.reheat?ingE(st.s.reheat):run.r.e);
+          updateWork();updatePanel();
+        }else if(run.mistakes.length>before)toast(run.mistakes[run.mistakes.length-1].msg);
+        break;
+      }
+      case "take":{
+        if(!st.heatTransfer&&KE.act(run,"take")){
+          sfx.take&&sfx.take();
+          if($k("kPanFood")||$k("kHeatFood")){setChef("drop",640);moveHeatFood(st,true);}
+          updateWork();updatePanel();
+        }
+        break;
+      }
+      case "flip":{if(st.heatTransfer)break;const bef=run.mistakes.length;const flips=st.flipsLeft.length;
+        const ok=KE.act(run,"flip");
+        if(st.flipsLeft.length<flips){
+          setChef("flip",450);
+          const food=$k("kPanFood");
+          if(food&&S.vfx!==false&&!matchMedia("(prefers-reduced-motion: reduce)").matches){
+            food.style.transformBox="fill-box";food.style.transformOrigin="center";
+            food.animate([{transform:"none"},{transform:"translateY(-17px) scaleY(.1)"},{transform:"none"}],{duration:400,easing:"ease-in-out"});
+          }
+        }
+        if(ok)toast("Dobrze obrócone! ✔");else if(run.mistakes.length>bef)toast(run.mistakes[run.mistakes.length-1].msg);sfx.put&&sfx.put();break;}
       case "skip":KE.act(run,"skip");break;
       case "hint":{if(run.hl<=0)break;const hh=KE.hint(run);if(!hh){toast("Tu nie potrzeba podpowiedzi");break;}run.hl--;
         if(hh.type==="item"){const el=document.querySelector('#kChips [data-id="'+hh.id+'"]');if(el){el.classList.add("hint");setTimeout(()=>el.classList.remove("hint"),4500);}}
@@ -243,12 +336,63 @@ const K=(()=>{
   }
   function toast(m){if(typeof say==="function")say(m);}
   const SVGNS="http://www.w3.org/2000/svg";
-  /* szef wrzuca składnik z ręki do garnka, na patelnię lub deskę */
-  function dropIng(id){const g=$k("kFx2");if(!g)return;
-    const t=document.createElementNS(SVGNS,"text");t.setAttribute("font-size","26");t.setAttribute("text-anchor","middle");t.textContent=ingE(id);g.appendChild(t);
-    const S0=STX[lastKind]||STX.board,x0=chefX+35,y0=chefY+48,x1=S0.x,y1=(lastKind==="board"||lastKind==="plate"||lastKind==="rest")?336:300;
-    const a=t.animate([{transform:"translate("+x0+"px,"+y0+"px) scale(1)",opacity:1},{transform:"translate("+((x0+x1)/2)+"px,"+(y0-80)+"px) scale(1.2)",opacity:1,offset:.5},{transform:"translate("+x1+"px,"+y1+"px) scale(.6)",opacity:.2}],{duration:520,easing:"ease-in"});
-    a.onfinish=()=>{t.remove();splash(x1,y1);};setTimeout(()=>t.remove(),1000);}
+  function moveHeatFood(st,removing){
+    const food=$k("kPanFood")||$k("kHeatFood"),effects=$k("kFx2"),hand=$k("kChefGrip");
+    if(!food||!effects||!hand||S.vfx===false||matchMedia("(prefers-reduced-motion: reduce)").matches)return false;
+    const effectMatrix=effects.getScreenCTM(),foodMatrix=food.getScreenCTM(),handMatrix=hand.getScreenCTM();
+    if(!effectMatrix||!foodMatrix||!handMatrix)return false;
+    const inverse=effectMatrix.inverse(),box=food.getBBox();
+    const center=new DOMPoint(box.x+box.width/2,box.y+box.height/2);
+    const pan=center.matrixTransform(foodMatrix).matrixTransform(inverse);
+    const grip=new DOMPoint(44,60).matrixTransform(handMatrix).matrixTransform(inverse);
+    const from=removing?pan:grip,to=removing?grip:pan;
+    const moving=document.createElementNS(SVGNS,"g"),copy=food.cloneNode(true);
+    copy.removeAttribute("id");copy.removeAttribute("style");copy.removeAttribute("opacity");
+    copy.querySelectorAll("[id]").forEach(node=>node.removeAttribute("id"));
+    copy.setAttribute("transform",`translate(${-center.x} ${-center.y})`);
+    moving.setAttribute("data-heat-transfer",removing?"out":"in");
+    moving.appendChild(copy);effects.appendChild(moving);
+    st.heatTransfer=true;
+    const at=(point,scale)=>`translate(${point.x}px,${point.y}px) scale(${scale})`;
+    const middle={x:(from.x+to.x)/2,y:Math.min(from.y,to.y)-24};
+    const motion=moving.animate([
+      {transform:at(from,removing?1:.65)},
+      {transform:at(middle,.88),offset:.5},
+      {transform:at(to,removing?.4:1),opacity:removing?.25:1}
+    ],{duration:470,easing:"ease-in-out"});
+    const finish=()=>{
+      moving.remove();st.heatTransfer=false;
+      if(run?.st===st){updateWork();updatePanel();}
+    };
+    motion.finished.then(finish,finish);
+    return true;
+  }
+  function moveToWork(emoji){
+    const effects=$k("kFx2");
+    const hand=$k("kChefGrip");
+    if(!effects||!hand||S.vfx===false||matchMedia("(prefers-reduced-motion: reduce)").matches)return;
+    const handMatrix=hand.getScreenCTM();
+    const effectMatrix=effects.getScreenCTM();
+    if(!handMatrix||!effectMatrix)return;
+    const origin=new DOMPoint(44,60).matrixTransform(handMatrix).matrixTransform(effectMatrix.inverse());
+    const target=STX[lastKind]||STX.board;
+    const surface={board:346,bowl:308,garnek:282,patelnia:326,piekarnik:326,plate:353,rest:338};
+    const x=target.x,y=surface[lastKind]??346;
+    const piece=document.createElementNS(SVGNS,"text");
+    piece.setAttribute("font-size","30");
+    piece.setAttribute("text-anchor","middle");
+    piece.setAttribute("dominant-baseline","central");
+    piece.textContent=emoji;
+    effects.appendChild(piece);
+    const at=(px,py,scale)=>`translate(${px}px,${py}px) scale(${scale})`;
+    const flight=piece.animate([
+      {transform:at(origin.x,origin.y,.8),opacity:1},
+      {transform:at((origin.x+x)/2,Math.min(origin.y,y)-26,1),opacity:1,offset:.53},
+      {transform:at(x,y,.65),opacity:1,offset:.87},
+      {transform:at(x,y+5,.3),opacity:0}
+    ],{duration:580,easing:"ease-in"});
+    flight.onfinish=()=>{piece.remove();if(effects.isConnected)splash(x,y);};
+  }
   function splash(x,y){const g=$k("kFx2");if(!g)return;const c=document.createElementNS(SVGNS,"ellipse");c.setAttribute("cx",x);c.setAttribute("cy",y+8);c.setAttribute("rx",10);c.setAttribute("ry",4);c.setAttribute("fill","none");c.setAttribute("stroke","#fff");c.setAttribute("stroke-width","2");g.appendChild(c);
     c.animate([{transform:"scale(1)",opacity:.9},{transform:"scale(3.2)",opacity:0}],{duration:450,easing:"ease-out"});c.style.transformBox="fill-box";c.style.transformOrigin="center";setTimeout(()=>c.remove(),500);}
   function mv(el,x,y,ms){if(!el)return;el.style.transitionDuration=(ms||1500)+"ms";el.style.transform="translate("+x+"px,"+y+"px)";}
@@ -392,7 +536,7 @@ const K=(()=>{
     let h=`<h2>📖 Księga przepisów</h2><p class="kp-sub">${rank()} · ⭐ ${total()}/${maxStars()} · 💰 ${S.coins} zł</p>`;
     for(const b of K_WORLDS){const rs=K_RECIPES.filter(r=>r.book===b.id);if(!rs.length)continue;
       h+=`<div class="k-book">${b.e} ${esc2(b.n)}</div>`;
-      for(const r of rs){const open=isOpen(r);
+      for(const r of rs){const open=r.practiceFromStart||isOpen(r);
         h+=open?`<button class="k-card" data-m="practice" data-id="${r.id}"><span class="e">${KDISH.svg(r.id,44)}</span><span><b>${esc2(r.name)}</b><small>${esc2(r.story.split(". ")[0])}.</small></span><span class="r">${stars(KS.stars[r.id]||0)}<br><small>${r.price} zł</small></span></button>`
           :`<div class="k-card lock"><span class="e">🔒</span><span><b>${esc2(r.name)}</b><small>Odblokuje się na planszy ${r.lvl+1} kampanii (jesteś na ${maxLv()+1})</small></span></div>`;}}
     h+=`<div class="kp-row"><button class="kp-big alt" data-m="menuk">◀ Wróć</button></div>`;
@@ -494,7 +638,7 @@ const K=(()=>{
     if(!root||!root.classList.contains("on")){raf=0;return;}
     const dt=Math.min(.1,(now-last)/1000);last=now;
     if(((HUDT=(HUDT||0)+dt))>.45){HUDT=0;hudTick();}
-    if(run&&!run.finished){KE.tick(run,dt);updatePanel();updateWork();}
+    if(run&&!run.finished){if(!run.st.heatTransfer)KE.tick(run,dt);updatePanel();updateWork();}
     if(chefT>0){chefT-=dt;if(chefT<=0)setChef(chefFor());}else{const a=chefFor(),c=$k("kChef");if(c&&c.dataset.a!==a)setChef(a);}
     const modalOn=$k("kModal").classList.contains("on");
     if(SH){

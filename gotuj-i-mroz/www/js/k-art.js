@@ -60,9 +60,12 @@ ${c.r?KDISH.g(c.r.id,-57,-40,31):""}<text x="-24" y="-20" font-size="9.5" font-w
 <g fill="#cfd2d6"><circle cx="-12" cy="28" r="3"/><circle cx="-12" cy="46" r="3"/><circle cx="-12" cy="64" r="3"/><circle cx="12" cy="28" r="3"/><circle cx="12" cy="46" r="3"/><circle cx="12" cy="64" r="3"/></g>
 <rect x="-34" y="26" width="16" height="16" rx="3" fill="#f6f6f6" stroke="#d9d9d9"/><rect x="-30" y="22" width="3" height="12" rx="1.5" fill="#3b82c4"/>
 <g class="arm armL"><rect x="-56" y="-4" width="24" height="60" rx="12" fill="#fff"/><rect x="-56" y="40" width="24" height="9" rx="4" fill="#ededed"/><circle class="hand" cx="-44" cy="60" r="11" fill="${skin}"/></g>
-<g class="arm armR"><rect x="32" y="-4" width="24" height="60" rx="12" fill="#fff"/><rect x="32" y="40" width="24" height="9" rx="4" fill="#ededed"/><circle class="hand" cx="44" cy="60" r="11" fill="${skin}"/>
-<g class="tool t-knife" transform="translate(44 60)"><rect x="-3" y="-6" width="6" height="16" rx="2" fill="#6a432d"/><path d="M-3 -6L-3 -36Q5 -32 5 -6Z" fill="#dfe4e8" stroke="#9aa3ab" stroke-width="1"/></g>
-<g class="tool t-spoon" transform="translate(44 60)"><rect x="-2.5" y="-4" width="5" height="36" rx="2" fill="#6a432d"/><ellipse cx="0" cy="-8" rx="9" ry="12" fill="#c98f4b" stroke="#8a5a2b" stroke-width="1.5"/></g></g>
+<g class="arm armR" id="kChefGrip"><rect x="32" y="-4" width="24" height="60" rx="12" fill="#fff"/><rect x="32" y="40" width="24" height="9" rx="4" fill="#ededed"/>
+<g class="tool t-knife" transform="translate(44 60) rotate(10)"><rect x="-13" y="-4" width="25" height="8" rx="3" fill="#704725"/><path d="M9 -5H49Q45 5 38 7H9Z" fill="#e5edf2" stroke="#8494a0" stroke-width="1.5"/></g>
+<g class="tool t-spoon" transform="translate(44 60) rotate(-27)"><rect x="-3" y="-10" width="6" height="44" rx="3" fill="#83532e"/><ellipse cx="0" cy="40" rx="9" ry="12" fill="#c98f4b" stroke="#8a5a2b" stroke-width="1.5"/></g>
+<g class="tool t-turner" transform="translate(44 60) rotate(-38)"><rect x="-3" y="-10" width="6" height="40" rx="3" fill="#704725"/><rect x="-10" y="27" width="20" height="17" rx="4" fill="#59636e"/><path d="M-5 31v8m5-8v8m5-8v8" stroke="#d8e0e6" stroke-width="1.4"/></g>
+<g class="tool t-fork" transform="translate(44 60) rotate(-30)"><rect x="-3" y="-9" width="6" height="42" rx="3" fill="#424e53"/><path d="M-7 36v10m4-10v12m6-12v12m4-12v10M-7 36q0-5 7-5t7 5" fill="none" stroke="#d8e1e6" stroke-width="2.3" stroke-linecap="round"/></g>
+<circle class="hand" cx="44" cy="60" r="10" fill="${skin}"/><path d="M38 61q5 4 12 0" fill="none" stroke="#bc8865" stroke-width="1.5" stroke-linecap="round"/></g>
 <rect x="-6" y="-22" width="12" height="12" fill="#d9a98a"/>
 <circle cx="-27" cy="-38" r="5" fill="${skin}"/><circle cx="27" cy="-38" r="5" fill="${skin}"/><circle cx="0" cy="-38" r="27" fill="${skin}"/>
 <path d="M12 -58Q30 -40 12 -14Q22 -36 12 -58Z" fill="rgba(0,0,0,.07)"/>

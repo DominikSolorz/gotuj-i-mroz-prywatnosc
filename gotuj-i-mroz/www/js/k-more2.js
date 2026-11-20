@@ -33,7 +33,7 @@ K_ADD([
   story:"Włoski płaski chleb z dużą ilością oliwy. W cieście robimy palcami dołki, w których zbiera się oliwa.",storage:"Do 2 dni w pojemniku.",
   c:"Zagnieć ciasto i rozłóż je na blasze.",cw:"Dobrze wyrobione ciasto jest elastyczne i puszyste.",verb:"Wyrabiaj",s:"Dopraw: oliwa, sól, rozmaryn.",sw:"Sól i oliwa dodane na wierzch dają chrupiącą skórkę.",o:["oliwa","sol","rozmaryn"],
   h:"Piecz focaccię w piekarniku, aż się zezłoci.",hw:"Średnia temperatura piecze środek, nie spalając wierzchu.",ho:{dur:11}},
- {id:"bruschetta",book:"pizza",name:"Bruschetta z pomidorami",e:"🍅",price:26,diff:1,al:["gluten"],kcal:"ok. 180 kcal",a:"build",ing:"bulkahd:4 kromki bagietki|pomidor:3 szt.|czosnek:1 ząbek|bazylia:garść|oliwa:2 łyżki",
+ {id:"bruschetta",book:"pizza",name:"Bruschetta z pomidorami",e:"🍅",price:26,diff:1,al:["gluten"],kcal:"ok. 180 kcal",a:"build",ing:"bagietka:4 kromki|pomidor:3 szt.|czosnek:1 ząbek|bazylia:garść|oliwa:2 łyżki",
   story:"Włoska przekąska: opieczone pieczywo natarte czosnkiem, z pomidorami i bazylią.",storage:"Zjedz od razu, bo pieczywo szybko mięknie.",
   h:"Opiecz kromki bagietki na średnim ogniu, aż będą chrupiące.",hw:"Chrupiące pieczywo nie rozmięknie od soku pomidorów.",ho:{dur:6,flips:[.5],window:[.6,.82]},s:"Złóż: czosnek, pomidory, bazylia, oliwa.",sw:"Czosnek wcieramy w gorące pieczywo, a oliwa spina całość.",o:["czosnek","pomidor","bazylia","oliwa"]},
  {id:"lasagne",book:"pizza",name:"Lasagne bolognese",e:"🍝",price:50,diff:3,al:["gluten","mleko","jaja"],kcal:"ok. 450 kcal w porcji",a:"bake",raw:1,ing:"makaron:płaty lasagne|mielone:400 g|pomidor:400 g|mleko:500 ml|mozzarella:150 g",

@@ -2,7 +2,7 @@
    Czysta logika/dane (testowalne w node vm). Ładowany po k-data.js. */
 "use strict";
 Object.assign(K_ING,{
-  parowki:{n:"Parówki",e:"🌭"},bulkahd:{n:"Bułka do hot-doga",e:"🥖"},ketchup:{n:"Ketchup",e:"🍅"},pomidor:{n:"Pomidory",e:"🍅"},ogorek:{n:"Ogórki",e:"🥒"},
+  parowki:{n:"Parówki",e:"🌭"},bulkahd:{n:"Bułka do hot-doga",e:"🥖"},bagietka:{n:"Bagietka",e:"🥖"},ketchup:{n:"Ketchup",e:"🍅"},pomidor:{n:"Pomidory",e:"🍅"},ogorek:{n:"Ogórki",e:"🥒"},
   ser:{n:"Ser żółty",e:"🧀"},szynka:{n:"Szynka",e:"🍖"},pieczarki:{n:"Pieczarki",e:"🍄"},makaron:{n:"Makaron",e:"🍝"},kasza:{n:"Kasza",e:"🥜"},ryz:{n:"Ryż",e:"🍚"},
   mielone:{n:"Mięso mielone",e:"🍖"},kapusta:{n:"Kapusta",e:"🥬"},kapkis:{n:"Kapusta kiszona",e:"🥬"},jablka:{n:"Jabłka",e:"🍎"},mak:{n:"Mak",e:"⚫"},
   fasola:{n:"Fasola",e:"🌱"},groch:{n:"Groch",e:"🟢"},burak:{n:"Buraki",e:"🔴"},koperek:{n:"Koperek",e:"🌿"},ryba:{n:"Filet z ryby",e:"🐟"},
@@ -26,18 +26,30 @@ const K_BOOKS2=[
   const G=(d,k)=>({type:"gather",text:"Przygotuj składniki.",why:d.gw||"Zanim zaczniesz, przygotuj wszystko pod ręką: kucharze nazywają to „mise en place”.",items:parse(d.ing).map(x=>x[0]).filter(x=>x!=="woda"&&x!=="sol"||true).slice(0,9),decoys:pick(parse(d.ing).map(x=>x[0]),k)});
   const C=(d,n,verb)=>({type:"chop",text:d.c,why:d.cw,n:n||6,verb:verb||"Krój"});
   const S=(d)=>({type:"seq",text:d.s,why:d.sw,order:d.o});
-  const H=(d,st,o)=>Object.assign({type:"heat",station:st,text:d.h,why:d.hw,good:"med",dur:9,window:[.62,.84],burn:1.0,temps:T3},o||{});
+  const H=(d,st,o)=>Object.assign({type:"heat",station:st,text:d.h,why:d.hw,good:"med",dur:9,window:[.62,.84],burn:1.0,temps:st==="piekarnik"?[["low","Niska temperatura"],["med","Średnia temperatura"],["high","Wysoka temperatura"]]:T3},o||{});
   const B=(d,label,o)=>Object.assign({type:"balance",text:d.b,why:d.bw,label:label||"Utrzymaj mały ogień",zone:[.3,.58],need:6,rise:.42,fall:.4},o||{});
   const M=(d)=>({type:"mix",text:d.m,why:d.mw,dur:4});
   const R=(txt,why,dur)=>({type:"rest",text:txt,why,dur:dur||3});
   const V=(d)=>({type:"serve",text:d.v||"Podaj gościowi na talerzu."});
+  const TOAST_SETUP={
+    type:"setup",
+    text:"Wytrzyj blat. Przygotuj deskę, a potem ustaw patelnię z uchwytem skierowanym w bok.",
+    why:"Czyste narzędzia odkładaj na czysty blat. Uchwyt patelni ustaw z dala od krawędzi i innych palników.",
+    tasks:[
+      {id:"wipe",label:"Wytrzyj blat"},
+      {id:"board",label:"Połóż czystą deskę"},
+      {id:"pan",label:"Ustaw patelnię"}
+    ]
+  };
   const ARCH={
     pan:(d,k)=>[W(d.raw),G(d,k),C(d),S(d),H(d,"patelnia",d.ho),R(d.r||"Odsącz i odstaw na chwilę.",d.rw||"Chwila odpoczynku sprawia, że danie jest soczyste i nie parzy.",2),V(d)],
     soup:(d,k)=>[W(d.raw),G(d,k),C(d),H(d,"patelnia",d.ho||{dur:6}),B(d,"Utrzymaj mały ogień"),S(d),R(d.r||"Odstaw zupę na chwilę, żeby smaki się połączyły.",d.rw||"Zupa „przegryziona” smakuje lepiej, bo smaki się łączą.",3),V(d)],
     batter:(d,k)=>[W(d.raw),G(d,k),M(d),R(d.r||"Odstaw ciasto, aby odpoczęło.",d.rw||"Odpoczęte ciasto jest gładsze, a gluten się rozluźnia.",3),H(d,"patelnia",Object.assign({flips:[.45]},d.ho||{})),V(d)],
     bake:(d,k)=>[W(d.raw),G(d,k),C(d,5,d.verb||"Ugniataj"),S(d),H(d,"piekarnik",Object.assign({dur:11,good:"med"},d.ho||{})),R(d.r||"Odstaw do przestygnięcia.",d.rw||"Pieczywo i ciasta dochodzą po wyjęciu z piekarnika; nie kroimy ich na gorąco.",3),V(d)],
-    boil:(d,k)=>[W(d.raw),G(d,k),B(d,d.bl||"Utrzymaj delikatne wrzenie",{need:6}),{type:"tap",text:d.t||"Zamieszaj kilka razy.",why:d.tw||"Mieszanie zapobiega przywieraniu do dna.",n:4,verb:"Zamieszaj"},S(d),V(d)],
+    boil:(d,k)=>[W(d.raw),G(d,k),B(d,d.bl||"Utrzymaj delikatne wrzenie",{need:6}),{type:"tap",text:d.t||"Zamieszaj kilka razy.",why:d.tw||"Mieszanie zapobiega przywieraniu do dna.",n:4,verb:d.tapVerb||"Zamieszaj",tool:d.tapTool,work:d.tapWork},S(d),V(d)],
     build:(d,k)=>[W(d.raw),G(d,k),H(d,d.st||"patelnia",d.ho),S(d),V(d)],
+    toast:(d,k)=>[W(d.raw),TOAST_SETUP,G(d,k),{...S(d),work:"board"},H(d,"patelnia",d.ho),V(d)],
+    gratin:(d,k)=>[W(d.raw),G(d,k),{...S(d),work:"board"},H(d,"piekarnik",d.ho),{type:"seq",work:"plate",text:"Polej upieczoną zapiekankę ketchupem.",why:"Sos dodajemy na końcu. Bagietka pozostaje chrupiąca.",order:["ketchup"]},V(d)],
     dough:(d,k)=>[W(d.raw),G(d,k),C(d,6,"Wyrabiaj"),R("Odstaw ciasto w ciepłe miejsce, żeby urosło.","Drożdże zjadają cukier i wydzielają gaz, który spulchnia ciasto.",4),H(d,d.st||"piekarnik",d.ho),R(d.r||"Odstaw do przestygnięcia.",d.rw||"Ciepłe wypieki najlepiej odczekać, bo wnętrze dopiero się „ustawia”.",2),V(d)]
   };
   /* skrót: id|świat|nazwa|emoji|cena|trudność|alergeny|kcal|arch|składniki|dane */
@@ -59,7 +71,7 @@ const K_BOOKS2=[
    {id:"kasza",book:"podstawy",name:"Kasza gryczana z masłem",e:"🍚",price:13,diff:1,al:["mleko"],kcal:"ok. 200 kcal w porcji",a:"boil",ing:"kasza:100 g|woda:200 ml (dwa razy tyle co kaszy)|sol:szczypta|maslo:łyżka",
      story:"Kaszę gotujemy w proporcji 1:2 z wodą pod przykryciem. Nie mieszamy jej, żeby nie zrobiła się papkowata.",storage:"Do 3 dni w lodówce.",
      b:"Zagotuj wodę z kaszą i gotuj na małym ogniu pod przykryciem.",bw:"Mały ogień pozwala kaszy równo wchłonąć wodę, zamiast przypalić się na dnie.",bl:"Utrzymaj mały ogień",
-     t:"Sprawdź kaszę widelcem: ma być sypka.",tw:"Dotknij tylko kilka razy; zbyt częste mieszanie zrobi z niej papkę.",s:"Wymieszaj z masłem i solą na końcu.",sw:"Masło otula ziarna, a sól dodana na końcu nie wydłuża gotowania.",o:["sol","maslo"]},
+     t:"Delikatnie rozluźnij kaszę widelcem. Sprawdź, czy ziarna łatwo się rozdzielają.",tapVerb:"Sprawdź widelcem",tapTool:"fork",tapWork:"garnek",tw:"Dotknij tylko kilka razy; zbyt częste mieszanie zrobi z niej papkę.",s:"Wymieszaj z masłem i solą na końcu.",sw:"Masło otula ziarna, a sól dodana na końcu nie wydłuża gotowania.",o:["sol","maslo"]},
    {id:"omlet",book:"podstawy",name:"Omlet z szynką",e:"🥞",price:17,diff:2,al:["jaja","mleko"],kcal:"ok. 300 kcal w porcji",a:"batter",raw:1,ing:"jajka:3 szt.|mleko:3 łyżki|szynka:3 plastry|maslo:łyżka|sol:szczypta",
      story:"Omlet jest delikatny, bo jajka rozcieńczone mlekiem ścinają się wolniej.",storage:"Najlepszy od razu.",
      m:"Roztrzep jajka z mlekiem i solą, aż masa będzie jednolita.",mw:"Jednolita masa ścina się równo i jest puszysta.",r:"Odstaw masę na minutę.",rw:"Odpoczęta masa lepiej się ścina.",
@@ -116,21 +128,21 @@ const K_BOOKS2=[
      story:"Delikatna ryba smaży się krótko. Zbyt długo i będzie sucha.",storage:"Najlepsza od razu; resztki zjedz w ciągu doby.",
      c:"Osusz filety i oprósz je mąką.",cw:"Sucha powierzchnia sprawia, że ryba się zrumieni zamiast się dusić.",s:"Dopraw w kolejności: sól, pieprz, mąka.",sw:"Sól i pieprz wnikają w mięso, mąka tworzy cienką skorupkę.",o:["sol","pieprz","maka"],
      h:"Smaż rybę na średnim ogniu, obróć raz.",hw:"Ryba potrzebuje tylko kilku minut. Obracaj ją raz, żeby się nie rozpadła.",ho:{dur:7,flips:[.5],window:[.6,.8]}},
-   {id:"hotdog",book:"bar",name:"Hot-dog klasyczny",e:"🌭",price:15,diff:1,al:["gluten","gorczyca"],kcal:"ok. 330 kcal",a:"build",ing:"parowki:2 szt.|bulkahd:2 szt.|ketchup:łyżka|musztarda:łyżka|cebula:pół",
+   {id:"hotdog",practiceFromStart:true,book:"bar",name:"Hot-dog klasyczny",e:"🌭",price:15,diff:1,al:["gluten","gorczyca"],kcal:"ok. 330 kcal",a:"build",ing:"parowki:2 szt.|bulkahd:2 szt.|ketchup:łyżka|musztarda:łyżka|cebula:pół",
      story:"Parówki są już ugotowane, wystarczy je podgrzać. Bułki delikatnie przypiekamy.",storage:"Zjedz od razu.",
-     h:"Podgrzej parówki na średnim ogniu, aż będą lekko zrumienione.",hw:"Parówki podgrzewamy tylko do ciepła; za długie smażenie je wysuszy.",ho:{dur:6,flips:[.5]},s:"Złóż hot-doga w kolejności: parówka, musztarda, ketchup, cebula.",sw:"Sos nakładamy na parówkę, nie na bułkę, żeby bułka nie namokła.",o:["parowki","musztarda","ketchup","cebula"]},
-   {id:"zapiekanka",book:"bar",name:"Zapiekanka z pieczarkami",e:"🍕",price:19,diff:2,al:["gluten","mleko"],kcal:"ok. 420 kcal",a:"build",ing:"bulkahd:1 duża bagietka|pieczarki:150 g|ser:100 g|ketchup:łyżka|cebula:pół",st:"piekarnik",
+     h:"Podgrzej parówki na średnim ogniu. Obróć je w połowie, żeby ogrzać obie strony.",hw:"Zbyt długie podgrzewanie wysusza parówki. W ćwiczeniu zielona strefa pokazuje moment zdjęcia ich z patelni.",ho:{dur:6,flips:[.5],reheat:"parowki"},s:"Złóż hot-doga w kolejności: parówka, musztarda, ketchup, cebula.",sw:"Sos nakładamy na parówkę, nie na bułkę, żeby bułka nie namokła.",o:["parowki","musztarda","ketchup","cebula"]},
+   {id:"zapiekanka",practiceFromStart:true,book:"bar",name:"Zapiekanka z pieczarkami",e:"🍕",price:19,diff:2,al:["gluten","mleko"],kcal:"ok. 420 kcal",a:"gratin",ing:"bagietka:1 duża bagietka|pieczarki:150 g|ser:100 g|ketchup:łyżka|cebula:pół",st:"piekarnik",
      story:"Klasyczna polska zapiekanka z budek ulicznych: bagietka, pieczarki i dużo sera.",storage:"Zjedz od razu.",
-     h:"Zapiecz zapiekankę w piekarniku na średniej temperaturze.",hw:"Zbyt wysoka temperatura zrumieni ser, zanim bagietka się nagrzeje.",ho:{dur:9,window:[.6,.82]},s:"Ułóż w kolejności: ketchup, pieczarki, cebula, ser.",sw:"Ser na wierzchu się rumieni i chroni składniki przed wysuszeniem.",o:["ketchup","pieczarki","cebula","ser"]},
+     h:"Zapiecz zapiekankę w piekarniku na średniej temperaturze.",hw:"Zbyt wysoka temperatura zrumieni ser, zanim bagietka się nagrzeje.",ho:{dur:9,window:[.6,.82]},s:"Na bagietce ułóż pieczarki, cebulę i ser. Ketchup dodaj po wyjęciu z piekarnika.",sw:"Ser na wierzchu się rumieni i chroni składniki przed wysuszeniem.",o:["bagietka","pieczarki","cebula","ser"]},
    {id:"frytki",book:"bar",name:"Frytki domowe",e:"🍟",price:13,diff:2,al:["brak"],kcal:"ok. 380 kcal w porcji",a:"build",ing:"frytki:400 g|olejsmaz:do smażenia|sol:szczypta",
      story:"Frytki robimy z pokrojonych i osuszonych ziemniaków. Mokre frytki chlapią tłuszczem.",storage:"Zjedz od razu.",
      h:"Smaż frytki na dużym ogniu, aż będą złote.",hw:"Gorący tłuszcz tworzy chrupiącą skorupkę. Za zimny sprawi, że frytki będą tłuste.",ho:{dur:8,good:"high",window:[.62,.82],flips:[.5]},s:"Posól frytki dopiero po usmażeniu.",sw:"Sól wyciąga wodę, więc sól dodana przed smażeniem rozmoczy frytki.",o:["sol"]},
    {id:"kanapka",book:"bar",name:"Kanapka z szynką i serem",e:"🥪",price:12,diff:1,al:["gluten","mleko"],kcal:"ok. 310 kcal",a:"build",ing:"toastbr:2 kromki|szynka:2 plastry|ser:2 plastry|salata:liść|maslo:łyżeczka",
      story:"Prosta kanapka: świeże składniki ułożone w dobrej kolejności, żeby chleb nie namókł.",storage:"Do 1 dnia w lodówce.",
      h:"Przypiecz kromki chleba na średnim ogniu, aby były chrupiące.",hw:"Przypieczony chleb nie namiąka od sałaty i pomidora.",ho:{dur:5,flips:[.5]},s:"Złóż w kolejności: masło, szynka, ser, sałata.",sw:"Masło tworzy barierę dla wilgoci.",o:["maslo","szynka","ser","salata"]},
-   {id:"tosty",book:"bar",name:"Tosty z szynką i serem",e:"🥪",price:14,diff:1,al:["gluten","mleko"],kcal:"ok. 340 kcal",a:"build",ing:"toastbr:4 kromki|szynka:2 plastry|ser:2 plastry|maslo:łyżka",
+   {id:"tosty",book:"bar",name:"Tosty z szynką i serem",e:"🥪",price:14,diff:1,al:["gluten","mleko"],kcal:"ok. 340 kcal",a:"toast",ing:"toastbr:4 kromki|szynka:2 plastry|ser:2 plastry|maslo:łyżka",
      story:"Tost to kanapka zapieczona na patelni lub w opiekaczu. Ser w środku się roztapia.",storage:"Zjedz od razu.",
-     h:"Zrumień tosty na średnim ogniu z obu stron.",hw:"Zbyt mocny ogień przypali chleb, zanim ser się roztopi.",ho:{dur:7,flips:[.5],window:[.6,.82]},s:"Złóż tost: masło, ser, szynka, ser.",sw:"Ser po obu stronach szynki skleja kanapkę.",o:["maslo","ser","szynka"]},
+     h:"Zrumień tosty na średnim ogniu z obu stron.",hw:"Zbyt mocny ogień przypali chleb, zanim ser się roztopi.",ho:{dur:7,flips:[.5],window:[.6,.82]},s:"Posmaruj kromkę masłem. Ułóż ser, szynkę i drugi plaster sera, a na końcu przykryj chlebem.",sw:"Ser po obu stronach szynki skleja kanapkę podczas smażenia.",o:["maslo","ser","szynka","ser","toastbr"]},
    {id:"nuggetsy",book:"bar",name:"Nuggetsy z kurczaka",e:"🍗",price:22,diff:2,al:["gluten","jaja"],kcal:"ok. 350 kcal w porcji",a:"pan",raw:1,ing:"kotlet:300 g|jajka:1 szt.|bulka:4 łyżki|maka:2 łyżki|sol:szczypta|olejsmaz:do smażenia",
      story:"Kawałki kurczaka w chrupiącej panierce. Kurczak musi być w środku dobrze wysmażony.",storage:"Do 2 dni w lodówce.",
      c:"Pokrój kurczaka na małe kawałki.",cw:"Małe, równe kawałki wysmażą się w całości w tym samym czasie.",s:"Panieruj w kolejności: mąka, jajko, bułka tarta.",sw:"Mąka trzyma jajko, jajko trzyma bułkę.",o:["maka","jajka","bulka"],
@@ -178,7 +190,7 @@ const K_BOOKS2=[
   const existing=K_RECIPES.slice();
   const mapBook={majonez:"podstawy",chleb:"podstawy",krem:"podstawy",wodzionka:"zupy",zurek:"zupy",rosol:"zupy",kluski:"obiady",schabowy:"obiady",sernik:"wypieki"};
   existing.forEach(r=>{if(mapBook[r.id])r.book=mapBook[r.id];});
-  function mk(d,k){return {id:d.id,book:d.book,name:d.name,e:d.e,diff:d.diff,price:d.price,unlock:0,kcal:d.kcal,allergens:d.al,ing:parse(d.ing),story:d.story,storage:d.storage,steps:ARCH[d.a](d,k)};}
+  function mk(d,k){return {id:d.id,book:d.book,name:d.name,e:d.e,diff:d.diff,price:d.price,unlock:0,practiceFromStart:d.practiceFromStart,kcal:d.kcal,allergens:d.al,ing:parse(d.ing),story:d.story,storage:d.storage,steps:ARCH[d.a](d,k)};}
   function rebuild(){
     for(const k of Object.keys(K_BYID))delete K_BYID[k];
     K_RECIPES.forEach(r=>{K_BYID[r.id]=r;delete r.lvl;});

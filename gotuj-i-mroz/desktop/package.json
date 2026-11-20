@@ -1,0 +1,9 @@
+{
+  "name": "gotuj-i-mroz-desktop",
+  "version": "3.0.0",
+  "private": true,
+  "main": "main.cjs",
+  "devDependencies": {
+    "electron": "45.4.1"
+  }
+}

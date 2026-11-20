@@ -10,7 +10,7 @@ vm.createContext(ctx);
 const src=["k-data.js","k-engine.js","k-more.js","k-more2.js","k-dishes.js","k-quiz.js"].map(f=>fs.readFileSync(path.join(dir,f),"utf8")).join("\n")+"\n;this.K_RECIPES=K_RECIPES;this.K_ING=K_ING;this.K_BOOKS=K_BOOKS2;this.K_LEVELS=K_LEVELS;this.KE=KE;this.KDISH=KDISH;this.K_TIER=K_TIER;this.K_QUIZ=K_QUIZ;this.K_QUIZPICK=K_QUIZPICK;";
 vm.runInContext(src,ctx);
 const {K_RECIPES,K_ING,K_BOOKS,KE,K_LEVELS,KDISH,K_TIER,K_QUIZ,K_QUIZPICK}=ctx;
-const STEP_TYPES=['wash','gather','chop','tap','mix','balance','seq','heat','rest','serve'];
+const STEP_TYPES=['setup','wash','gather','chop','tap','mix','balance','seq','heat','rest','serve'];
 
 /* idealny gracz: robi dokładnie to, czego wymaga każdy etap */
 function perfect(recipe){
@@ -21,6 +21,7 @@ function perfect(recipe){
       case 'wash':case 'mix':KE.act(run,'hold',true);for(let k=0;k<400&&!st.ok;k++)KE.tick(run,.05);KE.act(run,'hold',false);break;
       case 'gather':for(const id of s.items)KE.act(run,'item',id);break;
       case 'seq':for(const id of s.order)KE.act(run,'item',id);break;
+      case 'setup':for(const task of s.tasks)KE.act(run,'prepare',task.id);break;
       case 'chop':case 'tap':for(let k=0;k<s.n;k++)KE.act(run,'hit');break;
       case 'balance':{const mid=(s.zone[0]+s.zone[1])/2;for(let k=0;k<2000&&!st.ok;k++){KE.act(run,'hold',st.level<mid);KE.tick(run,.05);}break;}
       case 'heat':{KE.act(run,'temp',s.good);KE.act(run,'start');const mid=(s.window[0]+s.window[1])/2;
@@ -44,6 +45,7 @@ function sloppy(recipe,seed){
     switch(st.type){
       case 'wash':case 'mix':KE.act(run,'hold',true);for(let k=0;k<400&&!st.ok;k++)KE.tick(run,.05);break;
       case 'gather':KE.act(run,'item','ocet');KE.act(run,'item','maka');KE.act(run,'item','cukier');for(const id of s.items)KE.act(run,'item',id);break;
+      case 'setup':KE.act(run,'prepare',s.tasks[2].id);for(const task of s.tasks)KE.act(run,'prepare',task.id);break;
       case 'seq':{const o=s.order.slice().reverse();for(const id of o)KE.act(run,'item',id);for(const id of s.order)KE.act(run,'item',id);break;}
       case 'chop':case 'tap':for(let k=0;k<s.n;k++)KE.act(run,'hit');break;
       case 'balance':for(let k=0;k<2000&&!st.ok;k++){KE.act(run,'hold',true);KE.tick(run,.05);}break;
@@ -169,6 +171,7 @@ test('węższe okna na najwyższych planszach, a idealny gracz nadal wygrywa',()
     for(let g=0;g<400&&!run.finished;g++){const st=run.st,s=st.s;
       switch(st.type){case 'wash':case 'mix':KE.act(run,'hold',true);for(let k=0;k<400&&!st.ok;k++)KE.tick(run,.05);KE.act(run,'hold',false);break;
         case 'gather':for(const id of s.items)KE.act(run,'item',id);break;case 'seq':for(const id of s.order)KE.act(run,'item',id);break;
+        case 'setup':for(const task of s.tasks)KE.act(run,'prepare',task.id);break;
         case 'chop':case 'tap':for(let k=0;k<s.n;k++)KE.act(run,'hit');break;
         case 'balance':{const mid=(s.zone[0]+s.zone[1])/2;for(let k=0;k<2000&&!st.ok;k++){KE.act(run,'hold',st.level<mid);KE.tick(run,.05);}break;}
         case 'heat':{KE.act(run,'temp',s.good);KE.act(run,'start');const mid=(s.window[0]+s.window[1])/2;const fl=(s.flips||[]).slice();for(let k=0;k<4000&&st.p<mid&&!st.taken;k++){KE.tick(run,.02);if(fl.length&&st.p>=fl[0]){KE.act(run,'flip');fl.shift();}}KE.act(run,'take');break;}

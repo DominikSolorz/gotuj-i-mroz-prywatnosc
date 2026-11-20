@@ -2,7 +2,7 @@
 "use strict";
 const KE=(()=>{
   const clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
-  const TITLES={wash:"Higiena",gather:"Przygotuj składniki",chop:"Praca na desce",tap:"Dodawanie",mix:"Mieszanie",balance:"Utrzymaj temperaturę",seq:"Kolejność",heat:"Obróbka cieplna",rest:"Odpoczynek",serve:"Podanie"};
+  const TITLES={setup:"Przygotuj stanowisko",wash:"Higiena",gather:"Przygotuj składniki",chop:"Praca na desce",tap:"Dodawanie",mix:"Mieszanie",balance:"Utrzymaj temperaturę",seq:"Kolejność",heat:"Obróbka cieplna",rest:"Odpoczynek",serve:"Podanie"};
   const SPEED={low:.6,med:1,high:1.5};
   const ingName=id=>(typeof K_ING!=="undefined"&&K_ING[id])?K_ING[id].n:id;
 
@@ -25,7 +25,7 @@ const KE=(()=>{
       case "gather":st.picked=[];break;
       case "chop":case "tap":st.count=0;break;
       case "balance":st.level=.2;st.inZone=0;st.out=0;st.t=0;st.holding=false;break;
-      case "seq":st.pos=0;break;
+      case "setup":case "seq":st.pos=0;break;
       case "heat":st.temp=null;st.started=false;st.p=0;st.burnt=false;st.taken=false;st.flipsLeft=(s.flips||[]).slice();st.flipMiss=0;st.flipOk=0;break;
       case "rest":st.t=0;break;
       case "serve":st.ok=false;break;
@@ -37,6 +37,14 @@ const KE=(()=>{
   function act(run,a,v){
     const st=run.st,s=st.s;if(!st||run.finished)return false;
     switch(a){
+      case "prepare": {
+        if(st.type!=="setup"||st.ok||s.tasks.slice(0,st.pos).some(task=>task.id===v))return false;
+        const task=s.tasks[st.pos];
+        if(task.id!==v){mistake(run,"Najpierw: "+task.label.toLowerCase()+".");return false;}
+        st.pos++;
+        st.ok=st.pos===s.tasks.length;
+        return true;
+      }
       case "item":{
         if(st.type==="gather"){
           if(st.picked.includes(v))return false;
@@ -78,8 +86,8 @@ const KE=(()=>{
     if(p<w0)score=.35+.5*(p/w0);
     else if(p<=w1){const mid=(w0+w1)/2,half=(w1-w0)/2;score=1-.15*Math.abs(p-mid)/half;}
     else score=Math.max(.2,.8-.6*(p-w1)/Math.max(.05,s.burn-w1));
-    if(p<w0)run.mistakes.push({step:run.i,msg:"Wyjęto za wcześnie: danie jest niedogotowane.",why:s.why});
-    else if(p>w1)run.mistakes.push({step:run.i,msg:"Wyjęto za późno: danie jest przegotowane lub przypieczone.",why:s.why});
+    if(p<w0)run.mistakes.push({step:run.i,msg:s.reheat?"Wyjęto za wcześnie: potrawa nie zdążyła się podgrzać.":"Wyjęto za wcześnie: danie jest niedogotowane.",why:s.why});
+    else if(p>w1)run.mistakes.push({step:run.i,msg:s.reheat?"Podgrzewano za długo: potrawa zaczęła wysychać.":"Wyjęto za późno: danie jest przegotowane lub przypieczone.",why:s.why});
     if(st.temp!==s.good){score*=.6;run.mistakes.push({step:run.i,msg:"Zła temperatura. Tutaj najlepsza jest: "+tempLabel(s,s.good)+".",why:s.why});}
     score*=Math.pow(.85,st.flipMiss)*(st.flipsLeft.length?Math.pow(.85,st.flipsLeft.length):1);
     if(st.flipsLeft.length)run.mistakes.push({step:run.i,msg:"Zapomniano obrócić.",why:"Mięso obracamy w połowie smażenia."});
@@ -110,7 +118,7 @@ const KE=(()=>{
     const st=run.st,s=st.s;
     switch(st.type){
       case "gather":return Math.max(.4,1-.15*st.errs);
-      case "seq":return Math.max(.3,1-.2*st.errs);
+      case "setup":case "seq":return Math.max(.3,1-.2*st.errs);
       case "balance":{const tot=st.inZone+st.out,ratio=tot?st.inZone/Math.max(st.inZone+st.out,s.need):0,sc=clamp(ratio*1.1,0,1);
         if(sc<.6)run.mistakes.push({step:run.i,msg:"Nie utrzymano właściwej temperatury (zważyło się lub zmąciło).",why:s.why});return sc;}
       case "heat":return st.score==null?.5:st.score;
@@ -143,6 +151,7 @@ const KE=(()=>{
       case "gather":return st.picked.length/s.items.length;
       case "chop":case "tap":return st.count/s.n;
       case "balance":return Math.min(1,st.inZone/s.need);
+      case "setup":return st.pos/s.tasks.length;
       case "seq":return st.pos/s.order.length;
       case "heat":return clamp(st.p/s.burn,0,1);
       case "rest":return st.t/s.dur;

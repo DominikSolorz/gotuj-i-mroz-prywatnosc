@@ -7,8 +7,8 @@ android {
         applicationId "pl.gotujimroz.app"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 8
-        versionName "3.0"
+        versionCode 9
+        versionName "3.1"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         aaptOptions {
              // Files and dirs to omit from the packaged assets dir, modified to accommodate modern web apps.
@@ -30,6 +30,10 @@ android {
         }
     }
     buildTypes {
+        debug {
+            applicationIdSuffix ".debug"
+            versionNameSuffix "-test"
+        }
         release {
             signingConfig signingConfigs.release
             minifyEnabled false
