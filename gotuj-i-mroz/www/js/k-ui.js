@@ -375,7 +375,7 @@ const K=(()=>{
     const fin=SH&&SH.finishing;
     p.innerHTML=`<div class="kp-h"><b>${SH&&SH.lv?esc2(SH.lv.title)+" · ":""}Goście: ${SH?SH.served+SH.lost:0}/${SH?SH.total:0}</b></div><div class="kp-t">${fin?"Ostatni goście kończą posiłek i płacą…":"Dotknij gościa przy stoliku lub jego zamówienie na liście, aby ugotować danie. Kelner je zaniesie, a kasjerka przyjmie płatność."}</div><div id="kOrders"></div>`;
     $k("kWork").innerHTML="";$k("kWorkB").innerHTML="";updateOrders();setDay();
-    const pl=(SH&&SH.pool)||[];const w1=r=>r.name.split(" ")[0];[1,2,3].forEach(i=>{const e=$k("kMenu"+i);if(e)e.textContent=pl[i-1]?w1(pl[i-1]):"";});
+    const pl=(SH&&SH.pool)||[];const w1=r=>r.name.split(" ").slice(0,2).join(" ").slice(0,12);[1,2,3].forEach(i=>{const e=$k("kMenu"+i);if(e)e.textContent=pl[i-1]?w1(pl[i-1]):"";});
   }
   function updateOrders(){
     const o=$k("kOrders");if(!o||!SH||run)return;
